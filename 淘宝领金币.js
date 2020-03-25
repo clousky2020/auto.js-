@@ -113,7 +113,7 @@ function taobao_coins() {
                         back();
                         sleep(1000);
                         continue;
-                    }else if (text("领取奖励").findOne(8000)) {
+                    }else if (text("领取奖励").findOne(10000)) {
                         var 领取奖励 = text("领取奖励").findOne().bounds();
                         click(领取奖励.centerX(), 领取奖励.centerY());
                         sleep(1000);

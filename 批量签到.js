@@ -54,20 +54,31 @@ function SignIn_ximalaya() {
             launch("com.ximalaya.ting.android");
             sleep(1000);
         }
+        var 跳过广告=id("host_close_firework").findOne(4000);
+        if(跳过广告){
+            var 跳过广告=跳过广告.bounds();
+            click(跳过广告.centerX(),跳过广告.centerY())
+            }
         while (1) {
-            var 账号 = text("账号").findOne(10000);
+            var 账号 = text("账号").findOne(5000);
             if (账号) {
                 sleep(1000);
                 var 账号 = 账号.bounds();
                 click(账号.centerX(), 账号.centerY());
-                var 积分图标=id ("main_point_lottie_view").findOne();
+                var 积分图标=desc ("用户头像").findOne(3000);
                 if (积分图标){
-                    var 积分图标=积分图标.bounds();
-                    click(积分图标.centerX(),积分图标.centerY());
+                    click(792,357,912,477);
+                    //sleep(1000);
+                    //var 积分图标=积分图标.bounds();
+                    //click(积分图标.centerX(),积分图标.centerY());
                     while (1){
                         var 日常任务 = text("日常任务").findOne(3000);
                         if (日常任务) {//出现这个字样，说明进入了福利中心
                             while(1){
+                                var 我知道了=text("我知道了").findOne(2000);
+                                if (我知道了){
+                                    我知道了.click();
+                                    sleep(1000);}
                                 var 领取=text("领取").findOne(2000);
                                 if (领取){
                                     领取.click();
@@ -688,7 +699,7 @@ function SignIn_Baidu_netdisk() {
                     if (马上观看) {
                         var 马上观看 = 马上观看.bounds();
                         click(马上观看.centerX(), 马上观看.centerY());
-                        sleep(45000);
+                        sleep(44000);
                         var 了解一下 = text("了解一下").findOne();
                         if (了解一下) {
                             var 关闭 = id("btn_close").findOne(5000);
@@ -750,7 +761,7 @@ function SignIn_Fandengreader() {
             launch("io.dushu.fandengreader");
             sleep(1000);
         }
-        var 广告关闭 = id("btn_close").findOne(4000);
+        var 广告关闭 = id("btn_close").findOne(5000);
         if (广告关闭) {
             var 广告关闭 = 广告关闭.bounds();
             click(广告关闭.centerX(), 广告关闭.centerY());
@@ -809,7 +820,7 @@ function SignIn_Netease_Cloudmusic() {
             sleep(1000);
             click(100, 150);//打开菜单栏
             sleep(1000);
-            var 签到 = text("签到").findOne(2000);
+            var 签到 = text("签到").findOne(3000);
             if (签到) {
                 var 签到 = 签到.bounds();
                 click(签到.centerX(), 签到.centerY());
@@ -897,7 +908,13 @@ function SignIn_Smzdm() {
             var 我的 = 我的.bounds();
             click(我的.centerX(), 我的.centerY());
             sleep(1000);
-            var 签到 = text("签到").findOne(4000);
+            if(text("个人主页").findOne(5000)){
+                toastLog("进入个人主页了");
+                }else{
+                    toastLog("未进入个人主页，重启")
+                    SignIn_Smzdm();
+                    }
+            var 签到 = id  ("tv_login_sign").text("签到").findOne(4000);
             if (签到) {
                 var 签到 = 签到.bounds();
                 click(签到.centerX(), 签到.centerY());
@@ -906,8 +923,8 @@ function SignIn_Smzdm() {
                 home();
                 save_log("今天什么值得买已经签到");
                 return;
-            } else if (textContains("已签到").findOne(1000)) {
-                save_log("今天什么值得买已经签到");
+            //} else if (textContains("已签到").findOne(1000)) {
+                //save_log("今天什么值得买已经签到");
             } else {
                 toastLog("未找到签到标识");
                 while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
@@ -1150,7 +1167,7 @@ function SignIn_idlefish() {
         }
         if (text_log) {
             var patter = text_log.search("今天边逛边赚宝箱领完了");
-            if (patter != -1) {
+            if (patter != -1) {//改成-1，今天实行过一次就会跳过
                 toastLog("边逛边赚跳过");
             } else {
                 toastLog("开始边逛边赚")
@@ -1169,15 +1186,21 @@ function SignIn_idlefish() {
                                 click(400 * i, 1330);
                                 sleep(1500);
                                 back();
+                                while(1){
                                 var 点击打开 = desc("点击打开").findOne(2000);
+                                
                                 if (点击打开) {
                                     var 点击打开 = 点击打开.bounds();
                                     sleep(1000);
                                     click(点击打开.centerX(), 点击打开.centerY());
-                                    if (descContains("恭喜获得").findOne()) {
+                                    if (descContains("恭喜获得").findOne(3000)) {
                                         click(848, 754);//关闭
                                         sleep(2000);
+                                        break;
                                     }
+                                        
+                                        
+                                }else{break;}
                                 }
                             }
                             swipe(540, 2000, 540, 1000, 200);//下滑
