@@ -4,7 +4,7 @@ var height = device.height;
 var width = device.width;
 
 var now = new Date();
-var log_name = now.getFullYear() + "-" + (now.getMonth()+1) + "-" + now.getDate();
+var log_name = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
 var path = files.cwd() + "/运行日志/日志" + log_name + ".txt";
 if (files.isFile(path)) {
     var text_log = files.read(path);
@@ -16,7 +16,7 @@ taobao_coins();
 function save_log(text) {
     toastLog(text);
     var now = new Date();
-    var log_name = now.getFullYear() + "-" + (now.getMonth()+1) + "-" + now.getDate();
+    var log_name = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
     var path = files.cwd() + "/运行日志/日志" + log_name + ".txt";
     files.append(path, "\n" + text + "——" + now);
     return;
@@ -109,11 +109,11 @@ function taobao_coins() {
                     toastLog("去逛逛");
                     if (text("2.9元包邮").findOne(2000)) {
                         sleep(5000);
-                    }else if (desc("指定页面下单购物").findOne(1000)){
+                    } else if (desc("指定页面下单购物").findOne(1000)) {
                         back();
                         sleep(1000);
                         continue;
-                    }else if (text("领取奖励").findOne(10000)) {
+                    } else if (text("领取奖励").findOne(10000)) {
                         var 领取奖励 = text("领取奖励").findOne().bounds();
                         click(领取奖励.centerX(), 领取奖励.centerY());
                         sleep(1000);
@@ -162,10 +162,10 @@ function taobao_coins() {
                     if (扫一扫) {
                         扫一扫.click();
                         sleep(2000);
-                        var 继续上传=text ("继续上传").findOne(3000);
-                        if(继续上传){
+                        var 继续上传 = text("继续上传").findOne(3000);
+                        if (继续上传) {
                             继续上传.click();
-                            }
+                        }
                         var 扫一扫完成 = id("image_detect_icon").findOne(5000);
                         if (扫一扫完成) {
                             sleep(100000);
@@ -287,7 +287,7 @@ function taobao_coins() {
                         }
                     }
                     sleep(1000);
-                    if (num > 10) {
+                    if (num > 7) {
                         toastLog("常用好友已检查完，关闭！");
                         click("关闭");
                         sleep(2000);
@@ -314,7 +314,21 @@ function taobao_coins() {
             }
         }
         toastLog("检查金币成就");
-        click(450, 1160);
+        while (1) {
+            click(144, 129, 234, 216);//左上角金币
+            if (desc("购物默认抵扣").findOne(5000)) {
+                click(34, 1076, 1044, 1335);
+                if (text("金币成就").findOne(5000)) {
+                    break;
+                } else {
+                    toastLog("未找到金币成就，不确定是否进入金币成就界面，后退重启！")
+                    while (!text("超级抵钱").findOne(3000)) { back(); }
+                }
+            } else {
+                toastLog("未找到购物默认抵扣，不确定是否进入我的金币界面，后退重启！")
+                while (!text("超级抵钱").findOne(3000)) { back(); }
+            }
+        }
         if (text("金币成就").findOne(10000)) {
             while (1) {
                 var 领取奖励 = desc("领取奖励").findOne(2000);
@@ -328,7 +342,7 @@ function taobao_coins() {
                     break;
                 }
             }
-            back();
+            while (!text("超级抵钱").findOne(2000)) { back(); }
             sleep(1000);
         }
         if (text_log) {
