@@ -342,9 +342,9 @@ function taobao_coins() {
                     break;
                 }
             }
-            while (!text("超级抵钱").findOne(2000)) { back(); }
-            sleep(1000);
         }
+        while (!text("超级抵钱").findOne(1000)) { back(); }
+        sleep(1000);
         if (text_log) {
             var patter = text_log.search("淘金币福利中心已完成");
             if (patter != -1) {
