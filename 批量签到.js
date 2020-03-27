@@ -814,12 +814,14 @@ function SignIn_Netease_Cloudmusic() {
                 sleep(1000);
                 click(100, 150);//打开菜单栏
                 sleep(1000);
-                var 签到 = text("签到").findOne(3000);
+                var 签到 = text("赚云贝").findOne(3000);
                 if (签到) {
                     var 签到 = 签到.bounds();
                     click(签到.centerX(), 签到.centerY());
                     sleep(1000);
                     back();
+                    home();
+                    return;
                 } else if (text("已签到").findOne(3000)) {
                     save_log("网易云音乐已签到");
                     sleep(1000);
