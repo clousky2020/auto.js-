@@ -924,7 +924,7 @@ function SignIn_Smzdm() {
                 toastLog("未进入个人主页，重启")
                 SignIn_Smzdm();
             }
-            var 签到 = id("tv_login_sign").text("签到").findOne(4000);
+            var 签到 = text("签到").findOne(4000);
             if (签到) {
                 var 签到 = 签到.bounds();
                 click(签到.centerX(), 签到.centerY());
@@ -1428,7 +1428,7 @@ function SignIn_Sfacg() {
         if (广告关闭) {
             广告关闭.click();
         }
-        var 广告关闭=id("imgclose").findOne(4000)
+        var 广告关闭=id("imgClose").findOne(4000)
         if (广告关闭) {
             广告关闭.click();
         }
