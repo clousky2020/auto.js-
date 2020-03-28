@@ -456,11 +456,9 @@ function Signin_TaobaoPhone() {
                 sleep(1000);
                 var 签到领 = 签到领.bounds();
                 click(签到领.centerX(), 签到领.centerY());
-                if (text("今日已领取").findOne(3000)) {
+                if (textContains("今日已领取").findOne(5000)) {
                     save_log("淘宝话费已经领取");
-                    while (!desc("设置默认主屏幕").findOne(1000)) {
-                        back();
-                    }//后退至桌面
+                    while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
                     return;
                 } else {
                     toastLog("未找到签到成功的标志！不确定是否签到成功！");
@@ -814,18 +812,15 @@ function SignIn_Netease_Cloudmusic() {
                 sleep(1000);
                 click(100, 150);//打开菜单栏
                 sleep(1000);
-                var 签到 = text("赚云贝").findOne(3000);
-                if (签到) {
-                    var 签到 = 签到.bounds();
-                    click(签到.centerX(), 签到.centerY());
+                var 我的消息 = text("我的消息").findOne(3000);
+                if (我的消息) {
+                    click(627,563,828,623);
+                    sleep(2000);
+                    if (text("云贝中心").findOne(3000)) {
+                        save_log("网易云音乐已签到");
+                    }
                     sleep(1000);
                     back();
-                    home();
-                    return;
-                } else if (text("已签到").findOne(3000)) {
-                    save_log("网易云音乐已签到");
-                    sleep(1000);
-                    home();
                     return;
                 } else {
                     while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
@@ -926,7 +921,7 @@ function SignIn_Smzdm() {
                 toastLog("未进入个人主页，重启")
                 SignIn_Smzdm();
             }
-            var 签到 = text("签到").findOne(4000);
+            var 签到 = id("tv_login_sign").text("签到").findOne(4000);
             if (签到) {
                 var 签到 = 签到.bounds();
                 click(签到.centerX(), 签到.centerY());
@@ -1426,11 +1421,11 @@ function SignIn_Sfacg() {
             launch("com.sfacg");
             sleep(1000);
         }
-        var 广告关闭=id("tv_jump").findOne(2000)
+        var 广告关闭 = id("tv_jump").findOne(2000)
         if (广告关闭) {
             广告关闭.click();
         }
-        var 广告关闭=id("imgClose").findOne(4000)
+        var 广告关闭 = id("imgclose").findOne(4000)
         if (广告关闭) {
             广告关闭.click();
         }
