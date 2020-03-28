@@ -819,17 +819,16 @@ function SignIn_Netease_Cloudmusic() {
                     if (text("云贝中心").findOne(3000)) {
                         save_log("网易云音乐已签到");
                     }
-                    sleep(1000);
-                    back();
+                    while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
                     return;
                 } else {
-                    while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
+                    back(); 
                     return SignIn_Netease_Cloudmusic();
                 }
 
             } else {
                 toastLog("未找到网易云音乐主界面，重启");
-                while (!text("每日推荐").findOne(1000)) { back(); }//后退至桌面
+                while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
                 return SignIn_Netease_Cloudmusic();
             }
         }
