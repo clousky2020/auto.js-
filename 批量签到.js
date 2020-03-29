@@ -411,7 +411,7 @@ function SignIn_Baidu_Wenku() {
 function Signin_TaobaoPhone() {
     try {
         if (text_log) {
-            var patter = text_log.search("淘宝话费已完成");
+            var patter = text_log.search("淘宝话费已经领取");
             if (patter != -1) {
                 toastLog("淘宝话费跳过");
                 return;
@@ -441,7 +441,7 @@ function Signin_TaobaoPhone() {
         }
         var 去翻倍 = desc("继续赚").findOne(2000);
         if (去翻倍) {
-            save_log("淘宝话费已完成");
+            save_log("淘宝话费已经领取");
             while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
             return;
         }
@@ -812,16 +812,20 @@ function SignIn_Netease_Cloudmusic() {
                 sleep(1000);
                 click(100, 150);//打开菜单栏
                 sleep(1000);
-                var 我的消息 = text("我的消息").findOne(3000);
-                if (我的消息) {
-                    click(627,563,828,623);
+                var 签到 = text("签到").findOne(3000);
+                if (签到) {
+                    签到.click();
+                    // click(627,563,828,623);
                     sleep(2000);
                     if (text("云贝中心").findOne(3000)) {
                         save_log("网易云音乐已签到");
                     }
                     while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
                     return;
-                } else {
+                } else if (text("赚云贝").findOne(2000)){
+                    save_log("网易云音乐已签到");
+                }
+                else {
                     back(); 
                     return SignIn_Netease_Cloudmusic();
                 }
@@ -908,7 +912,6 @@ function SignIn_Smzdm() {
             launch("com.smzdm.client.android");
             sleep(1000);
         }
-
         var 我的 = text("我的").findOne(10000);
         if (我的) {
             var 我的 = 我的.bounds();
@@ -920,25 +923,24 @@ function SignIn_Smzdm() {
                 toastLog("未进入个人主页，重启")
                 SignIn_Smzdm();
             }
-            var 签到 = id("tv_login_sign").text("签到").findOne(4000);
-            if (签到) {
-                var 签到 = 签到.bounds();
-                click(签到.centerX(), 签到.centerY());
-                sleep(1000);
-                if (text("已连续签到").findOne(5000)) {
+            while(1){
+                var 签到 = text("签到").findOne(2000);
+                if (签到) {
+                    var 签到 = 签到.bounds();
+                    click(签到.centerX(), 签到.centerY());
+                    sleep(1000);
                     back();
-                    home();
+                } else if (textContains("已签到").findOne(1000)) {
                     save_log("今天什么值得买已经签到");
+                    while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
                     return;
+                } else {
+                    toastLog("未找到签到标识");
+                    while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
+                    return SignIn_Smzdm();
                 }
-
-            } else if (textContains("已签到").findOne(1000)) {
-                save_log("今天什么值得买已经签到");
-            } else {
-                toastLog("未找到签到标识");
-                while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
-                return SignIn_Smzdm();
             }
+            
         } else {
             toastLog("未找到我的主界面，重启");
             while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
@@ -949,7 +951,6 @@ function SignIn_Smzdm() {
         while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
 
     } finally {
-        sleep(1000);
         return;
     }
 }
