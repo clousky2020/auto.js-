@@ -59,7 +59,7 @@ function taobao_coins() {
             }
 
         }
-        var 立即签到 = text("立即签到").findOne(3000);
+        var 立即签到 = text("立即签到").findOne(2000);
         if (立即签到) {
             toastLog("自动弹出每日签到!")
             sleep(1000);
@@ -69,8 +69,8 @@ function taobao_coins() {
             text("TB1mJFIgET1gK0jSZFrXXcNCXXa-72-72.png_110x10000.jpg_").findOne().click()
             // click(903, 680);//上面那句不行就这句启用,关闭每日签到
             sleep(1000);
-        } else if (textContains("今日金币未领取").findOne(2000)) {
-            var 今日金币签到入口 = textContains("今日金币未领取").findOne(2000).bounds();
+        } else if (textContains("今日金币未领取").findOne(1000)) {
+            var 今日金币签到入口 = textContains("今日金币未领取").findOne(1000).bounds();
             click(今日金币签到入口.centerX(), 今日金币签到入口.centerY());
             var 立即签到 = text("立即签到").findOne(3000);
             if (立即签到) {
