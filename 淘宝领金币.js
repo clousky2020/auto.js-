@@ -241,15 +241,13 @@ function taobao_coins() {
             click(980, 900);
             var num = 0;
             var 偷金币界面 = text("浇水偷菜的乐趣，不如去好朋友的庄园看看吧～").findOne(7000);
-            var path = files.cwd();
-            requestScreenCapture();
             while (1) {
                 if (偷金币界面) {
                     toastLog("在偷金币界面")
-                    sleep(2000);
+                    sleep(1000);
                     while (1) {
                         toastLog("找浇水")
-                        var 可浇水 = text("可浇水").findOne(1000);
+                        var 可浇水 = text("可浇水").findOne(500);
                         if (可浇水) {
                             可浇水.click();
                             if (text("浇水").findOne(10000)) {
@@ -268,7 +266,7 @@ function taobao_coins() {
                     }
                     while (1) {
                         toastLog("找偷金币")
-                        var 偷金币 = text("偷金币").depth(18).findOne(1000);
+                        var 偷金币 = text("偷金币").depth(18).findOne(500);
                         if (偷金币) {
                             var 偷金币 = 偷金币.bounds();
                             click(偷金币.centerX(), 偷金币.centerY());
@@ -293,7 +291,7 @@ function taobao_coins() {
                         sleep(2000);
                         break;
                     }
-                    if (text("个好友可偷金币").findOne(1000)) {
+                    if (text("个好友可偷金币").findOne(500)) {
                         toastLog("个好友可偷金币")
                         var 点开好友列表 = text("个好友可偷金币").findOne().bounds();
                         click(点开好友列表.centerX(), 点开好友列表.centerY());
