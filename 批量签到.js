@@ -99,7 +99,7 @@ function SignIn_ximalaya() {
                 }
             } else {
                 toastLog("喜马拉雅未找到，重启");
-                while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至华为桌面
+                while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至华为桌面
                 sleep(1000);
                 return SignIn_ximalaya();
             }
@@ -108,8 +108,7 @@ function SignIn_ximalaya() {
     } catch (err) {
         toastLog(err);
     } finally {
-        while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至华为桌面
-        sleep(1000);
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至华为桌面
         return;
     }
 }
@@ -187,7 +186,6 @@ function SignIn_Miguaikan() {
         while (!desc("设置默认主屏幕").findOne(1000)) {
             back();
         }//后退至华为桌面
-        sleep(1000);
         return;
     }
 }
@@ -293,7 +291,7 @@ function SignIn_Alipay_draw_every_day() {
         return SignIn_Alipay_draw_every_day();
 
     } finally {
-        while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
 
         return;
     }
@@ -442,7 +440,7 @@ function Signin_TaobaoPhone() {
         var 去翻倍 = desc("继续赚").findOne(2000);
         if (去翻倍) {
             save_log("淘宝话费已经领取");
-            while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
+            while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
             return;
         }
         var 去领取 = desc("去兑换").findOne(10000);
@@ -458,7 +456,7 @@ function Signin_TaobaoPhone() {
                 click(签到领.centerX(), 签到领.centerY());
                 if (textContains("今日已领取").findOne(5000)) {
                     save_log("淘宝话费已经领取");
-                    while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
+                    while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
                     return;
                 } else {
                     toastLog("未找到签到成功的标志！不确定是否签到成功！");
@@ -470,7 +468,7 @@ function Signin_TaobaoPhone() {
             }
         } else {
             alert("未找到去领取!重启!");
-            while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
+            while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
             return Signin_TaobaoPhone();
         }
 
@@ -478,8 +476,7 @@ function Signin_TaobaoPhone() {
         toastLog(err);
         return Signin_TaobaoPhone();
     } finally {
-        while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
-        sleep(1000);
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
         return;
     }
 }
@@ -594,7 +591,7 @@ function SignIn_jingdong() {
                 sleep(2000);
             } else {
                 toastLog("未找到进店领豆,后退至桌面后重启!");
-                while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
+                while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
                 return SignIn_jingdong();
             }
             var 双签领豆 = text("双签领豆").findOne(5000);
@@ -660,9 +657,8 @@ function SignIn_jingdong() {
         toastLog(err);
         return SignIn_jingdong();
     } finally {
-        while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
 
-        sleep(1000);
         return;
     }
 }
@@ -705,7 +701,7 @@ function SignIn_Baidu_netdisk() {
                                 var 关闭 = 关闭.bounds();
                                 click(关闭.centerX(), 关闭.centerY());
                                 sleep(1000);
-                                while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
+                                while (!desc("设置默认主屏幕").findOne(500)) { back(); }
                                 save_log("百度网盘已完成！");
                                 return;
                             }
@@ -714,26 +710,25 @@ function SignIn_Baidu_netdisk() {
                     }
                 } else {
                     toastLog("没有签到标识！");
-                    while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
+                    while (!desc("设置默认主屏幕").findOne(500)) { back(); }
                     return SignIn_Baidu_netdisk();
                 }
             } else {
                 save_log("百度网盘没有待领取,应该是已完成！");
-                while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
+                while (!desc("设置默认主屏幕").findOne(500)) { back(); }
                 return;
             }
 
         } else {
             toastLog("未找到我的界面，重启");
-            while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
+            while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
             return SignIn_Baidu_netdisk();
         }
     } catch (err) {
         toastLog(err);
         return SignIn_Baidu_netdisk();
     } finally {
-        while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
-        sleep(1000);
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
         return;
     }
 }
@@ -785,8 +780,7 @@ function SignIn_Fandengreader() {
         toastLog(err);
         return SignIn_Fandengreader();
     } finally {
-        while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
-        sleep(1000);
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
         return;
     }
 }
@@ -820,7 +814,7 @@ function SignIn_Netease_Cloudmusic() {
                     if (text("云贝中心").findOne(3000)) {
                         save_log("网易云音乐已签到");
                     }
-                    while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
+                    while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
                     return;
                 } else if (text("赚云贝").findOne(2000)){
                     save_log("网易云音乐已签到");
@@ -832,7 +826,7 @@ function SignIn_Netease_Cloudmusic() {
 
             } else {
                 toastLog("未找到网易云音乐主界面，重启");
-                while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
+                while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
                 return SignIn_Netease_Cloudmusic();
             }
         }
@@ -842,8 +836,7 @@ function SignIn_Netease_Cloudmusic() {
         return SignIn_Netease_Cloudmusic();
 
     } finally {
-        while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
-        sleep(1000);
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
         return;
     }
 }
@@ -875,8 +868,18 @@ function SignIn_Mommypocket() {
                 break;
             }
         }
-        var 福利 = text("福利").findOne(10000);
+        while (1){
+            var 通知关闭 = id("system_notice_item_close").findOne(2000);
+            if (通知关闭){
+                通知关闭.click();
+                sleep(1000);
+            }else{
+                break;
+            }
+        }
+        var 福利 = text("福利").findOne(5000);
         if (福利) {
+            福利.click();
             toastLog("已经找到福利，成功启动美物清单！")
             sleep(2000);
             save_log("美物清单已完成！");
@@ -884,15 +887,14 @@ function SignIn_Mommypocket() {
             return;
         } else {
             toastLog("未找到我的主界面，重启");
+            while (!desc("设置默认主屏幕").findOne(500)) { back(); }
             return SignIn_Mommypocket();
         }
     } catch (err) {
         toastLog(err);
-        while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); }
         return SignIn_Mommypocket();
-
     } finally {
-        sleep(1000);
         return;
     }
 }
@@ -924,31 +926,31 @@ function SignIn_Smzdm() {
                 SignIn_Smzdm();
             }
             while(1){
-                var 签到 = text("签到").findOne(2000);
+                var 签到 = text("签到").findOne(4000);
                 if (签到) {
-                    var 签到 = 签到.bounds();
-                    click(签到.centerX(), 签到.centerY());
+                    toastLog("签到找到了")
+                    签到.click();
                     sleep(1000);
                     back();
                 } else if (textContains("已签到").findOne(1000)) {
                     save_log("今天什么值得买已经签到");
-                    while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
+                    while (!desc("设置默认主屏幕").findOne(500)) { back(); }
                     return;
                 } else {
                     toastLog("未找到签到标识");
-                    while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
+                    while (!desc("设置默认主屏幕").findOne(500)) { back(); }
                     return SignIn_Smzdm();
                 }
             }
             
         } else {
             toastLog("未找到我的主界面，重启");
-            while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
+            while (!desc("设置默认主屏幕").findOne(500)) { back(); }
             return SignIn_Smzdm();
         }
     } catch (err) {
         toastLog(err);
-        while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); }
 
     } finally {
         return;
@@ -1020,17 +1022,16 @@ function SignIn_Alibaba() {
 
         } else {
             toastLog("未找到赚元宝，重启");
-            //while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
+            //while (!desc("设置默认主屏幕").findOne(500)) { back(); }
             return SignIn_Alibaba();
         }
 
     } catch (err) {
         toastLog(err);
-        //while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
+        //while (!desc("设置默认主屏幕").findOne(500)) { back(); }
         //return SignIn_Alibaba();
 
     } finally {
-        sleep(1000);
         return;
     }
 }
@@ -1059,7 +1060,7 @@ function SignIn_Alibaba_AlipayGphone() {
             toastLog("点击进入淘宝首页");
         } else {
             toastLog("支付宝没有找到首页图标！后退重启！");
-            while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
+            while (!desc("设置默认主屏幕").findOne(500)) { back(); }
             return SignIn_Alibaba_AlipayGphone();
         }
 
@@ -1099,12 +1100,12 @@ function SignIn_Alibaba_AlipayGphone() {
                 }
             } else {
                 toastLog("未找到阿里巴巴1，重启");
-                while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
+                while (!desc("设置默认主屏幕").findOne(500)) { back(); }
                 return SignIn_Alibaba_AlipayGphone();
             }
         } else {
             toastLog("未找到我的小程序，重启");
-            while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
+            while (!desc("设置默认主屏幕").findOne(500)) { back(); }
             return SignIn_Alibaba_AlipayGphone();
         }
     } catch (err) {
@@ -1112,7 +1113,6 @@ function SignIn_Alibaba_AlipayGphone() {
         return SignIn_Alibaba_AlipayGphone();
 
     } finally {
-        sleep(1000);
         return;
     }
 }
@@ -1132,7 +1132,7 @@ function SignIn_idlefish() {
             sleep(1000);
         } else {
             toastLog("咸鱼没有找到首页，退出重启");
-            while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
+            while (!desc("设置默认主屏幕").findOne(500)) { back(); }
             return SignIn_idlefish();
         }
         if (text_log) {
@@ -1330,8 +1330,7 @@ function SignIn_idlefish() {
         return SignIn_idlefish();
     }
     finally {
-        while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
-        sleep(1000);
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); }
         return;
     }
 }
@@ -1390,19 +1389,18 @@ function Sign_autonavi() {
                     home();
                 }
             } else {
-                while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
+                while (!desc("设置默认主屏幕").findOne(500)) { back(); }
                 sleep(1000);
                 return Sign_autonavi();
             }
         }
     } catch (err) {
         toastLog("出现错误" + err);
-        while (!desc("设置默认主屏幕").findOne(1000)) { back(); }
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); }
         sleep(1000);
         return Sign_autonavi();
     }
     finally {
-        sleep(1000);
         return;
     }
 }
@@ -1476,8 +1474,7 @@ function SignIn_Sfacg() {
     } catch (err) {
         toastLog(err);
     } finally {
-        while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至华为桌面
-        sleep(1000);
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至华为桌面
         return;
     }
 }
@@ -1515,7 +1512,7 @@ function SignIn_Unicom() {
                     click(540, 1479);
                     sleep(4000);
                     save_log("联通营业厅已完成");
-                    while (!desc("设置默认主屏幕").findOne(1000)) { back(); }//后退至桌面
+                    while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
                     return;
                 }
                 //添加一个判断，第一次签到出来的弹窗
