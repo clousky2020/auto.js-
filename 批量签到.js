@@ -816,11 +816,12 @@ function SignIn_Netease_Cloudmusic() {
                     }
                     while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
                     return;
-                } else if (text("赚云贝").findOne(2000)){
+                } else if (text("赚云贝").findOne(2000)) {
                     save_log("网易云音乐已签到");
+                    return;
                 }
                 else {
-                    back(); 
+                    back();
                     return SignIn_Netease_Cloudmusic();
                 }
 
@@ -868,12 +869,12 @@ function SignIn_Mommypocket() {
                 break;
             }
         }
-        while (1){
+        while (1) {
             var 通知关闭 = id("system_notice_item_close").findOne(2000);
-            if (通知关闭){
+            if (通知关闭) {
                 通知关闭.click();
                 sleep(1000);
-            }else{
+            } else {
                 break;
             }
         }
@@ -925,7 +926,7 @@ function SignIn_Smzdm() {
                 toastLog("未进入个人主页，重启")
                 SignIn_Smzdm();
             }
-            while(1){
+            while (1) {
                 var 签到 = text("签到").findOne(4000);
                 if (签到) {
                     toastLog("签到找到了")
@@ -942,7 +943,7 @@ function SignIn_Smzdm() {
                     return SignIn_Smzdm();
                 }
             }
-            
+
         } else {
             toastLog("未找到我的主界面，重启");
             while (!desc("设置默认主屏幕").findOne(500)) { back(); }
@@ -1188,7 +1189,6 @@ function SignIn_idlefish() {
                         toastLog("进入边逛边赚钱了")
                         sleep(2000);
                         swipe(540, 2000, 540, 700, 200)//下滑
-                        sleep(2000);
                         var 点击看 = desc("点击看").findOne(2000);
                         while (点击看) {
                             for (i = 1; i <= 2; i++) {
@@ -1198,7 +1198,6 @@ function SignIn_idlefish() {
                                 back();
                                 while (1) {
                                     var 点击打开 = desc("点击打开").findOne(2000);
-
                                     if (点击打开) {
                                         var 点击打开 = 点击打开.bounds();
                                         sleep(1000);
@@ -1208,14 +1207,12 @@ function SignIn_idlefish() {
                                             sleep(2000);
                                             break;
                                         }
-
-
                                     } else { break; }
                                 }
                             }
                             swipe(540, 2000, 540, 1000, 200);//下滑
                             sleep(1000);
-                            var 点击看 = desc("点击看").findOne(3000);
+                            var 点击看 = desc("点击看").findOne(1000);
                         }
                         if (!点击看) {
                             //save_log("今天边逛边赚宝箱领完了");
@@ -1235,10 +1232,10 @@ function SignIn_idlefish() {
             var 签到页面 = depth("8").text("闲鱼币").findOne(2000);
             if (签到页面) {
                 sleep(3000);
-                click(539, 469);//签到
+                click(539, 460);//签到
                 sleep(1000);
-                click(670, 920);//收鱼篓
-                sleep(2000);
+                click(670, 900);//收鱼篓
+                sleep(1000);
                 if (text_log) {
                     var patter = text_log.search("夺宝押注已结束");
                     if (patter != -1) {
@@ -1427,21 +1424,21 @@ function SignIn_Sfacg() {
         if (广告关闭) {
             广告关闭.click();
         }
-        var rect = id("main_tab_image5").findOne(6000);
-        // var rect = text("书库").findOne();
-        if (rect) {
-            // click(950, 2280);
-            sleep(1000)
-            var rect = rect.bounds();
-            click(rect.centerX(), rect.centerY());
-
-        } else {
-            toast("没有找到我的主页，请重试！");
-            return SignIn_Sfacg();
+        while (1) {
+            var rect = id("main_tab_image5").findOne(3000);
+            if (rect) {
+                sleep(1000)
+                var rect = rect.bounds();
+                click(rect.centerX(), rect.centerY());
+                sleep(1000);
+                //进入签到页面
+                if (text("我的钱包").findOne(3000)) { break; }
+            } else {
+                toast("没有找到我的主页，请重试！");
+                while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至华为桌面
+                return SignIn_Sfacg();
+            }
         }
-        sleep(1000);
-        //进入签到页面
-        text("我的钱包").findOne();
         var rect = text("签到").findOne(2000);
         if (rect != null) {
             var rect = rect.bounds()
@@ -1458,7 +1455,7 @@ function SignIn_Sfacg() {
                 toastLog("没有找到放入钱包的提示，可能是签到失败！请确定是在凌晨1点后进行的签到！");
                 click(540, 1364);
             }
-        } else if (text("已签到").findOne(2000)) {
+        } else if (text("已签").findOne(2000)) {
             save_log("SF已完成!");
         }
         if (text("我的钱包").findOne()) {
