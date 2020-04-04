@@ -168,7 +168,7 @@ function tmail_form() {
                 click(0.5 * width, 0.65 * height)//点掉今天已经领过了，明天再领
                 sleep(1000);
                 click(0.891 * width, 0.695 * height)  // 进入活动中心
-                if (text("x10000").findOne()) {
+                if (text("x11000").findOne(10000)) {
                     sleep(1000);
                     var rect = text("去签到").findOne(1000);
                     if (rect != null) {
@@ -201,7 +201,7 @@ function tmail_form() {
                                 click(0.9 * width, 0.695 * height)//打开任务窗口
                                 sleep(1000);
                                 break;
-                            } else if (textContains("浏览完成").findOne(15000)) {
+                            } else if (textContains("浏览完成").findOne(20000)) {
                                 back();
                                 sleep(1000);
                             } else {
@@ -225,6 +225,7 @@ function tmail_form() {
                                 sleep(1000);
                                 break;
                             } else if (textContains("浏览完成").findOne(15000)) {
+                                sleep(1000);
                                 back();
                                 sleep(1000);
                             } else {

@@ -1,5 +1,5 @@
 auto.waitFor();
-setScreenMetrics(1080, 2340);//设定以下坐标点击的基准屏幕分辨率
+setScreenMetrics(1080, 2340); //设定以下坐标点击的基准屏幕分辨率
 var height = device.height;
 var width = device.width;
 
@@ -51,43 +51,49 @@ function taobao_coins() {
                     }
                 }
 
-            }
-            else {
+            } else {
                 toastLog("不在首页,后退重启！");
                 while (!desc("首页").findOne(1000)) { back(); }
                 return taobao_coins();
             }
 
         }
-        var 立即签到 = text("立即签到").findOne(2000);
-        if (立即签到) {
-            toastLog("自动弹出每日签到!")
-            sleep(1000);
-            var 立即签到 = 立即签到.bounds();
-            click(立即签到.centerX(), 立即签到.centerY());
-            sleep(1000);
-            text("TB1mJFIgET1gK0jSZFrXXcNCXXa-72-72.png_110x10000.jpg_").findOne().click()
-            // click(903, 680);//上面那句不行就这句启用,关闭每日签到
-            sleep(1000);
-        } else if (textContains("今日金币未领取").findOne(1000)) {
-            var 今日金币签到入口 = textContains("今日金币未领取").findOne(1000).bounds();
-            click(今日金币签到入口.centerX(), 今日金币签到入口.centerY());
-            var 立即签到 = text("立即签到").findOne(3000);
-            if (立即签到) {
-                var 立即签到 = 立即签到.bounds();
-                click(立即签到.centerX(), 立即签到.centerY());
+        if (text_log) {
+            var patter = text_log.search("淘金币今天已签到");
+            if (patter != -1) {
+                toastLog("淘金币今天已签到");
+            } else {
+                var 立即签到 = text("立即签到").findOne(2000);
+                if (立即签到) {
+                    toastLog("自动弹出每日签到!")
+                    sleep(1000);
+                    var 立即签到 = 立即签到.bounds();
+                    click(立即签到.centerX(), 立即签到.centerY());
+                    sleep(1000);
+                    text("TB1mJFIgET1gK0jSZFrXXcNCXXa-72-72.png_110x10000.jpg_").findOne().click()
+                        // click(903, 680);//上面那句不行就这句启用,关闭每日签到
+                    sleep(1000);
+                } else if (textContains("今日金币未领取").findOne(1000)) {
+                    var 今日金币签到入口 = textContains("今日金币未领取").findOne(1000).bounds();
+                    click(今日金币签到入口.centerX(), 今日金币签到入口.centerY());
+                    var 立即签到 = text("立即签到").findOne(3000);
+                    if (立即签到) {
+                        var 立即签到 = 立即签到.bounds();
+                        click(立即签到.centerX(), 立即签到.centerY());
+                    }
+                    text("TB1mJFIgET1gK0jSZFrXXcNCXXa-72-72.png_110x10000.jpg_").findOne().click()
+                    sleep(1000);
+                } else {
+                    save_log("淘金币今天已签到");
+                }
             }
-            text("TB1mJFIgET1gK0jSZFrXXcNCXXa-72-72.png_110x10000.jpg_").findOne().click()
-            sleep(1000);
-        }
-        else {
-            toastLog("今天已签到")
         }
 
+
         while (text("偷金币").findOne(1000) == null) {
-            swipe(540, 500, 540, 2000, 300)//上划
+            swipe(540, 500, 540, 2000, 300) //上划
         }
-        click(540, 965);//收果实
+        click(540, 965); //收果实
         sleep(1000);
         click(942, 1100);
         var 领水滴界面 = text("领水滴赚金币").findOne(8000);
@@ -118,6 +124,10 @@ function taobao_coins() {
                         click(领取奖励.centerX(), 领取奖励.centerY());
                         sleep(1000);
                         continue;
+                    } else if (desc("首页").findOne(3000)) {
+                        toastLog("进入首页领金币了，5s后重启！");
+                        sleep(5000);
+                        return taobao_coins();
                     }
                     sleep(7000);
                     back();
@@ -125,17 +135,17 @@ function taobao_coins() {
                         if (text("领水滴赚金币").findOne(4000)) {
                             break;
                         } else {
-                            click(538, 1996);//淘宝人生每日签到关闭按钮
+                            click(538, 1996); //淘宝人生每日签到关闭按钮
                             sleep(1000);
-                            click(530, 1818);//淘宝人生的好友赠礼关闭按钮
+                            click(530, 1818); //淘宝人生的好友赠礼关闭按钮
                             sleep(1000);
-                            click(530, 1818);//淘宝人生的好友赠礼关闭按钮
+                            click(530, 1818); //淘宝人生的好友赠礼关闭按钮
                             sleep(1000);
-                            click(530, 1818);//淘宝人生的好友赠礼关闭按钮
+                            click(530, 1818); //淘宝人生的好友赠礼关闭按钮
                             sleep(1000);
-                            click(540, 1457);//淘宝人生的回到淘宝按钮
+                            click(540, 1457); //淘宝人生的回到淘宝按钮
                             sleep(1000);
-                            click(357, 1818);//省钱消消乐的回到淘宝按钮
+                            click(357, 1818); //省钱消消乐的回到淘宝按钮
                             sleep(1000);
                         }
                     }
@@ -190,23 +200,19 @@ function taobao_coins() {
                         var 进群打卡 = desc("进群打卡").findOne().bounds();
                         click(进群打卡.centerX(), 进群打卡.centerY());
                         sleep(1000);
-                        while (!text("领水滴赚金币").findOne(1000)) {
-                            sleep(1000);
-                            back();
-                        }
+                        while (!text("领水滴赚金币").findOne(1000)) { back(); }
                         //因为后退后又回到主页面了，索性整个流程重新来一遍
                         // return taobao_coins();
                     } else if (text("历史搜索").findOne(1000)) {
                         toastLog("进入搜索领金币");
-                        click(40, 400);//点第一个历史搜索
+                        click(40, 400); //点第一个历史搜索
                         sleep(12000);
                         while (!text("领水滴赚金币").findOne(1000)) { back(); }
                     } else if (text("领取奖励").findOne(6000)) {
                         var 领取奖励 = text("领取奖励").findOne().bounds();
                         click(领取奖励.centerX(), 领取奖励.centerY());
                         sleep(1000);
-                    }
-                    else {
+                    } else {
                         toastLog("退回");
                         sleep(1000);
                         back();
@@ -232,7 +238,7 @@ function taobao_coins() {
             return taobao_coins();
         }
         while (text("偷金币").findOne(1000) == null) {
-            swipe(540, 500, 540, 2000, 300)//上划
+            swipe(540, 500, 540, 2000, 300) //上划
         }
         sleep(1000);
         toastLog(("开始偷金币"))
@@ -272,7 +278,7 @@ function taobao_coins() {
                             click(偷金币.centerX(), 偷金币.centerY());
                             if (text("浇水").findOne(10000)) {
                                 sleep(1000);
-                                click(540, 964);//偷金币
+                                click(540, 964); //偷金币
                                 sleep(1000);
                                 back();
                                 sleep(3000);
@@ -304,7 +310,7 @@ function taobao_coins() {
                     }
                     num += 1;
                     toastLog("下滑第" + num + "次")
-                    swipe(540, 2000, 540, 1000, 200);//下划
+                    swipe(540, 2000, 540, 1000, 200); //下划
                 } else {
                     toastLog("未在偷金币界面");
                     exit();
@@ -313,7 +319,7 @@ function taobao_coins() {
         }
         toastLog("检查金币成就");
         while (1) {
-            click(144, 129, 234, 216);//左上角金币
+            click(144, 129, 234, 216); //左上角金币
             if (desc("购物默认抵扣").findOne(5000)) {
                 click(34, 1076, 1044, 1335);
                 if (text("金币成就").findOne(5000)) {
@@ -373,7 +379,7 @@ function taobao_coins() {
                 if (签到5金币) {
                     var 签到5金币 = 签到5金币.bounds();
                     if (签到5金币.centerY() > 2300) {
-                        swipe(540, 2000, 540, 1000, 300);//下划
+                        swipe(540, 2000, 540, 1000, 300); //下划
                         continue;
                     }
                     click(签到5金币.centerX(), 签到5金币.centerY());

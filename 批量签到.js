@@ -133,7 +133,7 @@ function SignIn_Miguaikan() {
             var close = id("close").findOne().bounds();
             click(close.centerX(), close.centerY());
         }
-        var 我的 = text("我的").findOne(10000);
+        var 我的 = id ("image5").findOne(10000);
         if (我的) {
             sleep(1000);
             var 我的 = 我的.bounds();
@@ -443,11 +443,14 @@ function Signin_TaobaoPhone() {
             while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
             return;
         }
-        var 去领取 = desc("去兑换").findOne(10000);
+        //var 去兑换 = desc("去兑换").findOne(3000);
+        var 去领取 = desc("去领取").findOne(3000);
+        
         if (去领取) {
-            sleep(1000);
-            var 去领取 = 去领取.bounds();
-            click(去领取.centerX(), 去领取.centerY());
+            
+            click(800,1530,1001,1616);
+            //var 去领取 = 去领取.bounds();
+            //click(去领取.centerX(), 去领取.centerY());
             var 签到领 = text("签到领").findOne(7000);
             if (签到领) {
                 toastLog("进入签到领界面");
@@ -460,14 +463,14 @@ function Signin_TaobaoPhone() {
                     return;
                 } else {
                     toastLog("未找到签到成功的标志！不确定是否签到成功！");
-                    while (!desc("设置默认主屏幕").findOne(1000)) {
+                    while (!desc("设置默认主屏幕").findOne(500)) {
                         back();
                     }//后退至桌面
                     return;
                 }
             }
         } else {
-            alert("未找到去领取!重启!");
+            toastLog("未找到去领取!重启!");
             while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
             return Signin_TaobaoPhone();
         }
@@ -859,7 +862,7 @@ function SignIn_Mommypocket() {
         }
         //添加广告关闭的按钮
         while (1) {
-            var 广告 = id("push_popup_close").findOne(3000);
+            var 广告 = id("push_popup_close").findOne(7000);
             if (广告) {
                 toastLog("有广告！")
                 var 广告 = 广告.bounds();
@@ -975,13 +978,13 @@ function SignIn_Alibaba() {
         var 赚元宝 = text("赚元宝").findOne(7000);
         if (赚元宝) {
             toastLog("找到赚元宝了");
-            sleep(5000);
+            sleep(2000);
             //click(450,640);
             var 赚元宝 = 赚元宝.bounds();
             press(赚元宝.centerX(), 赚元宝.centerY(), 450);
             var 做任务赚元宝 = text("做任务赚元宝").findOne(10000);
             if (做任务赚元宝) {
-                sleep(3000);//有时候会出现抽奖
+                sleep(1000);//有时候会出现抽奖
                 var 做任务赚元宝 = 做任务赚元宝.bounds();
                 click(做任务赚元宝.centerX(), 做任务赚元宝.centerY());
                 if (text("今日已领取").findOne(2000)) {
@@ -993,18 +996,18 @@ function SignIn_Alibaba() {
                     sleep(1000);
                     var 去搜好货 = 去搜好货.bounds();
                     click(去搜好货.centerX(), 去搜好货.centerY());
-                    var 搜索历史 = text("搜索历史").findOne(10000);
+                    var 搜索历史 = text("搜索历史").findOne(5000);
                     if (搜索历史) {
                         sleep(1000);
                         click(40, 470);//第一条搜索历史
                         sleep(2000);
                         while (!text("做任务赚元宝").findOne(1000)) {
                             back();
-                            sleep(1000);
+                         
                         }
                     }
                 }
-                var 领10个元宝 = text("领10个元宝").findOne(10000);
+                var 领10个元宝 = text("领10个元宝").findOne(5000);
                 if (领10个元宝) {
                     sleep(1000);
                     var 领10个元宝 = 领10个元宝.bounds();
