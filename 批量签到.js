@@ -2,7 +2,7 @@ auto.waitFor();
 var height = device.height;
 var width = device.width;
 // toastLog("本设备的分辨率为，\n宽："+device.width+"\n长："+device.height);//输出设备的分辨率
-setScreenMetrics(1080, 2340);//设定以下坐标点击的基准屏幕分辨率
+setScreenMetrics(1080, 2340); //设定以下坐标点击的基准屏幕分辨率
 
 var now = new Date();
 var log_name = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
@@ -11,24 +11,39 @@ if (files.isFile(path)) {
     var text_log = files.read(path);
 }
 home();
-sleep(1000);
 
-SignIn_Miguaikan();//咪咕爱看签到
-SignIn_Unicom();//联通营业厅
-Sign_autonavi();//高德地图签到
-SignIn_Alibaba();//阿里巴巴领元宝
-SignIn_Alibaba_AlipayGphone();//支付宝阿里巴巴领元宝
-SignIn_Smzdm();//什么值得买
-SignIn_Mommypocket();//美物清单
-SignIn_Netease_Cloudmusic();//网易云音乐
+sleep(500);
+SignIn_Unicom(); //联通营业厅
+sleep(500);
+Sign_autonavi(); //高德地图签到
+sleep(500);
+SignIn_Alibaba(); //阿里巴巴领元宝
+sleep(500);
+SignIn_Alibaba_AlipayGphone(); //支付宝阿里巴巴领元宝
+sleep(500);
+SignIn_Smzdm(); //什么值得买
+sleep(500);
+SignIn_Mommypocket(); //美物清单
+sleep(500);
+SignIn_Netease_Cloudmusic(); //网易云音乐
+sleep(500);
 SignIn_Fandengreader(); //樊登读书
-SignIn_Baidu_netdisk();//百度网盘
-SignIn_jingdong();//京东
-Signin_TaobaoPhone();//领取淘宝的话费
-SignIn_Baidu_Wenku();//百度文库
-SignIn_ximalaya();//喜马拉雅
-SignIn_idlefish();//咸鱼签到
-SignIn_Sfacg();//sf小说签到
+sleep(500);
+SignIn_Miguaikan(); //咪咕爱看签到
+sleep(500);
+SignIn_Baidu_netdisk(); //百度网盘
+sleep(500);
+SignIn_jingdong(); //京东
+sleep(500);
+Signin_TaobaoPhone(); //领取淘宝的话费
+sleep(500);
+SignIn_ximalaya(); //喜马拉雅
+sleep(500);
+SignIn_idlefish(); //咸鱼签到
+sleep(500);
+SignIn_Sfacg(); //sf小说签到
+sleep(500);
+SignIn_Baidu_Wenku(); //百度文库
 // SignIn_Alipay_draw_every_day();//支付宝天天抽奖！废弃
 
 function save_log(text) {
@@ -39,6 +54,7 @@ function save_log(text) {
     files.append(path, "\n" + text + "——" + now);
     return;
 }
+
 function SignIn_ximalaya() {
     try {
         if (text_log) {
@@ -73,7 +89,7 @@ function SignIn_ximalaya() {
                     //click(积分图标.centerX(),积分图标.centerY());
                     while (1) {
                         var 日常任务 = text("日常任务").findOne(3000);
-                        if (日常任务) {//出现这个字样，说明进入了福利中心
+                        if (日常任务) { //出现这个字样，说明进入了福利中心
                             while (1) {
                                 var 我知道了 = text("我知道了").findOne(2000);
                                 if (我知道了) {
@@ -99,7 +115,7 @@ function SignIn_ximalaya() {
                 }
             } else {
                 toastLog("喜马拉雅未找到，重启");
-                while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至华为桌面
+                while (!desc("设置默认主屏幕").findOne(500)) { back(); } //后退至华为桌面
                 sleep(1000);
                 return SignIn_ximalaya();
             }
@@ -108,10 +124,11 @@ function SignIn_ximalaya() {
     } catch (err) {
         toastLog(err);
     } finally {
-        while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至华为桌面
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); } //后退至华为桌面
         return;
     }
 }
+
 function SignIn_Miguaikan() {
     try {
         if (text_log) {
@@ -128,12 +145,12 @@ function SignIn_Miguaikan() {
             sleep(1000);
         }
 
-        var close = id("close").findOne(4000);
+        var close = id("splash_time").findOne(4000);
         if (close) {
-            var close = id("close").findOne().bounds();
+            var close = close.bounds();
             click(close.centerX(), close.centerY());
         }
-        var 我的 = id ("image5").findOne(10000);
+        var 我的 = text("我的").findOne(10000);
         if (我的) {
             sleep(1000);
             var 我的 = 我的.bounds();
@@ -143,13 +160,16 @@ function SignIn_Miguaikan() {
                 sleep(1000);
                 var 福利 = 福利.bounds();
                 click(福利.centerX(), 福利.centerY());
+                text("会员每日福利").findOne();
+                toastLog("咪咕爱看福利界面出现了");
                 var 领取 = text("领取").findOne(2000);
                 if (领取) {
                     sleep(1000);
                     var 领取 = 领取.bounds();
                     click(领取.centerX(), 领取.centerY());
                     if (text("签到成功").findOne()) {
-                        click(495, 1596, 585, 1686);//关闭
+                        sleep(2000);
+                        click(495, 1596, 585, 1686); //关闭
                         sleep(1000);
                     }
                 }
@@ -175,7 +195,7 @@ function SignIn_Miguaikan() {
             toastLog("未找到我的，重启");
             while (!desc("设置默认主屏幕").findOne(1000)) {
                 back();
-            }//后退至华为桌面
+            } //后退至华为桌面
             sleep(1000);
             return SignIn_Miguaikan();
         }
@@ -185,10 +205,11 @@ function SignIn_Miguaikan() {
     } finally {
         while (!desc("设置默认主屏幕").findOne(1000)) {
             back();
-        }//后退至华为桌面
+        } //后退至华为桌面
         return;
     }
 }
+
 function SignIn_Alipay_draw_every_day() {
     try {
         toastLog("开始支付宝天天抽奖！")
@@ -228,7 +249,7 @@ function SignIn_Alipay_draw_every_day() {
                 var 守护宝 = text("守护宝").findOne(10000);
                 if (守护宝) {
                     sleep(1000);
-                    click(540, 1820);//弹窗关闭
+                    click(540, 1820); //弹窗关闭
                     sleep(1000);
                     var 守护宝 = 守护宝.bounds();
                     click(守护宝.centerX(), 守护宝.centerY());
@@ -291,11 +312,12 @@ function SignIn_Alipay_draw_every_day() {
         return SignIn_Alipay_draw_every_day();
 
     } finally {
-        while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); } //后退至桌面
 
         return;
     }
 }
+
 function SignIn_Baidu_Wenku() {
     try {
         if (text_log) {
@@ -311,7 +333,7 @@ function SignIn_Baidu_Wenku() {
             launch("com.baidu.wenku");
             sleep(1000);
         }
-        var 跳过广告 = id("skip_ad_layout").findOne(5000);
+        var 跳过广告 = id("skip_ad_layout").findOne(2000);
         if (跳过广告) {
             toastLog("跳过广告");
             跳过广告.click();
@@ -324,19 +346,18 @@ function SignIn_Baidu_Wenku() {
             while (1) {
                 if (textContains("签到并领取").findOne(4000)) {
                     textContains("签到并领取").findOne().click();
-                    sleep(2000);
-                    toastLog("开始百度文库安全验证！");
-                    gesture(2000, [0.212 * width, 0.601 * height], [0.812 * width, 0.603 * height]);//安全验证拖至最右
-                    // save_log("百度文库已安全验证！");
-                    sleep(2000);//等待5秒后奖励界面消失
-
-                    if (id("iv_close").findOne(3000)) {
-                        id("iv_close").findOne(3000).click();
-                        save_log("文库今日已签");
-                        break;
-                    } else {
-                        return;
+                    if (text("身份验证").findOne(4000)) {
+                        alert("百度今天需要身份验证，请手动验证！")
                     }
+                    // toastLog("开始百度文库安全验证！");
+                    // gesture(2000, [0.212 * width, 0.601 * height], [0.812 * width, 0.603 * height]); //安全验证拖至最右
+                    // save_log("百度文库已安全验证！");
+
+                    // if (id("iv_close").findOne()) {
+                    id("iv_close").findOne().click();
+                    save_log("文库今日已签");
+                    break;
+                    // } 
                 } else if (textContains("今日已签").findOne(5000)) {
                     save_log("百度文库今日已签");
                     break;
@@ -358,31 +379,7 @@ function SignIn_Baidu_Wenku() {
             //     return;
             // }
 
-            //第7天领取下载卷
-            // var 领取下载卷 = id("sign_enter").findOne(2000);
-            // if (领取下载卷) {
-            //     var 领取下载卷 = 领取下载卷.bounds();
-            //     click(领取下载卷.centerX(), 领取下载卷.centerY());
-            //     sleep(2000);
-            //     toastLog("开始百度文库安全验证！");
-            //     gesture(2000, [0.212 * width, 0.601 * height], [0.812 * width, 0.603 * height]);//安全验证拖至最右
-            //     save_log("百度文库已安全验证！");
-            //     sleep(5000);//等待5秒后奖励界面消失
-            //     back();
-            //     home();
-            //     return;
-            // }
-            // click(0.479 * width, 0.681 * height);
-            // if (text("安全验证").findOne(2000)) {
-            //     sleep(2000);
-            //     toastLog("开始百度文库安全验证！");
-            //     gesture(2000, [0.212 * width, 0.601 * height], [0.812 * width, 0.603 * height]);//安全验证拖至最右
-            //     save_log("百度文库已安全验证！");
-            //     sleep(5000);//等待5秒后奖励界面消失
-            //     back();
-            //     home();
-            //     return;
-            // }
+
 
             var 已连续签到 = text("已连续签到").findOne(2000);
             if (已连续签到) {
@@ -394,9 +391,7 @@ function SignIn_Baidu_Wenku() {
             }
         } else {
             toastLog("未找到签到有奖，重启");
-            while (!text("签到有奖").findOne(1000)) {
-                back();
-            }
+            while (!text("签到有奖").findOne(500)) { back(); }
             return SignIn_Baidu_Wenku();
         }
     } catch (err) {
@@ -406,6 +401,7 @@ function SignIn_Baidu_Wenku() {
         return;
     }
 }
+
 function Signin_TaobaoPhone() {
     try {
         if (text_log) {
@@ -440,15 +436,15 @@ function Signin_TaobaoPhone() {
         var 去翻倍 = desc("继续赚").findOne(2000);
         if (去翻倍) {
             save_log("淘宝话费已经领取");
-            while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
+            while (!desc("设置默认主屏幕").findOne(500)) { back(); } //后退至桌面
             return;
         }
         //var 去兑换 = desc("去兑换").findOne(3000);
         var 去领取 = desc("去领取").findOne(3000);
-        
+
         if (去领取) {
-            
-            click(800,1530,1001,1616);
+
+            click(800, 1530, 1001, 1616);
             //var 去领取 = 去领取.bounds();
             //click(去领取.centerX(), 去领取.centerY());
             var 签到领 = text("签到领").findOne(7000);
@@ -459,19 +455,19 @@ function Signin_TaobaoPhone() {
                 click(签到领.centerX(), 签到领.centerY());
                 if (textContains("今日已领取").findOne(5000)) {
                     save_log("淘宝话费已经领取");
-                    while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
+                    while (!desc("设置默认主屏幕").findOne(500)) { back(); } //后退至桌面
                     return;
                 } else {
                     toastLog("未找到签到成功的标志！不确定是否签到成功！");
                     while (!desc("设置默认主屏幕").findOne(500)) {
                         back();
-                    }//后退至桌面
+                    } //后退至桌面
                     return;
                 }
             }
         } else {
             toastLog("未找到去领取!重启!");
-            while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
+            while (!desc("设置默认主屏幕").findOne(500)) { back(); } //后退至桌面
             return Signin_TaobaoPhone();
         }
 
@@ -479,7 +475,7 @@ function Signin_TaobaoPhone() {
         toastLog(err);
         return Signin_TaobaoPhone();
     } finally {
-        while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); } //后退至桌面
         return;
     }
 }
@@ -594,7 +590,7 @@ function SignIn_jingdong() {
                 sleep(2000);
             } else {
                 toastLog("未找到进店领豆,后退至桌面后重启!");
-                while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
+                while (!desc("设置默认主屏幕").findOne(500)) { back(); } //后退至桌面
                 return SignIn_jingdong();
             }
             var 双签领豆 = text("双签领豆").findOne(5000);
@@ -605,14 +601,14 @@ function SignIn_jingdong() {
                 var 双签领奖励 = text("双签领奖励").findOne(10000);
                 if (双签领奖励) {
                     sleep(1000);
-                    click(900, 1050);//去京东金融app签到
+                    click(900, 1050); //去京东金融app签到
                     sleep(3000);
                     if (text("双签领奖励").findOne(2000)) {
                         toastLog("还停留在这个页面，可能是因为已经领取今日奖励了");
                         save_log("京东今天已领豆！");
                         while (!desc("设置默认主屏幕").findOne(1000)) {
                             back();
-                        }//后退至桌面
+                        } //后退至桌面
                         toastLog("已经后退到桌面！")
                         return;
                     }
@@ -624,21 +620,21 @@ function SignIn_jingdong() {
                             click(签到领钢镚.centerX(), 签到领钢镚.centerY());
                             if (text("签到成功").findOne(5000)) {
                                 sleep(1000);
-                                while (!text("双签领奖励").findOne(1000)) { back(); }//退回到双签领奖励界面
+                                while (!text("双签领奖励").findOne(1000)) { back(); } //退回到双签领奖励界面
                             } else {
-                                while (!text("签到领钢镚").findOne(1000)) { back(); }//退回到签到领钢镚界面
+                                while (!text("签到领钢镚").findOne(1000)) { back(); } //退回到签到领钢镚界面
                                 continue;
                             }
-                            click(900, 1280);//点击双签领奖励
+                            click(900, 1280); //点击双签领奖励
                             sleep(2000);
-                            click(540, 1720);//最终领取奖励坐标
+                            click(540, 1720); //最终领取奖励坐标
                             sleep(1000);
                             home();
                             save_log("京东今天已领豆！");
                             return;
                         } else {
                             toastLog("未跳转到金融app领钢镚界面");
-                            while (!text("每日签到").findOne(2000)) { back(); }//后退
+                            while (!text("每日签到").findOne(2000)) { back(); } //后退
                             var 每日签到 = text("每日签到").findOne(2000).bounds();
                             click(每日签到.centerX(), 每日签到.centerY());
                             sleep(1000);
@@ -653,18 +649,19 @@ function SignIn_jingdong() {
             toastLog("未找到领京豆，重启");
             while (!desc("设置默认主屏幕").findOne(1000)) {
                 back();
-            }//后退至桌面
+            } //后退至桌面
             return SignIn_jingdong();
         }
     } catch (err) {
         toastLog(err);
         return SignIn_jingdong();
     } finally {
-        while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); } //后退至桌面
 
         return;
     }
 }
+
 function SignIn_Baidu_netdisk() {
     try {
         if (text_log) {
@@ -696,7 +693,7 @@ function SignIn_Baidu_netdisk() {
                     if (马上观看) {
                         var 马上观看 = 马上观看.bounds();
                         click(马上观看.centerX(), 马上观看.centerY());
-                        sleep(44000);
+                        sleep(20000);
                         var 了解一下 = text("了解一下").findOne();
                         if (了解一下) {
                             var 关闭 = id("btn_close").findOne(5000);
@@ -717,24 +714,25 @@ function SignIn_Baidu_netdisk() {
                     return SignIn_Baidu_netdisk();
                 }
             } else {
-                save_log("百度网盘没有待领取,应该是已完成！");
+                save_log("百度网盘没有找到待领取,可能是已完成！");
                 while (!desc("设置默认主屏幕").findOne(500)) { back(); }
                 return;
             }
 
         } else {
             toastLog("未找到我的界面，重启");
-            while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
+            while (!desc("设置默认主屏幕").findOne(500)) { back(); } //后退至桌面
             return SignIn_Baidu_netdisk();
         }
     } catch (err) {
         toastLog(err);
         return SignIn_Baidu_netdisk();
     } finally {
-        while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); } //后退至桌面
         return;
     }
 }
+
 function SignIn_Fandengreader() {
     try {
         if (text_log) {
@@ -773,8 +771,7 @@ function SignIn_Fandengreader() {
             } else if (text("签到完成").findOne(1000)) {
                 save_log("樊登读书已签到");
                 return;
-            }
-            else {
+            } else {
                 toastLog("樊登读书没有找到签到");
                 return SignIn_Fandengreader();
             }
@@ -783,7 +780,7 @@ function SignIn_Fandengreader() {
         toastLog(err);
         return SignIn_Fandengreader();
     } finally {
-        while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); } //后退至桌面
         return;
     }
 }
@@ -807,7 +804,7 @@ function SignIn_Netease_Cloudmusic() {
             var 每日推荐 = text("每日推荐").findOne(6000);
             if (每日推荐) {
                 sleep(1000);
-                click(100, 150);//打开菜单栏
+                click(100, 150); //打开菜单栏
                 sleep(1000);
                 var 签到 = text("签到").findOne(3000);
                 if (签到) {
@@ -817,20 +814,19 @@ function SignIn_Netease_Cloudmusic() {
                     if (text("云贝中心").findOne(3000)) {
                         save_log("网易云音乐已签到");
                     }
-                    while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
+                    while (!desc("设置默认主屏幕").findOne(500)) { back(); } //后退至桌面
                     return;
                 } else if (text("赚云贝").findOne(2000)) {
                     save_log("网易云音乐已签到");
                     return;
-                }
-                else {
+                } else {
                     back();
                     return SignIn_Netease_Cloudmusic();
                 }
 
             } else {
                 toastLog("未找到网易云音乐主界面，重启");
-                while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
+                while (!desc("设置默认主屏幕").findOne(500)) { back(); } //后退至桌面
                 return SignIn_Netease_Cloudmusic();
             }
         }
@@ -840,10 +836,11 @@ function SignIn_Netease_Cloudmusic() {
         return SignIn_Netease_Cloudmusic();
 
     } finally {
-        while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); } //后退至桌面
         return;
     }
 }
+
 function SignIn_Mommypocket() {
     try {
         if (text_log) {
@@ -960,6 +957,7 @@ function SignIn_Smzdm() {
         return;
     }
 }
+
 function SignIn_Alibaba() {
     try {
         if (text_log) {
@@ -975,6 +973,7 @@ function SignIn_Alibaba() {
             launch("com.alibaba.wireless");
             sleep(1000);
         }
+        sleep(4000);
         var 赚元宝 = text("赚元宝").findOne(7000);
         if (赚元宝) {
             toastLog("找到赚元宝了");
@@ -984,49 +983,58 @@ function SignIn_Alibaba() {
             press(赚元宝.centerX(), 赚元宝.centerY(), 450);
             var 做任务赚元宝 = text("做任务赚元宝").findOne(10000);
             if (做任务赚元宝) {
-                sleep(1000);//有时候会出现抽奖
+                sleep(1000); //有时候会出现抽奖
                 var 做任务赚元宝 = 做任务赚元宝.bounds();
                 click(做任务赚元宝.centerX(), 做任务赚元宝.centerY());
-                if (text("今日已领取").findOne(2000)) {
+                sleep(1000);
+                if (text("今日已领取").findOne(1000)) {
                     save_log("阿里巴巴已搜索领元宝");
                     return;
                 }
-                var 去搜好货 = text("去搜好货").findOne(5000);
-                if (去搜好货) {
+                toastLog("阿里巴巴今日未领取，去搜好货");
+                click(765, 933, 1026, 1020);
+                sleep(1000);
+                var 搜索历史 = text("搜索历史").findOne(3000);
+                if (搜索历史) {
                     sleep(1000);
-                    var 去搜好货 = 去搜好货.bounds();
-                    click(去搜好货.centerX(), 去搜好货.centerY());
-                    var 搜索历史 = text("搜索历史").findOne(5000);
-                    if (搜索历史) {
-                        sleep(1000);
-                        click(40, 470);//第一条搜索历史
-                        sleep(2000);
-                        while (!text("做任务赚元宝").findOne(1000)) {
-                            back();
-                         
-                        }
-                    }
+                    click(40, 470); //第一条搜索历史
+                    sleep(1000);
+                    while (!text("做任务赚元宝").findOne(1000)) { back(); }
                 }
-                var 领10个元宝 = text("领10个元宝").findOne(5000);
+                // var 去搜好货 = text("去搜好货").findOne(3000);
+                // if (去搜好货) {
+                //     toastLog("去搜好货");
+                //     sleep(1000);
+                //     var 去搜好货 = 去搜好货.bounds();
+                //     click(去搜好货.centerX(), 去搜好货.centerY());
+                //     var 搜索历史 = text("搜索历史").findOne(5000);
+                //     if (搜索历史) {
+                //         sleep(1000);
+                //         click(40, 470); //第一条搜索历史
+                //         sleep(2000);
+                //         while (!text("做任务赚元宝").findOne(1000)) { back(); }
+                //     }
+                // }
+                var 领10个元宝 = text("领10个元宝").findOne(2000);
                 if (领10个元宝) {
                     sleep(1000);
                     var 领10个元宝 = 领10个元宝.bounds();
                     click(领10个元宝.centerX(), 领10个元宝.centerY());
                     sleep(1000);
                     save_log("阿里巴巴元宝已经领取");
+                } else {
+                    save_log("阿里巴巴元宝已经领取过了");
                 }
-
             } else {
                 toastLog("未进入签到界面，后退重启！");
                 back();
                 back();
-
                 return SignIn_Alibaba();
             }
 
         } else {
             toastLog("未找到赚元宝，重启");
-            //while (!desc("设置默认主屏幕").findOne(500)) { back(); }
+            while (!desc("设置默认主屏幕").findOne(500)) { back(); }
             return SignIn_Alibaba();
         }
 
@@ -1061,7 +1069,7 @@ function SignIn_Alibaba_AlipayGphone() {
             var 首页 = 首页.bounds();
             click(首页.centerX(), 首页.centerY());
             sleep(1000);
-            toastLog("点击进入淘宝首页");
+
         } else {
             toastLog("支付宝没有找到首页图标！后退重启！");
             while (!desc("设置默认主屏幕").findOne(500)) { back(); }
@@ -1076,11 +1084,11 @@ function SignIn_Alibaba_AlipayGphone() {
             if (阿里巴巴1) {
                 var 阿里巴巴1 = 阿里巴巴1.bounds();
                 click(阿里巴巴1.centerX(), 阿里巴巴1.centerY());
-                var 领元宝 = text("领元宝").findOne(10000);
+                var 领元宝 = text("领元宝").findOne(5000);
                 // var 阿里巴巴主界面 = id("h5_rl_title").findOne(10000);
                 if (领元宝) {
                     sleep(3000);
-                    click(540, 1820);//弹窗关闭
+                    click(540, 1820); //弹窗关闭
                     sleep(1000);
                     if (领元宝) {
                         var 领元宝 = 领元宝.bounds();
@@ -1088,11 +1096,14 @@ function SignIn_Alibaba_AlipayGphone() {
                         var 领元宝界面2 = text("网页由 show.1688.com 提供").findOne(10000);
                         if (领元宝界面2) {
                             sleep(3000);
-                            click(540, 1880);//弹窗关闭
+                            click(540, 1880); //弹窗关闭
                             sleep(1000);
                             click(724, 681);
                             sleep(1000);
                             click(900, 855);
+                            sleep(3000);
+                            back();
+                            click(907, 1038);
                             sleep(1000);
                             save_log("支付宝里的阿里巴巴已完成！");
                             while (!text("我的小程序").findOne(1000)) {
@@ -1135,7 +1146,7 @@ function SignIn_idlefish() {
             click(首页坐标.centerX(), 首页坐标.centerY());
             sleep(1000);
         } else {
-            toastLog("咸鱼没有找到首页，退出重启");
+            toastLog("闲鱼没有找到首页，退出重启");
             while (!desc("设置默认主屏幕").findOne(500)) { back(); }
             return SignIn_idlefish();
         }
@@ -1153,7 +1164,7 @@ function SignIn_idlefish() {
                     if (text("历史搜索").findOne(7000)) {
                         toastLog("选择宝贝")
                         sleep(2000);
-                        click(130, 376);//点击历史记录第一个
+                        click(130, 376); //点击历史记录第一个
                         sleep(1000);
                         back();
                         sleep(1000);
@@ -1181,7 +1192,7 @@ function SignIn_idlefish() {
         }
         if (text_log) {
             var patter = text_log.search("今天边逛边赚宝箱领完了");
-            if (patter != -1) {//改成-1，今天实行过一次就会跳过
+            if (patter != -1) { //改成-1，今天实行过一次就会跳过
                 toastLog("边逛边赚跳过");
             } else {
                 toastLog("开始边逛边赚")
@@ -1191,7 +1202,7 @@ function SignIn_idlefish() {
                     if (depth("8").desc("边逛边赚钱").findOne(8000)) {
                         toastLog("进入边逛边赚钱了")
                         sleep(2000);
-                        swipe(540, 2000, 540, 700, 200)//下滑
+                        swipe(540, 2000, 540, 700, 200) //下滑
                         var 点击看 = desc("点击看").findOne(2000);
                         while (点击看) {
                             for (i = 1; i <= 2; i++) {
@@ -1206,14 +1217,14 @@ function SignIn_idlefish() {
                                         sleep(1000);
                                         click(点击打开.centerX(), 点击打开.centerY());
                                         if (descContains("恭喜获得").findOne(3000)) {
-                                            click(848, 754);//关闭
+                                            click(848, 754); //关闭
                                             sleep(2000);
                                             break;
                                         }
                                     } else { break; }
                                 }
                             }
-                            swipe(540, 2000, 540, 1000, 200);//下滑
+                            swipe(540, 2000, 540, 1000, 200); //下滑
                             sleep(1000);
                             var 点击看 = desc("点击看").findOne(1000);
                         }
@@ -1235,9 +1246,9 @@ function SignIn_idlefish() {
             var 签到页面 = depth("8").text("闲鱼币").findOne(2000);
             if (签到页面) {
                 sleep(3000);
-                click(539, 460);//签到
+                click(539, 460); //签到
                 sleep(1000);
-                click(670, 900);//收鱼篓
+                click(670, 900); //收鱼篓
                 sleep(1000);
                 if (text_log) {
                     var patter = text_log.search("夺宝押注已结束");
@@ -1254,29 +1265,32 @@ function SignIn_idlefish() {
                                 toastLog("进入闲鱼夺宝页面");
                                 sleep(1000);
                                 while (1) {
+                                    var 签到页面 = depth("8").text("闲鱼币").findOne(2000);
                                     var 夺宝押注入口 = desc("100闲鱼币夺宝").depth("21").findOne(2000);
                                     if (夺宝押注入口) {
                                         sleep(1000);
                                         var 夺宝押注入口 = 夺宝押注入口.bounds();
                                         if (夺宝押注入口.centerY() > 2300) {
-                                            swipe(540, 2000, 540, 1500, 300);//把坐标点移上来
+                                            swipe(540, 2000, 540, 1500, 300); //把坐标点移上来
                                             continue;
                                         }
                                         click(夺宝押注入口.centerX(), 夺宝押注入口.centerY());
                                         sleep(1000);
-
                                         if (desc("100闲鱼币夺宝").findOne(3000)) {
-                                            click(500, 1670);//点击进入押宝最终页面
+                                            click(500, 1670); //点击进入押宝最终页面
                                             sleep(1000);
                                             if (desc("100闲鱼币夺宝").findOne()) {
-                                                click(226, 1900);//减少投注
+                                                click(226, 1900); //减少投注
                                                 sleep(1000);
-                                                click(226, 1900);//减少投注
+                                                click(226, 1900); //减少投注
                                                 sleep(1000);
-                                                click(500, 2250);//确定投注
+                                                click(500, 2250); //确定投注
                                                 sleep(1000);
                                                 back();
                                             }
+                                            sleep(1000);
+                                            back();
+                                            text("100闲鱼币夺宝 >").findOne().click();
                                         } else {
                                             toastLog("本页面已压过了")
                                             back();
@@ -1286,7 +1300,7 @@ function SignIn_idlefish() {
                                         var 我的闲鱼币 = (desc("我的闲鱼币").findOne(2000));
                                         if ("我的闲鱼币") {
                                             var 我的闲鱼币 = 我的闲鱼币.bounds();
-                                            click(我的闲鱼币.centerX() - 229, 我的闲鱼币.centerY() + 46);//通过求出旁边的我的闲鱼币的控件坐标计算得到左边最终领取投资奖励的坐标
+                                            click(我的闲鱼币.centerX() - 229, 我的闲鱼币.centerY() + 46); //通过求出旁边的我的闲鱼币的控件坐标计算得到左边最终领取投资奖励的坐标
                                         }
                                         break;
                                     }
@@ -1313,9 +1327,9 @@ function SignIn_idlefish() {
                     }
                 }
                 sleep(2000);
-                click(670, 920);//收鱼篓
+                click(670, 920); //收鱼篓
                 sleep(1000);
-                click(910, 1150);//点击换闲鱼币
+                click(910, 1150); //点击换闲鱼币
                 sleep(1000);
                 back();
                 sleep(1000);
@@ -1328,8 +1342,7 @@ function SignIn_idlefish() {
     } catch (err) {
         toastLog("出现错误" + err);
         return SignIn_idlefish();
-    }
-    finally {
+    } finally {
         while (!desc("设置默认主屏幕").findOne(500)) { back(); }
         return;
     }
@@ -1353,12 +1366,12 @@ function Sign_autonavi() {
         var rect = textContains("跳过").findOne(1500);
         if (rect) {
             var rect = rect.bounds();
-            click(rect.centerX(), rect.centerY());//跳过广告界面
+            click(rect.centerX(), rect.centerY()); //跳过广告界面
         }
         var rect = id("iv_close").findOne(3000);
         if (rect) {
             var rect = rect.bounds();
-            click(rect.centerX(), rect.centerY());//跳过升级提示
+            click(rect.centerX(), rect.centerY()); //跳过升级提示
         }
         var rect = text("我的").findOne(5000);
         if (rect) {
@@ -1399,8 +1412,7 @@ function Sign_autonavi() {
         while (!desc("设置默认主屏幕").findOne(500)) { back(); }
         sleep(1000);
         return Sign_autonavi();
-    }
-    finally {
+    } finally {
         return;
     }
 }
@@ -1413,7 +1425,8 @@ function SignIn_Sfacg() {
                 toastLog("SF跳过");
                 return;
             }
-        } sleep(1000);
+        }
+        sleep(1000);
         var appRun = currentActivity();
         if (appRun != 'com.sfacg') {
             launch("com.sfacg");
@@ -1438,7 +1451,7 @@ function SignIn_Sfacg() {
                 if (text("我的钱包").findOne(3000)) { break; }
             } else {
                 toast("没有找到我的主页，请重试！");
-                while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至华为桌面
+                while (!desc("设置默认主屏幕").findOne(500)) { back(); } //后退至华为桌面
                 return SignIn_Sfacg();
             }
         }
@@ -1474,7 +1487,7 @@ function SignIn_Sfacg() {
     } catch (err) {
         toastLog(err);
     } finally {
-        while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至华为桌面
+        while (!desc("设置默认主屏幕").findOne(500)) { back(); } //后退至华为桌面
         return;
     }
 }
@@ -1487,7 +1500,8 @@ function SignIn_Unicom() {
                 toastLog("联通营业厅跳过");
                 return;
             }
-        } sleep(1000);
+        }
+        sleep(1000);
         var appRun = currentActivity();
         if (appRun != 'com.sinovatech.unicom.ui') {
             launch("com.sinovatech.unicom.ui");
@@ -1497,10 +1511,10 @@ function SignIn_Unicom() {
         var 首页精选 = text("精选").findOne(7000);
         if (首页精选) {
             toastLog("进入首页了")
-            // var close = text("oFr5vJX3UQPSC9zxHDaogEvWoQcnnqMLcSRw18J6ZKGBYq3rYYwU+bFUeVgLHba6x4zbn8bzKjtu8Nnnc5p8AAwDgFJ01yE0rBgAAAABJRU5ErkJggg==").findOne(5000)
-            // if (close != null) {
-            //     close.click();
-            // }
+                // var close = text("oFr5vJX3UQPSC9zxHDaogEvWoQcnnqMLcSRw18J6ZKGBYq3rYYwU+bFUeVgLHba6x4zbn8bzKjtu8Nnnc5p8AAwDgFJ01yE0rBgAAAABJRU5ErkJggg==").findOne(5000)
+                // if (close != null) {
+                //     close.click();
+                // }
             sleep(1000);
             toastLog("点击签到")
             press(205, 137, 400);
@@ -1512,16 +1526,16 @@ function SignIn_Unicom() {
                     click(540, 1479);
                     sleep(4000);
                     save_log("联通营业厅已完成");
-                    while (!desc("设置默认主屏幕").findOne(500)) { back(); }//后退至桌面
+                    while (!desc("设置默认主屏幕").findOne(500)) { back(); } //后退至桌面
                     return;
                 }
                 //添加一个判断，第一次签到出来的弹窗
                 toast("手动点击微博签到");
-                click(252, 1260);//点击日常任务
+                click(252, 1260); //点击日常任务
                 toastLog("去新浪微博签到")
                 var 刷新浪微博 = text("刷新浪微博").findOne(3000);
                 if (刷新浪微博 != null) {
-                    click(936, 1620);//点击刷新新浪微博的去完成按钮
+                    click(936, 1620); //点击刷新新浪微博的去完成按钮
                     if (text("签到成功!").findOne(3000)) {
                         save_log("联通营业厅已完成");
                         return;

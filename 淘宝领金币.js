@@ -10,7 +10,7 @@ if (files.isFile(path)) {
     var text_log = files.read(path);
 }
 
-// home(); 
+
 taobao_coins();
 
 function save_log(text) {
@@ -96,6 +96,7 @@ function taobao_coins() {
         click(540, 965); //收果实
         sleep(1000);
         click(942, 1100);
+        var 去完成循环 = 1;
         var 领水滴界面 = text("领水滴赚金币").findOne(8000);
         if (领水滴界面) {
             toastLog("进入领水滴界面")
@@ -129,7 +130,7 @@ function taobao_coins() {
                         sleep(5000);
                         return taobao_coins();
                     }
-                    sleep(7000);
+                    sleep(8000);
                     back();
                     while (1) {
                         if (text("领水滴赚金币").findOne(4000)) {
@@ -156,16 +157,16 @@ function taobao_coins() {
                 }
 
             }
-            var 一键领取 = text("一键领取").findOne(1000);
-            if (一键领取) {
-                一键领取.click();
-                sleep(1000);
-            }
-            while (1) {
-                sleep(2000);
+            while (去完成循环) {
+                var 一键领取 = text("一键领取").findOne(1000);
+                if (一键领取) {
+                    一键领取.click();
+                    sleep(1000);
+                }
+                sleep(500);
                 var 去完成 = text("去完成").findOne(2000)
                 if (去完成) {
-                    sleep(1000);
+                    sleep(2000);
                     去完成.click();
                     sleep(1000);
                     var 扫一扫 = id("scan_icon").findOne(4000);
@@ -178,18 +179,18 @@ function taobao_coins() {
                         }
                         var 扫一扫完成 = id("image_detect_icon").findOne(5000);
                         if (扫一扫完成) {
-                            sleep(100000);
-                            toastLog("点击拍照领金币图标")
-                            click(962, 2094);
-                            var 拍照领金币 = desc("领取奖励").findOne(3000);
-                            if (拍照领金币) {
-                                toastLog("拍照领金币领取奖励");
-                                sleep(11000);
-                                back();
-                            } else {
-                                toastLog("没有拍照领金币的奖励");
-                            }
-                            while (!text("领水滴赚金币").findOne(1000)) { back(); }
+                            sleep(11000);
+                            //toastLog("点击拍照领金币图标")
+                            //click(962, 2094);
+                            //var 拍照领金币 = desc("领取奖励").findOne(3000);
+                            //if (拍照领金币) {
+                            //    toastLog("拍照领金币领取奖励");
+                            //    sleep(11000);
+                            //    back();
+                            //} else {
+                            //    toastLog("没有拍照领金币的奖励");
+                            //}
+                            while (!text("领水滴赚金币").findOne(500)) { back(); }
                         } else {
                             toastLog("未找到扫一扫");
                             back();
@@ -203,15 +204,46 @@ function taobao_coins() {
                         while (!text("领水滴赚金币").findOne(1000)) { back(); }
                         //因为后退后又回到主页面了，索性整个流程重新来一遍
                         // return taobao_coins();
-                    } else if (text("历史搜索").findOne(1000)) {
+                    } else if (text("历史搜索").findOne(2000)) {
                         toastLog("进入搜索领金币");
                         click(40, 400); //点第一个历史搜索
                         sleep(12000);
-                        while (!text("领水滴赚金币").findOne(1000)) { back(); }
+                        while (!text("领水滴赚金币").findOne(500)) { back(); }
+                        sleep(2000);
                     } else if (text("领取奖励").findOne(6000)) {
                         var 领取奖励 = text("领取奖励").findOne().bounds();
                         click(领取奖励.centerX(), 领取奖励.centerY());
                         sleep(1000);
+                    } else if (desc("首页").findOne(3000)) {
+                        toastLog("进入首页领金币了，5s后重启！");
+                        sleep(1000);
+                        var 去完成循环 = 0;
+                        while (1) {
+                            toastLog("开始淘金币")
+                            var 首页 = desc("首页").findOne(3000);
+                            if (首页) {
+                                var 首页 = 首页.bounds();
+                                click(首页.centerX(), 首页.centerY());
+                                sleep(1000);
+                                var next_click = desc("领淘金币").findOne(1000);
+                                if (next_click != null) {
+                                    toastLog("找到领淘金币了")
+                                    next_click = next_click.bounds();
+                                    click(next_click.centerX(), next_click.centerY());
+                                    if (!text("超级抵钱").findOne(5000)) {
+                                        toastLog("没有进入")
+                                        continue;
+                                    } else {
+                                        toastLog("已经进入淘金币")
+                                        sleep(2000);
+                                        click(942, 1100);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        // return taobao_coins();
+
                     } else {
                         toastLog("退回");
                         sleep(1000);
@@ -261,7 +293,7 @@ function taobao_coins() {
                                 click(浇水.centerX(), 浇水.centerY());
                                 sleep(1000);
                                 back();
-                                sleep(3000);
+                                sleep(2000);
                             } else {
                                 toastLog("未知原因，还未进入他人庄园")
                             }
@@ -281,7 +313,7 @@ function taobao_coins() {
                                 click(540, 964); //偷金币
                                 sleep(1000);
                                 back();
-                                sleep(3000);
+                                sleep(2000);
                             } else {
                                 toastLog("未知原因，还未进入他人庄园")
                             }
@@ -291,7 +323,7 @@ function taobao_coins() {
                         }
                     }
                     sleep(1000);
-                    if (num > 7) {
+                    if (num > 10) {
                         toastLog("常用好友已检查完，关闭！");
                         click("关闭");
                         sleep(2000);
