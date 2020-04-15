@@ -150,6 +150,11 @@ function SignIn_Miguaikan() {
             var close = close.bounds();
             click(close.centerX(), close.centerY());
         }
+        var close = id("close").findOne(4000);
+        if (close) {
+            var close = close.bounds();
+            click(close.centerX(), close.centerY());
+        }
         var 我的 = text("我的").findOne(10000);
         if (我的) {
             sleep(1000);
@@ -167,10 +172,12 @@ function SignIn_Miguaikan() {
                     sleep(1000);
                     var 领取 = 领取.bounds();
                     click(领取.centerX(), 领取.centerY());
-                    if (text("签到成功").findOne()) {
-                        sleep(2000);
+                    if (text("签到成功").findOne(5000)) {
                         click(495, 1596, 585, 1686); //关闭
                         sleep(1000);
+                    } else {
+                        back();
+                        return SignIn_Miguaikan();
                     }
                 }
                 var 去完成 = text("去完成").findOne(2000);
@@ -183,7 +190,6 @@ function SignIn_Miguaikan() {
                         sleep(1000);
                         var 点击抽奖 = 点击抽奖.bounds();
                         click(点击抽奖.centerX(), 点击抽奖.centerY());
-
                     }
                 }
                 save_log("咪咕爱看已完成！");
@@ -693,9 +699,11 @@ function SignIn_Baidu_netdisk() {
                     if (马上观看) {
                         var 马上观看 = 马上观看.bounds();
                         click(马上观看.centerX(), 马上观看.centerY());
-                        sleep(20000);
-                        var 了解一下 = text("了解一下").findOne();
-                        if (了解一下) {
+                        // sleep(20000);
+                        // var 了解一下 = text("了解一下").findOne();
+                        var 倒计时 = id("video_duration").findOne();
+                        if (!倒计时) {
+                            sleep(1000);
                             var 关闭 = id("btn_close").findOne(5000);
                             if (关闭) {
                                 var 关闭 = 关闭.bounds();
@@ -1100,11 +1108,11 @@ function SignIn_Alibaba_AlipayGphone() {
                             sleep(1000);
                             click(724, 681);
                             sleep(1000);
+                            click(907, 1038);
+                            sleep(1000);
                             click(900, 855);
                             sleep(3000);
                             back();
-                            click(907, 1038);
-                            sleep(1000);
                             save_log("支付宝里的阿里巴巴已完成！");
                             while (!text("我的小程序").findOne(1000)) {
                                 back();
@@ -1281,11 +1289,13 @@ function SignIn_idlefish() {
                                             sleep(1000);
                                             if (desc("100闲鱼币夺宝").findOne()) {
                                                 click(226, 1900); //减少投注
-                                                sleep(1000);
+                                                sleep(800);
                                                 click(226, 1900); //减少投注
-                                                sleep(1000);
-                                                click(500, 2250); //确定投注
-                                                sleep(1000);
+                                                sleep(800);
+                                                while (desc("100闲鱼币夺宝").findOne(500)) {
+                                                    click(500, 2250); //确定投注
+                                                    sleep(1000);
+                                                }
                                                 back();
                                             }
                                             sleep(1000);
@@ -1294,6 +1304,11 @@ function SignIn_idlefish() {
                                         } else {
                                             toastLog("本页面已压过了")
                                             back();
+                                            sleep(1000);
+                                            back();
+                                            text("100闲鱼币夺宝 >").findOne().click();
+
+
                                         }
                                     } else {
                                         save_log("夺宝押注已结束")
