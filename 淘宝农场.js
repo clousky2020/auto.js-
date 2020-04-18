@@ -94,8 +94,8 @@ function tmail_form() {
             click(0.907 * width, 0.659 * height) // 点击领阳光的图标
             sleep(1000);
             while (1) {
-                var next_click = text("去浏览").findOne(2000);
-                var wait_time = text("后开始任务").findOne(1000);
+                var next_click = text("去浏览").findOne(500);
+                var wait_time = text("后开始任务").findOne(500);
                 if (next_click && !wait_time) {
                     click(0.841 * width, 0.666 * height); //点击浏览阳光的坐标
                     toast("去浏览15秒领阳光")
@@ -108,13 +108,13 @@ function tmail_form() {
                     sleep(1000);
                     break;
                 } else {
-                    toastLog("不能浏览阳光")
+                    toastLog("不能继续浏览得阳光了")
                     break;
                 }
             }
             while (1) {
-                var 去进店领阳光 = text("去进店").findOne(1000);
-                var 去进店领阳光已完成 = text("已完成").findOne(1000);
+                var 去进店领阳光 = text("去进店").findOne(500);
+                var 去进店领阳光已完成 = text("已完成").findOne(500);
                 if (去进店领阳光 && !去进店领阳光已完成) {
                     sleep(1000);
                     去进店领阳光.click();
@@ -122,7 +122,7 @@ function tmail_form() {
                     sleep(3000);
                     var num = 0;
                     while (1) {
-                        if (desc("立即打开").findOne(1000)) {
+                        if (desc("立即打开").findOne(500)) {
                             toast("立即打开");
                             var rect = desc("立即打开").findOne().bounds();
                             if (rect.centerY() > 2200) {
@@ -139,7 +139,7 @@ function tmail_form() {
                             }
                             click(rect.centerX(), rect.centerY());
                         }
-                        if (desc("经过搜寻，你获得了").findOne(1000)) {
+                        if (desc("经过搜寻，你获得了").findOne(500)) {
                             toast("已经得到阳光,退回");
                             back();
                             sleep(2000);
@@ -152,7 +152,7 @@ function tmail_form() {
                                 swipe(540, 200, 540, 2100, 200); //向上滑
                                 // sleep(1000);
                             }
-                        } else if (num > 30) {
+                        } else if (num > 40) {
                             toast("下滑多次未找到目标，退回");
                             back();
                             break
@@ -179,7 +179,9 @@ function tmail_form() {
 
             toast("进入果园");
             click(0.112 * width, 0.664 * height);
-            if (text("无星辰落").findOne()) {
+            var 集果实图标 = text("gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==")
+                //if (text("无星辰落").findOne()) {
+            if (集果实图标.findOne()) {
                 toast("已经进入福年种福果");
                 sleep(1000);
                 click(0.7 * width, 0.521 * height); //收取昨日的福气
@@ -187,12 +189,12 @@ function tmail_form() {
                 click(0.5 * width, 0.65 * height) //点掉今天已经领过了，明天再领
                 sleep(1000);
                 click(0.891 * width, 0.695 * height) // 进入活动中心
-                if (text("x11000").findOne(10000)) {
+                if (textContains("gif").findOne(10000)) {
                     sleep(1000);
                     var rect = text("去签到").findOne(1000);
                     if (rect != null) {
                         toast("签到")
-                        click(900, 1250);
+                        click(822, 1239, 951, 1290);
                         // rect.click();
                         // click(rect.centerX(),rect.centerY());
                     }
@@ -202,14 +204,14 @@ function tmail_form() {
                         click(900, 2000);
                         // click(rect.centerX(),rect.centerY());
                     }
-                    var rect = textContains("去兑换").findOne(1000);
+                    var rect = textContains("去兑换").findOne(500);
                     if (rect != null) {
                         toast("去兑换")
                         click(900, 2200);
                         // rect.click();
                     }
                     while (1) {
-                        var 去逛逛 = textContains("去逛逛").findOne(1000);
+                        var 去逛逛 = textContains("去逛逛").findOne(500);
                         if (去逛逛) {
                             去逛逛.click();
                             if (textContains("全部完成").findOne(2000)) {
@@ -243,6 +245,18 @@ function tmail_form() {
                                 click(0.9 * width, 0.695 * height) //打开任务窗口
                                 sleep(1000);
                                 break;
+                            } else if (text("滑动浏览得奖励").findOne(2000)) {
+                                sleep(3000);
+                                swipe(540, 800, 540, 300, 300); //下滑
+                                if (textContains("完成").findOne(22000)) {
+                                    back();
+                                } else {
+                                    back();
+                                }
+                                sleep(1000);
+                            } else if (text("今日已达上限继续逛逛吧").findOne(2000)) {
+                                back();
+                                sleep(1000);
                             } else if (textContains("浏览完成").findOne(15000)) {
                                 sleep(1000);
                                 back();
@@ -255,7 +269,7 @@ function tmail_form() {
                             break;
                         }
                     }
-                    var 去换装 = textContains("去换装").findOne(1000);
+                    var 去换装 = textContains("去换装").findOne(500);
                     if (去换装) {
                         去换装.click();
                         sleep(10000);
@@ -266,7 +280,7 @@ function tmail_form() {
                         click(0.508 * width, 0.645 * height); //退出淘宝人生
                         sleep(2000);
                     }
-                    if (textContains("x11000").findOne(10000)) {
+                    if (textContains("gif").findOne(4000)) { //确定还是在这个任务界面
                         click(0.916 * width, 0.409 * height); //关闭任务菜单
                         sleep(1000);
                         // for (i=0;i<10;i++){
