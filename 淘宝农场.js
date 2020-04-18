@@ -17,7 +17,7 @@ function tmail_form() {
             var 我的淘宝图标 = 我的淘宝图标.bounds();
             click(我的淘宝图标.centerX(), 我的淘宝图标.centerY());
             while (1) {
-                var 天猫农场入口 = text("天猫农场").findOne(3000);
+                var 天猫农场入口 = desc("天猫农场").findOne(3000);
                 if (天猫农场入口) {
                     sleep(2000);
                     var 天猫农场入口 = 天猫农场入口.bounds();
