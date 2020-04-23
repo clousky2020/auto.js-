@@ -494,7 +494,7 @@ function SignIn_jingdong() {
             var 领京豆 = 领京豆.bounds();
             click(领京豆.centerX(), 领京豆.centerY());
             toastLog("进入京东签到页面！");
-            if (!text("进店领豆").findOne(3000)) {
+            if (!text("进店领豆").findOne(5000)) {
                 toastLog("可能没有进入签到页面，后退重启！");
                 while (!id("workspace_screen").findOne(500)) { back(); } //后退至桌面
                 return SignIn_jingdong();
@@ -962,7 +962,7 @@ function SignIn_Smzdm() {
 function SignIn_Alibaba() {
     try {
         if (text_log) {
-            var patter = text_log.search("阿里巴巴");
+            var patter = text_log.search("阿里巴巴元宝已经领取");
             if (patter != -1) {
                 toastLog("阿里巴巴跳过");
                 return;
@@ -987,13 +987,11 @@ function SignIn_Alibaba() {
                 sleep(1000); //有时候会出现抽奖
                 var 做任务赚元宝 = 做任务赚元宝.bounds();
                 click(做任务赚元宝.centerX(), 做任务赚元宝.centerY());
-                sleep(1000);
+                toastLog("阿里巴巴今日未领取，去搜好货");
                 if (text("今日已领取").findOne(1000)) {
                     save_log("阿里巴巴已搜索领元宝");
                     return;
                 }
-                toastLog("阿里巴巴今日未领取，去搜好货");
-                click(765, 933, 1026, 1020);
                 sleep(1000);
                 var 搜索历史 = text("搜索历史").findOne(3000);
                 if (搜索历史) {
@@ -1213,8 +1211,12 @@ function SignIn_idlefish() {
                         while (点击看) {
                             for (i = 1; i <= 2; i++) {
                                 click(400 * i, 1330);
-                                sleep(1500);
-                                back();
+                                if (text("留言").findOne()) {
+                                    back();
+                                    sleep(500);
+                                }
+                                // sleep(1500);
+                                // back();
                                 while (1) {
                                     var 点击打开 = desc("点击打开").findOne(2000);
                                     if (点击打开) {
@@ -1297,7 +1299,7 @@ function SignIn_idlefish() {
                                                 }
                                                 back();
                                             }
-                                            sleep(1000);
+                                            sleep(2000);
                                             back();
                                             text("100闲鱼币夺宝 >").findOne().click();
                                         } else {
@@ -1306,8 +1308,6 @@ function SignIn_idlefish() {
                                             sleep(1000);
                                             back();
                                             text("100闲鱼币夺宝 >").findOne().click();
-
-
                                         }
                                     } else {
                                         save_log("夺宝押注已结束")

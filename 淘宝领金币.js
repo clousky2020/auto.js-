@@ -63,7 +63,7 @@ function taobao_coins() {
             if (patter != -1) {
                 toastLog("淘金币今天已签到");
             } else {
-                var 立即签到 = text("立即签到").findOne(2000);
+                var 立即签到 = text("立即签到").findOne(4000);
                 if (立即签到) {
                     toastLog("自动弹出每日签到!")
                     sleep(1000);
@@ -74,7 +74,7 @@ function taobao_coins() {
                         // click(903, 680);//上面那句不行就这句启用,关闭每日签到
                     sleep(1000);
                 } else if (textContains("今日金币未领取").findOne(2000)) {
-                    var 今日金币签到入口 = textContains("今日金币未领取").findOne(1000).bounds();
+                    var 今日金币签到入口 = textContains("今日金币未领取").findOne().bounds();
                     click(今日金币签到入口.centerX(), 今日金币签到入口.centerY());
                     var 立即签到 = text("立即签到").findOne(3000);
                     if (立即签到) {
@@ -88,11 +88,10 @@ function taobao_coins() {
                 }
             }
         }
-
-
         while (text("偷金币").findOne(1000) == null) {
             swipe(540, 500, 540, 2000, 300) //上划
         }
+        sleep(1000);
         click(540, 965); //收果实
         sleep(1000);
         click(942, 1100);
@@ -104,12 +103,15 @@ function taobao_coins() {
             if (打卡) {
                 打卡.click();
             }
-            var 一键领取 = text("一键领取").findOne(1000);
+            var num = 0;
             while (去完成循环) {
-
-                if (一键领取) {
-                    一键领取.click();
-                    sleep(2000);
+                if (num > 3) {
+                    var 一键领取 = text("一键领取").findOne(200);
+                    if (一键领取) {
+                        一键领取.click();
+                        var num = 0;
+                        sleep(2000);
+                    }
                 }
                 var 去完成 = text("去完成").findOne(2000);
                 if (去完成) {
@@ -191,17 +193,22 @@ function taobao_coins() {
                     break;
                 }
             }
+            var num = 0;
             while (1) {
-                if (一键领取) {
-                    一键领取.click();
-                    sleep(2000);
+                if (num > 3) {
+                    var 一键领取 = text("一键领取").findOne(200);
+                    if (一键领取) {
+                        一键领取.click();
+                        var num = 0;
+                        sleep(2000);
+                    }
                 }
                 var 去逛逛 = text("去逛逛").findOne(1000);
                 if (去逛逛) {
                     去逛逛.click();
                     toastLog("去逛逛");
-                    if (text("2.9元包邮").findOne(2000)) {
-                        sleep(5000);
+                    if (textContains("摇钱树").findOne(3000)) {
+                        sleep(10000);
                     } else if (desc("指定页面下单购物").findOne(1000)) {
                         back();
                         sleep(1000);
@@ -222,7 +229,7 @@ function taobao_coins() {
                         sleep(5000);
                         return taobao_coins();
                     }
-                    sleep(3000);
+                    sleep(5000);
                     back();
                     while (1) {
                         if (text("领水滴赚金币").findOne(3000)) {
@@ -249,11 +256,24 @@ function taobao_coins() {
                 }
 
             }
-
+            var 去添加 = text("去添加").findOne(1000);
+            if (去添加) {
+                去添加.click();
+                sleep(1000);
+                descContains("水滴发放可能有延迟").findOne(); //进入添加页面
+                click(80, 906, 310, 975);
+                click(422, 906, 652, 975);
+                click(765, 906, 995, 975);
+                sleep(1000);
+                back();
+                sleep(2000);
+            }
+            var 一键领取 = text("一键领取").findOne(200);
             if (一键领取) {
                 一键领取.click();
                 sleep(1000);
             }
+
             sleep(1000);
             click("关闭");
             toastLog("关闭水滴任务菜单")
@@ -317,8 +337,8 @@ function taobao_coins() {
                         }
                     }
                     sleep(1000);
-                    if (num > 8) {
-                        toastLog("常用好友已检查完，关闭！");
+                    if (num > 10) {
+                        toastLog("前" + num + "页好友已检查完，关闭！");
                         click("关闭");
                         sleep(2000);
                         break;
