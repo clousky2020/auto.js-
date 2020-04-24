@@ -987,33 +987,29 @@ function SignIn_Alibaba() {
                 sleep(1000); //有时候会出现抽奖
                 var 做任务赚元宝 = 做任务赚元宝.bounds();
                 click(做任务赚元宝.centerX(), 做任务赚元宝.centerY());
-                toastLog("阿里巴巴今日未领取，去搜好货");
                 if (text("今日已领取").findOne(1000)) {
                     save_log("阿里巴巴已搜索领元宝");
                     return;
+                } else {
+                    toastLog("阿里巴巴今日未领取，去搜好货");
+                    while (1) {
+                        click(800, 950);
+                        sleep(1000);
+                        var 搜索历史 = text("搜索历史").findOne(3000);
+                        if (搜索历史) {
+                            sleep(1000);
+                            click(40, 470); //第一条搜索历史
+                            sleep(1000);
+                            while (!text("做任务赚元宝").findOne(1000)) { back(); }
+                            save_log("阿里巴巴元宝已经领取过了");
+                            break;
+                        } else {
+                            toastLog("未找到搜索历史");
+                            back();
+                            sleep(1000);
+                        }
+                    }
                 }
-                sleep(1000);
-                var 搜索历史 = text("搜索历史").findOne(3000);
-                if (搜索历史) {
-                    sleep(1000);
-                    click(40, 470); //第一条搜索历史
-                    sleep(1000);
-                    while (!text("做任务赚元宝").findOne(1000)) { back(); }
-                }
-                // var 去搜好货 = text("去搜好货").findOne(3000);
-                // if (去搜好货) {
-                //     toastLog("去搜好货");
-                //     sleep(1000);
-                //     var 去搜好货 = 去搜好货.bounds();
-                //     click(去搜好货.centerX(), 去搜好货.centerY());
-                //     var 搜索历史 = text("搜索历史").findOne(5000);
-                //     if (搜索历史) {
-                //         sleep(1000);
-                //         click(40, 470); //第一条搜索历史
-                //         sleep(2000);
-                //         while (!text("做任务赚元宝").findOne(1000)) { back(); }
-                //     }
-                // }
                 var 领10个元宝 = text("领10个元宝").findOne(2000);
                 if (领10个元宝) {
                     sleep(1000);
@@ -1021,8 +1017,6 @@ function SignIn_Alibaba() {
                     click(领10个元宝.centerX(), 领10个元宝.centerY());
                     sleep(1000);
                     save_log("阿里巴巴元宝已经领取");
-                } else {
-                    save_log("阿里巴巴元宝已经领取过了");
                 }
             } else {
                 toastLog("未进入签到界面，后退重启！");
