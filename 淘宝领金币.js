@@ -103,15 +103,11 @@ function taobao_coins() {
             if (打卡) {
                 打卡.click();
             }
-            var num = 3;
             while (去完成循环) {
-                if (num > 2) {
-                    var 一键领取 = text("一键领取").findOne(200);
-                    if (一键领取) {
-                        一键领取.click();
-                        var num = 0;
-                        sleep(2000);
-                    }
+                var 一键领取 = text("一键领取").findOne(200);
+                if (一键领取) {
+                    一键领取.click();
+                    sleep(2000);
                 }
                 var 去完成 = text("去完成").findOne(2000);
                 if (去完成) {
@@ -182,10 +178,8 @@ function taobao_coins() {
                             }
                         }
                         // return taobao_coins();
-
                     } else {
                         toastLog("退回");
-                        num += 1;
                         sleep(1000);
                         back();
                         sleep(2000);
@@ -194,15 +188,12 @@ function taobao_coins() {
                     break;
                 }
             }
-            var num = 3;
+
             while (1) {
-                if (num > 2) {
-                    var 一键领取 = text("一键领取").findOne(200);
-                    if (一键领取) {
-                        一键领取.click();
-                        var num = 0;
-                        sleep(2000);
-                    }
+                var 一键领取 = text("一键领取").findOne(200);
+                if (一键领取) {
+                    一键领取.click();
+                    sleep(2000);
                 }
                 var 去逛逛 = text("去逛逛").findOne(1000);
                 if (去逛逛) {
@@ -232,7 +223,6 @@ function taobao_coins() {
                     }
                     sleep(5000);
                     back();
-                    num += 1;
                     while (1) {
                         if (text("领水滴赚金币").findOne(3000)) {
                             break;
