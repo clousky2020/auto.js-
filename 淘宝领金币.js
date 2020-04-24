@@ -103,9 +103,9 @@ function taobao_coins() {
             if (打卡) {
                 打卡.click();
             }
-            var num = 0;
+            var num = 3;
             while (去完成循环) {
-                if (num > 3) {
+                if (num > 2) {
                     var 一键领取 = text("一键领取").findOne(200);
                     if (一键领取) {
                         一键领取.click();
@@ -185,6 +185,7 @@ function taobao_coins() {
 
                     } else {
                         toastLog("退回");
+                        num += 1;
                         sleep(1000);
                         back();
                         sleep(2000);
@@ -193,9 +194,9 @@ function taobao_coins() {
                     break;
                 }
             }
-            var num = 0;
+            var num = 3;
             while (1) {
-                if (num > 3) {
+                if (num > 2) {
                     var 一键领取 = text("一键领取").findOne(200);
                     if (一键领取) {
                         一键领取.click();
@@ -231,6 +232,7 @@ function taobao_coins() {
                     }
                     sleep(5000);
                     back();
+                    num += 1;
                     while (1) {
                         if (text("领水滴赚金币").findOne(3000)) {
                             break;
@@ -295,7 +297,7 @@ function taobao_coins() {
             var 偷金币界面 = text("浇水偷菜的乐趣，不如去好朋友的庄园看看吧～").findOne(7000);
             while (1) {
                 if (偷金币界面) {
-                    toastLog("在偷金币界面")
+                    // toastLog("在偷金币界面");
                     sleep(1000);
                     while (1) {
                         // toastLog("找浇水");
@@ -312,7 +314,7 @@ function taobao_coins() {
                                 toastLog("未知原因，还未进入他人庄园")
                             }
                         } else {
-                            toast("浇水没找到");
+                            // toast("浇水没找到");
                             break;
                         }
                     }
@@ -337,7 +339,7 @@ function taobao_coins() {
                         }
                     }
                     sleep(1000);
-                    if (num > 10) {
+                    if (num > 12) {
                         toastLog("前" + num + "页好友已检查完，关闭！");
                         click("关闭");
                         sleep(2000);
