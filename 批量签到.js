@@ -17,9 +17,12 @@ SignIn_Unicom(); //联通营业厅
 sleep(500);
 Sign_autonavi(); //高德地图签到
 sleep(500);
+SignIn_Alipay();
+sleep(500);
 SignIn_Alibaba(); //阿里巴巴领元宝
 sleep(500);
 SignIn_Alibaba_AlipayGphone(); //支付宝阿里巴巴领元宝
+
 sleep(500);
 SignIn_Smzdm(); //什么值得买
 sleep(500);
@@ -1162,6 +1165,90 @@ function SignIn_Alibaba_AlipayGphone() {
     } catch (err) {
         toastLog(err);
         return SignIn_Alibaba_AlipayGphone();
+
+    } finally {
+        return;
+    }
+}
+
+function SignIn_Alipay() {
+    try {
+        if (text_log) {
+            var patter = text_log.search("支付宝里的积分已领取");
+            if (patter != -1) {
+                toastLog("支付宝里积分领取跳过");
+                return;
+            }
+        }
+        sleep(1000);
+        //支付宝里的积分
+        var appRun = currentActivity();
+        if (appRun != 'com.eg.android.AlipayGphone') {
+            launch("com.eg.android.AlipayGphone");
+            sleep(1000);
+        }
+        var 我的 = text("我的").findOne(3000);
+        if (我的) {
+            var 我的 = 我的.bounds();
+            click(我的.centerX(), 我的.centerY());
+            sleep(1000);
+            click(186, 448, 426, 533); //点击进入支付宝会员页面
+        } else {
+            toastLog("支付宝没有找到我的图标！后退重启！");
+            while (!id("workspace_screen").findOne(500)) { back(); } //后退至桌面
+            return SignIn_Alipay();
+        }
+
+        // var 支付宝会员 = id("list_item_icon").findOne(4000);
+        // if (支付宝会员) {
+        //     var 支付宝会员 = 支付宝会员.bounds();
+        //     click(支付宝会员.centerX(), 支付宝会员.centerY());
+        // } else {
+        //     toastLog("未找到支付宝会员，重启");
+        //     while (!id("workspace_screen").findOne(500)) { back(); } //后退至桌面
+        //     return SignIn_Alipay();
+        // }
+
+        var 领积分 = text("领积分").findOne(3000);
+        if (领积分) {
+            var 领积分 = 领积分.bounds();
+            click(领积分.centerX(), 领积分.centerY());
+            var num = 0;
+            while (num < 3) {
+                var 可用积分 = text("可用积分").findOne(5000);
+                if (可用积分) {
+                    var 可用积分 = 可用积分.bounds();
+                    click(可用积分.centerX(), 可用积分.centerY());
+                    num += 1;
+                    toast("点击第" + num + "次");
+                    sleep(1000);
+                }
+            }
+            while (!text("我的家").findOne(1000)) { back(); } //后退至上一级，进入我的家
+        } else {
+            toastLog("未找到支付宝会员领积分，可能是领过了！");
+            while (!text("我的家").findOne(500)) { back(); } //后退至上一级，进入我的家
+        }
+        var 我的家 = text("我的家").findOne(2000);
+        if (我的家) {
+            var 我的家 = 我的家.bounds();
+            click(我的家.centerX(), 我的家.centerY());
+            while (1) {
+                var 家庭积分 = text("每日签到").findOne(1000);
+                if (家庭积分) {
+                    var 家庭积分 = 家庭积分.bounds();
+                    click(家庭积分.centerX(), 家庭积分.centerY());
+                    sleep(1000);
+                } else {
+                    save_log("支付宝里的积分已领取");
+                    break;
+                }
+            }
+        }
+        while (!id("workspace_screen").findOne(500)) { back(); } //后退至桌面
+    } catch (err) {
+        toastLog(err);
+        return SignIn_Alipay();
 
     } finally {
         return;
