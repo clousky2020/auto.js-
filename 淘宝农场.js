@@ -9,7 +9,7 @@ function tmail_form() {
         if (appRun != 'com.taobao.taobao') {
             launch("com.taobao.taobao");
         }
-        var 我的淘宝图标 = desc("我的淘宝").findOne(5000);
+        var 我的淘宝图标 = desc("我的淘宝").findOne(3000);
         if (我的淘宝图标) {
             var 我的淘宝图标 = 我的淘宝图标.bounds();
             click(我的淘宝图标.centerX(), 我的淘宝图标.centerY());
@@ -36,7 +36,9 @@ function tmail_form() {
                 sleep(2000);
             } else {
                 toastLog("未进入农场，重启");
-                while (!desc("我的淘宝").findOne(1000)) { back(); }
+                while (!desc("我的淘宝").findOne(1000)) {
+                    back();
+                }
                 return tmail_form();
             }
             if (text("离线超过24小时，作物会停止自动生产哦~").findOne(5000)) {
@@ -101,9 +103,7 @@ function tmail_form() {
                     if (text("当前页面浏览满15秒可获得10阳光").findOne(3000)) {
                         sleep(15250);
                         while (!text("去APP完成").findOne(1000)) { back(); }
-                    } else {
-                        back();
-                    }
+                    } else { back(); }
                     sleep(1000);
                     break;
                 } else {
@@ -121,7 +121,7 @@ function tmail_form() {
                     sleep(3000);
                     var num = 0;
                     while (1) {
-                        if (desc("立即打开").findOne(500)) {
+                        if (desc("立即打开").findOne(1000)) {
                             toast("立即打开");
                             var rect = desc("立即打开").findOne().bounds();
                             if (rect.centerY() > 2200) {
@@ -148,7 +148,7 @@ function tmail_form() {
                             toastLog("下滑15次还没看到目标值，向上，重新来");
                             num += 1;
                             for (i1 = 0; i1 < 18; i1++) {
-                                swipe(540, 200, 540, 2100, 500); //向上滑
+                                swipe(540, 400, 540, 2100, 200); //向上滑
                             }
                         } else if (num > 40) {
                             toast("下滑多次未找到目标，退回");
@@ -179,7 +179,7 @@ function tmail_form() {
             click(121, 1554);
             var 集果实图标 = text("gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==");
             //if (text("无星辰落").findOne()) {
-            if (集果实图标.findOne()) {
+            if (集果实图标.findOne(15000)) {
                 toast("已经进入福年种福果");
                 sleep(1000);
                 click(756, 1219); //收取昨日的福气
@@ -192,21 +192,17 @@ function tmail_form() {
                     var rect = text("去签到").findOne(1000);
                     if (rect != null) {
                         toast("签到");
-                        click(822, 1239, 951, 1290);
-                        // rect.click();
-                        // click(rect.centerX(),rect.centerY());
+                        rect.click();
                     }
-                    var rect = textContains("去领取").findOne(500);
+                    var rect = text("去领取").findOne(500);
                     if (rect != null) {
                         toast("去领取");
-                        click(900, 2000);
-                        // click(rect.centerX(),rect.centerY());
+                        rect.click();
                     }
                     var rect = textContains("去兑换").findOne(500);
                     if (rect != null) {
                         toast("去兑换");
-                        click(900, 2200);
-                        // rect.click();
+                        rect.click();
                     }
                     while (1) {
                         var 去逛逛 = textContains("去逛逛").findOne(500);
@@ -220,7 +216,11 @@ function tmail_form() {
                                 click(972, 1626) //打开任务窗口
                                 sleep(1000);
                                 break;
-                            } else if (textContains("浏览完成").findOne(20000)) {
+                            } else if (textContains("滑动浏览得").findOne(1000)) {
+                                sleep(2000);
+                                swipe(540, 2000, 540, 500, 500);
+                            }
+                            if (textContains("完成").findOne(20000)) {
                                 back();
                                 sleep(1000);
                             } else {
@@ -232,10 +232,10 @@ function tmail_form() {
                         }
                     }
                     while (1) {
-                        var 去浏览 = textContains("去浏览").findOne(1000);
+                        var 去浏览 = textContains("去浏览").findOne(500);
                         if (去浏览) {
                             去浏览.click();
-                            if (textContains("全部完成").findOne(2000)) {
+                            if (textContains("全部完成").findOne(3000)) {
                                 back();
                                 sleep(1000);
                                 click(985, 976) //关闭任务窗口
@@ -243,8 +243,8 @@ function tmail_form() {
                                 click(972, 1626) //打开任务窗口
                                 sleep(1000);
                                 break;
-                            } else if (text("滑动浏览得奖励").findOne(2000)) {
-                                sleep(3000);
+                            } else if (textContains("滑动浏览").findOne(1000)) {
+                                sleep(2000);
                                 swipe(540, 800, 540, 300, 300); //下滑
                                 if (textContains("完成").findOne(22000)) {
                                     back();
@@ -252,10 +252,10 @@ function tmail_form() {
                                     back();
                                 }
                                 sleep(1000);
-                            } else if (text("今日已达上限继续逛逛吧").findOne(2000)) {
+                            } else if (text("今日已达上限继续逛逛吧").findOne(1000)) {
                                 back();
                                 sleep(1000);
-                            } else if (textContains("浏览完成").findOne(15000)) {
+                            } else if (textContains("浏览完成").findOne(20000)) {
                                 sleep(1000);
                                 back();
                                 sleep(1000);
@@ -267,7 +267,7 @@ function tmail_form() {
                             break;
                         }
                     }
-                    var 去换装 = textContains("去换装").findOne(500);
+                    var 去换装 = textContains("去换装").findOne(1000);
                     if (去换装) {
                         去换装.click();
                         sleep(10000);
@@ -278,13 +278,30 @@ function tmail_form() {
                         click(549, 1509); //退出淘宝人生
                         sleep(2000);
                     }
+                    var 去拍照 = textContains("去拍照").findOne(1000);
+                    if (去拍照) {
+                        去拍照.click();
+                        sleep(2000);
+                        var 扫一扫 = id("scan_icon").findOne(3000);
+                        if (扫一扫) {
+                            扫一扫.click();
+                            sleep(2000);
+                            var 继续上传 = text("继续上传").findOne(2000);
+                            if (继续上传) { 继续上传.click(); }
+                            var 扫一扫完成 = id("image_detect_icon").findOne(5000);
+                            if (扫一扫完成) {
+                                sleep(1000);
+                                while (!textContains("gif").findOne(1000)) { back(); }
+                            } else {
+                                toastLog("未找到扫一扫");
+                                back();
+                            }
+                        }
+                    }
+
                     if (textContains("gif").findOne(4000)) { //确定还是在这个任务界面
                         click(989, 957); //关闭任务菜单
                         sleep(1000);
-                        // for (i=0;i<10;i++){
-                        //     click(0.491*1080, 0.693*2340);//点击浇灌福气
-                        //     sleep(1000);
-                        // }
                     }
                     back(); //退出
                     sleep(1000);
@@ -292,8 +309,16 @@ function tmail_form() {
                     home();
                     toastLog("农场已完成，退出");
                 }
+            } else {
+                toastLog("未进入我的果园页面，后退重启！");
+                while (!id("workspace_screen").findOne(500)) { back(); } //后退至桌面
+                return tmail_form();
             }
             // }
+        } else {
+            toastLog("未找到我的淘宝页面，后退重启！");
+            while (!id("workspace_screen").findOne(1000)) { back(); } //后退至桌面
+            return tmail_form();
         }
     } catch (err) {
         toastLog(err);
