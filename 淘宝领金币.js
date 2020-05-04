@@ -53,7 +53,9 @@ function taobao_coins() {
 
             } else {
                 toastLog("不在首页,后退重启！");
-                while (!desc("首页").findOne(1000)) { back(); }
+                while (!desc("首页").findOne(1000)) {
+                    back();
+                }
                 return taobao_coins();
             }
 
@@ -99,9 +101,9 @@ function taobao_coins() {
                 打卡.click();
             }
             while (1) {
-                var 去完成 = text("去完成").findOne(1000);
-                var 去逛逛 = text("去逛逛").findOne(1000);
-                var 去添加 = text("去添加").findOne(1000);
+                var 去完成 = text("去完成").findOne(500);
+                var 去逛逛 = text("去逛逛").findOne(500);
+                var 去添加 = text("去添加").findOne(500);
                 if (去完成) {
                     sleep(2000);
                     去完成.click();
@@ -159,7 +161,6 @@ function taobao_coins() {
                     // toastLog("在偷金币界面");
                     sleep(1000);
                     while (1) {
-                        // toastLog("找浇水");
                         var 可浇水 = text("可浇水").findOne(500);
                         if (可浇水) {
                             可浇水.click();
@@ -168,47 +169,57 @@ function taobao_coins() {
                                 click(浇水.centerX(), 浇水.centerY());
                                 sleep(1000);
                                 back();
-                                sleep(2000);
+                                // sleep(1000);
+                                偷金币界面;
                             } else {
-                                toastLog("未知原因，还未进入他人庄园")
+                                toastLog("未知原因，还未进入他人庄园浇水");
+                                while (!text("超级抵钱").findOne(1000)) { back(); }
+                                break;
                             }
                         } else {
-                            // toast("浇水没找到");
                             break;
                         }
                     }
                     while (1) {
-                        // toastLog("找偷金币");
                         var 偷金币 = text("偷金币").depth(18).findOne(500);
                         if (偷金币) {
                             var 偷金币 = 偷金币.bounds();
                             click(偷金币.centerX(), 偷金币.centerY());
-                            if (text("浇水").findOne(10000)) {
+                            if (text("浇水").findOne(5000)) {
                                 sleep(1000);
                                 click(540, 964); //偷金币
                                 sleep(1000);
                                 back();
-                                sleep(2000);
+                                // sleep(2000);
+                                偷金币界面;
                             } else {
-                                toastLog("未知原因，还未进入他人庄园")
+                                toastLog("未知原因，还未进入他人庄园偷金币");
+                                while (!text("超级抵钱").findOne(1000)) { back(); }
+                                break;
                             }
                         } else {
                             // toast("偷金币没找到");
                             break;
                         }
                     }
-                    sleep(1000);
-                    if (num > 12) {
+                    sleep(500);
+                    if (num > 15) {
                         toastLog("前" + num + "页好友已检查完，关闭！");
                         click("关闭");
                         sleep(2000);
                         break;
                     }
                     if (text("个好友可偷金币").findOne(500)) {
-                        // toastLog("个好友可偷金币")
-                        var 点开好友列表 = text("个好友可偷金币").findOne().bounds();
-                        click(点开好友列表.centerX(), 点开好友列表.centerY());
-                        sleep(1000);
+                        while (1) {
+                            var 点开好友列表 = text("个好友可偷金币").findOne().bounds();
+                            if (点开好友列表.centerY() > 2300) {
+                                swipe(540, 1500, 540, 1300, 200); //下划
+                                sleep(1000);
+                            } else {
+                                click(点开好友列表.centerX(), 点开好友列表.centerY());
+                                break;
+                            }
+                        }
                     } else {
                         toastLog("全部好友都找遍了！");
                         click("关闭");
@@ -216,7 +227,8 @@ function taobao_coins() {
                         break;
                     }
                     num += 1;
-                    // toastLog("下滑第" + num + "次")
+                    // toastLog("下滑第" + num + "次");
+                    sleep(500);
                     swipe(540, 2000, 540, 1000, 200); //下划
                 } else {
                     toastLog("未在偷金币界面");
@@ -233,11 +245,15 @@ function taobao_coins() {
                     break;
                 } else {
                     toastLog("未找到金币成就，不确定是否进入金币成就界面，后退重启！")
-                    while (!text("超级抵钱").findOne(3000)) { back(); }
+                    while (!text("超级抵钱").findOne(3000)) {
+                        back();
+                    }
                 }
             } else {
                 toastLog("未找到购物默认抵扣，不确定是否进入我的金币界面，后退重启！")
-                while (!text("超级抵钱").findOne(3000)) { back(); }
+                while (!text("超级抵钱").findOne(3000)) {
+                    back();
+                }
             }
         }
         if (text("金币成就").findOne(10000)) {
@@ -254,7 +270,9 @@ function taobao_coins() {
                 }
             }
         }
-        while (!text("超级抵钱").findOne(1000)) { back(); }
+        while (!text("超级抵钱").findOne(1000)) {
+            back();
+        }
         sleep(1000);
         if (text_log) {
             var patter = text_log.search("淘金币福利中心已完成");
@@ -302,7 +320,9 @@ function taobao_coins() {
             sleep(1000);
         }
         sleep(1000);
-        while (!desc("首页").findOne(1000)) { back(); }
+        while (!desc("首页").findOne(1000)) {
+            back();
+        }
         home();
     } catch (err) {
         alert(err)
@@ -311,27 +331,34 @@ function taobao_coins() {
     }
 }
 
+
 function coin_loop() {
-    var 扫一扫 = id("scan_icon").findOne(3000);
-    if (扫一扫) {
-        扫一扫.click();
-        sleep(2000);
-        var 继续上传 = text("继续上传").findOne(2000);
-        if (继续上传) { 继续上传.click(); }
-        var 扫一扫完成 = id("image_detect_icon").findOne(5000);
-        if (扫一扫完成) {
-            sleep(11000);
-            while (!text("领水滴赚金币").findOne(1000)) { back(); }
-        } else {
-            toastLog("未找到扫一扫");
-            back();
-        }
-    } else if (text("进群打卡领金币").findOne(500)) {
+    sleep(1000);
+    if (text("进群打卡领金币").findOne(2000)) {
         sleep(1000)
         var 进群打卡 = desc("进群打卡").findOne().bounds();
         click(进群打卡.centerX(), 进群打卡.centerY());
         sleep(1000);
-        while (!text("领水滴赚金币").findOne(1000)) { back(); }
+        while (!text("领水滴赚金币").findOne(1000)) {
+            back();
+        }
+    } else if (id("scan_icon").findOne(3000)) {
+        id("scan_icon").findOne().click();
+        sleep(2000);
+        var 继续上传 = text("继续上传").findOne(2000);
+        if (继续上传) {
+            继续上传.click();
+        }
+        var 扫一扫完成 = id("image_detect_icon").findOne(5000);
+        if (扫一扫完成) {
+            sleep(11000);
+            while (!text("领水滴赚金币").findOne(1000)) {
+                back();
+            }
+        } else {
+            toastLog("未找到扫一扫");
+            back();
+        }
     } else if (text("历史搜索").findOne(500)) {
         toastLog("进入搜索领金币");
         click(40, 400); //点第一个历史搜索
@@ -339,15 +366,16 @@ function coin_loop() {
         while (!text("领水滴赚金币").findOne(500)) { back(); }
         sleep(2000);
     } else if (text("天天红包赛").findOne(500)) {
-        sleep(1000);
-        back();
-        text("残忍离开").findOne().click();
+        sleep(11000);
+        while (!text("领水滴赚金币").findOne(500)) { back(); }
+        //text("残忍离开").findOne(1000).click();
     } else if (textContains("摇钱树").findOne(500)) {
         sleep(10000);
+        while (!text("领水滴赚金币").findOne(500)) { back(); }
     } else if (text("男装淘金币抵扣会场").findOne(500)) {
-        back();
+        while (!text("领水滴赚金币").findOne(500)) { back(); }
     } else if (desc("指定页面下单购物").findOne(500)) {
-        back();
+        while (!text("领水滴赚金币").findOne(500)) { back(); }
         sleep(1000);
     } else if (text("领取奖励").findOne(6000)) {
         var 领取奖励 = text("领取奖励").findOne().bounds();
@@ -369,7 +397,7 @@ function coin_loop() {
                     next_click = next_click.bounds();
                     click(next_click.centerX(), next_click.centerY());
                     if (!text("超级抵钱").findOne(5000)) {
-                        toastLog("没有进入")
+                        toastLog("没有进入");
                         continue;
                     } else {
                         toastLog("已经进入淘金币")

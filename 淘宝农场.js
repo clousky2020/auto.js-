@@ -38,13 +38,10 @@ function tmail_form() {
                 sleep(2000);
             } else {
                 toastLog("未进入农场，重启");
-                while (!desc("我的淘宝").findOne(1000)) {
-                    back();
-                }
+                while (!desc("我的淘宝").findOne(1000)) { back(); }
                 return tmail_form();
             }
-            if (text("离线超过24小时，作物会停止自动生产哦~").findOne(5000)) {
-
+            if (text("离线超过24小时，作物会停止自动生产哦~").findOne(3000)) {
                 click(526, 1743.3); //关闭长时间未进入后弹出的窗口
                 sleep(1000);
             }
@@ -94,23 +91,15 @@ function tmail_form() {
             sleep(1000);
             click(535, 1577) //宝箱点击关闭
             sleep(1000);
-            click(980, 1542) // 点击领阳光的图标
-            sleep(1000);
             while (1) {
-                var next_click = text("去浏览").findOne(500);
-                var wait_time = text("后开始任务").findOne(500);
-                if (next_click && !wait_time) {
-                    click(908, 1558); //点击浏览阳光的坐标
-                    toast("去浏览15秒领阳光");
-                    if (text("当前页面浏览满15秒可获得10阳光").findOne(3000)) {
-                        sleep(15250);
-                        while (!text("去APP完成").findOne(1000)) { back(); }
-                    } else { back(); }
-                    sleep(1000);
+                click(980, 1542) // 点击领阳光的图标
+                sleep(1000);
+                if (text("去APP完成").findOne(5000)) {
+                    toastLog("进入了任务菜单");
                     break;
                 } else {
-                    toastLog("不能继续浏览得阳光了");
-                    break;
+                    while (!textContains("兑换好礼").findOne(1000)) { back(); }
+                    sleep(1000);
                 }
             }
             while (1) {
@@ -166,7 +155,35 @@ function tmail_form() {
                     break;
                 }
             }
-
+            while (1) {
+                var 今日已完成 = textContains("今日已完成").findOne(2000);
+                if (今日已完成) {
+                    toastLog("今日已完成");
+                    break;
+                }
+                // var 再看看 = text("再看看").findOne(1000);
+                var 去浏览 = text("去浏览").findOne(1000);
+                var wait_time = text("后开始任务").findOne(1000);
+                if (去浏览 && !wait_time) {
+                    去浏览.click();
+                    toast("去浏览15秒领阳光");
+                    if (textContains("今天的浏览商品任务已经全部完成啦").findOne(1000)) {
+                        back();
+                        sleep(1000);
+                        break;
+                    } else if (text("当前页面浏览满15秒可获得10阳光").findOne(3000)) {
+                        sleep(15250);
+                        while (!text("去APP完成").findOne(1000)) { back(); }
+                    } else {
+                        back();
+                        sleep(1000);
+                        break;
+                    }
+                } else {
+                    toastLog("不能继续浏览得阳光了");
+                    break;
+                }
+            }
             sleep(1000);
             toast("没有什么任务可以做了，关闭任务菜单！");
             click(999, 1280);
@@ -182,7 +199,13 @@ function tmail_form() {
             //if (text("无星辰落").findOne()) {
             if (集果实图标.findOne(15000)) {
                 toast("已经进入福年种福果");
-                sleep(1000);
+
+                var 收下祝福 = text("收下祝福").findOne(2000);
+                if (收下祝福) {
+                    var 收下祝福 = 收下祝福.bounds();
+                    click(收下祝福.centerX(), 收下祝福.centerY());
+                    sleep(1000);
+                }
                 click(756, 1219); //收取昨日的福气
                 sleep(1000);
                 click(540, 1521) //点掉今天已经领过了，明天再领
@@ -222,11 +245,16 @@ function collection_bless() {
             toast("签到");
             rect.click();
         }
-        var rect = text("去领取").findOne(500);
-        if (rect != null) {
-            toast("去领取");
-            rect.click();
+        while (1) {
+            var rect = text("去领取").findOne(500);
+            if (rect != null) {
+                toast("去领取");
+                rect.click();
+            } else {
+                break;
+            }
         }
+
         var rect = textContains("去兑换").findOne(500);
         if (rect != null) {
             toast("去兑换");
