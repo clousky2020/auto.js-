@@ -206,18 +206,27 @@ function tmail_form() {
                     click(收下祝福.centerX(), 收下祝福.centerY());
                     sleep(1000);
                 }
+                var 去种新福果 = textContains("去种新福果").findOne(500);
+                if (去种新福果) {
+                    去种新福果.click();
+                    sleep(2000);
+                }
                 click(756, 1219); //收取昨日的福气
                 sleep(1000);
                 click(540, 1521) //点掉今天已经领过了，明天再领
                 sleep(1000);
-                click(962, 1626); // 进入活动中心
+                click(1000, 1700); // 进入活动中心
                 collection_bless();
+
                 var 左移图标 = text("TB1X9ITzND1gK0jSZFsXXbldVXa-52-52.png_1080x1800Q50s50.jpg_").findOne(2000);
                 if (左移图标) {
                     左移图标.click();
                     sleep(3000);
-                    click(962, 1626); // 进入活动中心
-                    collection_bless();
+                    var 去种新福果 = textContains("去种新福果").findOne(500);
+                    if (!去种新福果) {
+                        click(1000, 1700); // 进入活动中心
+                        collection_bless();
+                    }
                 }
                 while (!desc("我的淘宝").findOne(500)) { back(); } //后退至淘宝首页
                 home();
@@ -250,6 +259,7 @@ function collection_bless() {
             if (rect != null) {
                 toast("去领取");
                 rect.click();
+                sleep(1000);
             } else {
                 break;
             }
