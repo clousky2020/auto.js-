@@ -12,32 +12,32 @@ if (files.isFile(path)) {
 }
 home();
 
-// sleep(500);
-// SignIn_Unicom(); //联通营业厅
-// sleep(500);
-// Sign_autonavi(); //高德地图签到
-// sleep(500);
-// SignIn_Alipay(); //支付宝签到领积分
-// sleep(500);
-// SignIn_Alibaba(); //阿里巴巴领元宝
-// sleep(500);
-// SignIn_Alibaba_AlipayGphone(); //支付宝阿里巴巴领元宝
-// sleep(500);
-// SignIn_Smzdm(); //什么值得买
-// sleep(500);
-// SignIn_Mommypocket(); //美物清单
-// sleep(500);
-// SignIn_Netease_Cloudmusic(); //网易云音乐
-// sleep(500);
-// SignIn_Fandengreader(); //樊登读书
-// sleep(500);
-// SignIn_Miguaikan(); //咪咕爱看签到
-// sleep(500);
-// SignIn_Baidu_netdisk(); //百度网盘
-// sleep(500);
-// SignIn_jingdong(); //京东
-// sleep(500);
-// Signin_TaobaoPhone(); //领取淘宝的话费
+sleep(500);
+SignIn_Unicom(); //联通营业厅
+sleep(500);
+Sign_autonavi(); //高德地图签到
+sleep(500);
+SignIn_Alipay(); //支付宝签到领积分
+sleep(500);
+SignIn_Alibaba(); //阿里巴巴领元宝
+sleep(500);
+SignIn_Alibaba_AlipayGphone(); //支付宝阿里巴巴领元宝
+sleep(500);
+SignIn_Smzdm(); //什么值得买
+sleep(500);
+SignIn_Mommypocket(); //美物清单
+sleep(500);
+SignIn_Netease_Cloudmusic(); //网易云音乐
+sleep(500);
+SignIn_Fandengreader(); //樊登读书
+sleep(500);
+SignIn_Miguaikan(); //咪咕爱看签到
+sleep(500);
+SignIn_Baidu_netdisk(); //百度网盘
+sleep(500);
+SignIn_jingdong(); //京东
+sleep(500);
+Signin_TaobaoPhone(); //领取淘宝的话费
 sleep(500);
 SignIn_ximalaya(); //喜马拉雅
 sleep(500);
@@ -1178,7 +1178,8 @@ function SignIn_Alipay() {
             click(理财.centerX(), 理财.centerY());
             while (1) {
                 var 立即领取 = text("立即领取").findOne(2000);
-                var 去看看 = text("去看看").findOne(2000);
+                var 去看看 = text("去看看").findOne(500);
+                var 去完成 = text("去完成").findOne(500);
                 if (立即领取) {
                     toastLog("今日黄金票还未领取");
                     var 立即领取 = 立即领取.bounds();
@@ -1188,6 +1189,8 @@ function SignIn_Alipay() {
                         break;
                     }
                 } else if (去看看) {
+                    break;
+                } else if (去完成) {
                     break;
                 } else {
                     swipe(1120, 1750, 200, 1750, 300); //左滑
