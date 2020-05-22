@@ -12,39 +12,39 @@ if (files.isFile(path)) {
 }
 home();
 
-sleep(500);
+sleep(250);
 SignIn_Unicom(); //联通营业厅
-sleep(500);
+sleep(250);
 Sign_autonavi(); //高德地图签到
-sleep(500);
+sleep(250);
 SignIn_Alipay(); //支付宝签到领积分
-sleep(500);
-SignIn_Alibaba(); //阿里巴巴领元宝
-sleep(500);
+sleep(250);
 SignIn_Alibaba_AlipayGphone(); //支付宝阿里巴巴领元宝
-sleep(500);
+sleep(250);
 SignIn_Smzdm(); //什么值得买
-sleep(500);
+sleep(250);
 SignIn_Mommypocket(); //美物清单
-sleep(500);
+sleep(250);
 SignIn_Netease_Cloudmusic(); //网易云音乐
-sleep(500);
+sleep(250);
+SignIn_Alibaba(); //阿里巴巴领元宝
+sleep(250);
 SignIn_Fandengreader(); //樊登读书
-sleep(500);
+sleep(250);
 SignIn_Miguaikan(); //咪咕爱看签到
-sleep(500);
+sleep(250);
 SignIn_Baidu_netdisk(); //百度网盘
-sleep(500);
+sleep(250);
 SignIn_jingdong(); //京东
-sleep(500);
+sleep(250);
 Signin_TaobaoPhone(); //领取淘宝的话费
-sleep(500);
+sleep(250);
 SignIn_ximalaya(); //喜马拉雅
-sleep(500);
+sleep(250);
 SignIn_idlefish(); //闲鱼签到
-sleep(500);
+sleep(250);
 SignIn_Sfacg(); //sf小说签到
-sleep(500);
+sleep(250);
 SignIn_Baidu_Wenku(); //百度文库
 
 
@@ -135,7 +135,7 @@ function SignIn_ximalaya() {
                 }
             } else {
                 toastLog("喜马拉雅未找到，重启");
-                while (!id("workspace_screen").findOne(500)) {
+                while (!desc("一键锁屏").findOne(500)) {
                     back();
                 }
                 sleep(1000);
@@ -145,7 +145,7 @@ function SignIn_ximalaya() {
     } catch (err) {
         toastLog(err);
     } finally {
-        while (!id("workspace_screen").findOne(500)) {
+        while (!desc("一键锁屏").findOne(500)) {
             back();
         }
         return;
@@ -180,6 +180,7 @@ function SignIn_Miguaikan() {
             click(close.centerX(), close.centerY());
             back();
         }
+        sleep(2000);
         back();
 
         var 我的 = text("我的").findOne(4000);
@@ -227,17 +228,16 @@ function SignIn_Miguaikan() {
             }
         } else {
             toastLog("未找到我的，重启");
-            while (!id("workspace_screen").findOne(1000)) {
+            while (!text("我的").findOne(1000)) {
                 back();
             }
-            sleep(1000);
             return SignIn_Miguaikan();
         }
     } catch (err) {
         toastLog(err);
 
     } finally {
-        while (!id("workspace_screen").findOne(1000)) {
+        while (!desc("一键锁屏").findOne(1000)) {
             back();
         }
         return;
@@ -374,7 +374,7 @@ function Signin_TaobaoPhone() {
         var 去翻倍 = desc("继续赚").findOne(2000);
         if (去翻倍) {
             save_log("淘宝话费已经领取");
-            while (!id("workspace_screen").findOne(500)) {
+            while (!desc("一键锁屏").findOne(500)) {
                 back();
             }
             return;
@@ -394,13 +394,13 @@ function Signin_TaobaoPhone() {
                 click(签到领.centerX(), 签到领.centerY());
                 if (textContains("今日已领取").findOne(5000)) {
                     save_log("淘宝话费已经领取");
-                    while (!id("workspace_screen").findOne(500)) {
+                    while (!desc("一键锁屏").findOne(500)) {
                         back();
                     }
                     return;
                 } else {
                     toastLog("未找到签到成功的标志！不确定是否签到成功！");
-                    while (!id("workspace_screen").findOne(500)) {
+                    while (!desc("一键锁屏").findOne(500)) {
                         back();
                     }
                     return;
@@ -408,7 +408,7 @@ function Signin_TaobaoPhone() {
             }
         } else {
             toastLog("未找到去领取!重启!");
-            while (!id("workspace_screen").findOne(500)) {
+            while (!desc("一键锁屏").findOne(500)) {
                 back();
             }
             return Signin_TaobaoPhone();
@@ -418,7 +418,7 @@ function Signin_TaobaoPhone() {
         toastLog(err);
         return Signin_TaobaoPhone();
     } finally {
-        while (!id("workspace_screen").findOne(500)) {
+        while (!desc("一键锁屏").findOne(500)) {
             back();
         }
         return;
@@ -445,7 +445,7 @@ function SignIn_jingdong() {
             toastLog("进入京东签到页面！");
             if (!text("进店领豆").findOne(5000)) {
                 toastLog("可能没有进入签到页面，后退重启！");
-                while (!id("workspace_screen").findOne(500)) {
+                while (!desc("一键锁屏").findOne(500)) {
                     back();
                 }
                 return SignIn_jingdong();
@@ -457,42 +457,21 @@ function SignIn_jingdong() {
                 click(签到领京豆.centerX(), 签到领京豆.centerY());
                 sleep(3000);
                 back();
+
             }
             //种豆得豆
+            sleep(1000);
             click(1000, 300);
             sleep(2000);
-            var 点击领取 = text("点击领取").findOne(4000);
-            if (点击领取) {
-                var 点击领取 = 点击领取.bounds();
-                click(点击领取.centerX(), 点击领取.centerY());
-                sleep(2000);
-            }
-            // toastLog("收取他人的培养液");
-            // while (1) {
-            //     click(399, 1531.5);
-            //     sleep(1000);
-            //     var one = text("1").findOne(2000);
-            //     if (one) {
-            //         var 点击领取 = text("点击领取").findOne(4000);
-            //         if (点击领取) {
-            //             var 点击领取 = 点击领取.bounds();
-            //             click(点击领取.centerX(), 点击领取.centerY());
-            //             sleep(1000);
-            //             back();
-            //         } else {
-            //             back();
-            //         }
-            //     } else {
-            //         click(540.5, 2076);
-            //         break;
-            //     }
-            //     sleep(2000);
-            // }
-            var 培养 = text("培养").findOne(4000);
-            if (培养) {
-                var 培养 = 培养.bounds();
-                click(培养.centerX(), 培养.centerY());
-                sleep(1000);
+            while (1) {
+                if (textMatches(/再来领取/).findOne(2000)) { break; }
+                var 点击领取 = textMatches(/x\d/).findOne(2000);
+                if (点击领取) {
+                    var 点击领取 = 点击领取.bounds();
+                    // toastLog("点击领取营养液x:" + 点击领取.centerX() + "y:" + 点击领取.centerY())
+                    click(点击领取.centerX(), 点击领取.centerY());
+                    sleep(1000);
+                } else { break; }
             }
             back();
             sleep(1000);
@@ -548,7 +527,7 @@ function SignIn_jingdong() {
                 sleep(2000);
             } else {
                 toastLog("未找到进店领豆,后退至桌面后重启!");
-                while (!id("workspace_screen").findOne(500)) {
+                while (!desc("一键锁屏").findOne(500)) {
                     back();
                 }
                 return SignIn_jingdong();
@@ -566,7 +545,7 @@ function SignIn_jingdong() {
                     if (text("双签领奖励").findOne(2000)) {
                         toastLog("还停留在这个页面，可能是因为已经领取今日奖励了");
                         save_log("京东今天已领豆！");
-                        while (!id("workspace_screen").findOne(1000)) {
+                        while (!desc("一键锁屏").findOne(1000)) {
                             back();
                         }
                         toastLog("已经后退到桌面！");
@@ -613,7 +592,7 @@ function SignIn_jingdong() {
             }
         } else {
             toastLog("未找到领京豆，重启");
-            while (!id("workspace_screen").findOne(500)) {
+            while (!desc("一键锁屏").findOne(500)) {
                 back();
             }
             return SignIn_jingdong();
@@ -622,7 +601,7 @@ function SignIn_jingdong() {
         toastLog(err);
         return SignIn_jingdong();
     } finally {
-        while (!id("workspace_screen").findOne(500)) {
+        while (!desc("一键锁屏").findOne(500)) {
             back();
         }
 
@@ -671,7 +650,7 @@ function SignIn_Baidu_netdisk() {
                                 var 关闭 = 关闭.bounds();
                                 click(关闭.centerX(), 关闭.centerY());
                                 sleep(1000);
-                                while (!id("workspace_screen").findOne(500)) {
+                                while (!desc("一键锁屏").findOne(500)) {
                                     back();
                                 }
                                 save_log("百度网盘已完成！");
@@ -682,14 +661,14 @@ function SignIn_Baidu_netdisk() {
                     }
                 } else {
                     toastLog("没有签到标识！");
-                    while (!id("workspace_screen").findOne(500)) {
+                    while (!desc("一键锁屏").findOne(500)) {
                         back();
                     }
                     return SignIn_Baidu_netdisk();
                 }
             } else {
                 save_log("百度网盘没有找到待领取,可能是已完成！");
-                while (!id("workspace_screen").findOne(500)) {
+                while (!desc("一键锁屏").findOne(500)) {
                     back();
                 }
                 return;
@@ -697,7 +676,7 @@ function SignIn_Baidu_netdisk() {
 
         } else {
             toastLog("未找到我的界面，重启");
-            while (!id("workspace_screen").findOne(500)) {
+            while (!desc("一键锁屏").findOne(500)) {
                 back();
             }
             return SignIn_Baidu_netdisk();
@@ -706,7 +685,7 @@ function SignIn_Baidu_netdisk() {
         toastLog(err);
         return SignIn_Baidu_netdisk();
     } finally {
-        while (!id("workspace_screen").findOne(500)) {
+        while (!desc("一键锁屏").findOne(500)) {
             back();
         }
         return;
@@ -752,7 +731,7 @@ function SignIn_Fandengreader() {
                 return;
             } else {
                 toastLog("樊登读书没有找到签到");
-                while (!id("workspace_screen").findOne(500)) {
+                while (!desc("一键锁屏").findOne(500)) {
                     back();
                 }
                 return SignIn_Fandengreader();
@@ -762,7 +741,7 @@ function SignIn_Fandengreader() {
         toastLog(err);
         return SignIn_Fandengreader();
     } finally {
-        while (!id("workspace_screen").findOne(500)) {
+        while (!desc("一键锁屏").findOne(500)) {
             back();
         }
         return;
@@ -798,7 +777,7 @@ function SignIn_Netease_Cloudmusic() {
                     if (text("云贝中心").findOne(3000)) {
                         save_log("网易云音乐已签到");
                     }
-                    while (!id("workspace_screen").findOne(500)) {
+                    while (!desc("一键锁屏").findOne(500)) {
                         back();
                     }
                     return;
@@ -812,7 +791,7 @@ function SignIn_Netease_Cloudmusic() {
                 }
             } else {
                 toastLog("未找到网易云音乐主界面，重启");
-                while (!id("workspace_screen").findOne(500)) {
+                while (!desc("一键锁屏").findOne(500)) {
                     back();
                 }
                 return SignIn_Netease_Cloudmusic();
@@ -824,7 +803,7 @@ function SignIn_Netease_Cloudmusic() {
         return SignIn_Netease_Cloudmusic();
 
     } finally {
-        while (!id("workspace_screen").findOne(500)) {
+        while (!desc("一键锁屏").findOne(500)) {
             back();
         }
         return;
@@ -847,33 +826,26 @@ function SignIn_Mommypocket() {
             launch("com.shouqu.mommypocket");
             sleep(1000);
         }
-        sleep(4000);
+        // launch("com.shouqu.mommypocket");
         //添加广告关闭的按钮
-        while (1) {
-            var 广告 = id("push_popup_close").findOne(4000);
-            var 通知关闭 = id("system_notice_item_close").findOne(2000);
-            if (广告) {
-                toastLog("有广告！");
-                var 广告 = 广告.bounds();
-                click(广告.centerX(), 广告.centerY());
-                sleep(1000);
-            } else if (通知关闭) {
-                通知关闭.click();
-                sleep(1000);
-            } else {
-                break;
-            }
+        var 广告 = id("push_popup_close").findOne(2000);
+        var 通知关闭 = id("system_notice_item_close").findOne(2000);
+        if (广告) {
+            toastLog("有广告！");
+            var 广告 = 广告.bounds();
+            click(广告.centerX(), 广告.centerY());
+            sleep(1000);
+        } else if (通知关闭) {
+            通知关闭.click();
+            sleep(1000);
+        }
+        var 通知关闭 = id("system_notice_item_close").findOne(2000);
+        if (通知关闭) {
+            通知关闭.click();
+            sleep(1000);
         }
 
-        // var 通知关闭 = id("system_notice_item_close").findOne(2000);
-        // if (通知关闭) {
-        //     通知关闭.click();
-        //     sleep(1000);
-        // } else {
-        //     break;
-        // }
-
-        var 福利 = text("福利").findOne(5000);
+        var 福利 = text("福利").findOne(2000);
         if (福利) {
             福利.click();
             toastLog("已经找到福利，成功启动美物清单！");
@@ -883,16 +855,12 @@ function SignIn_Mommypocket() {
             return;
         } else {
             toastLog("未找到我的主界面，重启");
-            while (!id("workspace_screen").findOne(500)) {
-                back();
-            }
+            // while (!desc("一键锁屏").findOne(500)) { back(); }
             return SignIn_Mommypocket();
         }
     } catch (err) {
         toastLog(err);
-        while (!id("workspace_screen").findOne(500)) {
-            back();
-        }
+        // while (!desc("一键锁屏").findOne(500)) { back(); }
         return SignIn_Mommypocket();
     } finally {
         return;
@@ -914,6 +882,7 @@ function SignIn_Smzdm() {
             launch("com.smzdm.client.android");
             sleep(1000);
         }
+        // launch("com.smzdm.client.android");
         var 我的 = text("我的").findOne(5000);
         if (我的) {
             var 我的 = 我的.bounds();
@@ -923,7 +892,7 @@ function SignIn_Smzdm() {
                 toastLog("进入个人主页了");
             } else {
                 toastLog("未进入个人主页，重启");
-                SignIn_Smzdm();
+                return SignIn_Smzdm();
             }
             while (1) {
                 var 签到 = text("签到").findOne(4000);
@@ -934,13 +903,13 @@ function SignIn_Smzdm() {
                     back();
                 } else if (textContains("已签到").findOne(1000)) {
                     save_log("今天什么值得买已经签到");
-                    while (!id("workspace_screen").findOne(500)) {
+                    while (!desc("一键锁屏").findOne(500)) {
                         back();
                     }
                     return;
                 } else {
                     toastLog("未找到签到标识");
-                    while (!id("workspace_screen").findOne(500)) {
+                    while (!desc("一键锁屏").findOne(500)) {
                         back();
                     }
                     return SignIn_Smzdm();
@@ -949,14 +918,14 @@ function SignIn_Smzdm() {
 
         } else {
             toastLog("未找到我的主界面，重启");
-            while (!id("workspace_screen").findOne(500)) {
+            while (!desc("一键锁屏").findOne(500)) {
                 back();
             }
             return SignIn_Smzdm();
         }
     } catch (err) {
         toastLog(err);
-        while (!id("workspace_screen").findOne(500)) {
+        while (!desc("一键锁屏").findOne(500)) {
             back();
         }
 
@@ -980,6 +949,7 @@ function SignIn_Alibaba() {
             launch("com.alibaba.wireless");
             sleep(1000);
         }
+        // launch("com.alibaba.wireless");
         sleep(4000);
         var 赚元宝 = text("赚元宝").findOne(7000);
         if (赚元宝) {
@@ -1040,20 +1010,20 @@ function SignIn_Alibaba() {
 
         } else {
             toastLog("未找到赚元宝，重启");
-            while (!id("workspace_screen").findOne(500)) {
+            while (!desc("一键锁屏").findOne(500)) {
                 back();
             }
-            return SignIn_Alibaba();
+            return
         }
 
     } catch (err) {
         toastLog(err);
-        while (!id("workspace_screen").findOne(500)) {
+        while (!desc("一键锁屏").findOne(500)) {
             back();
         }
         return SignIn_Alibaba();
     } finally {
-        while (!id("workspace_screen").findOne(500)) {
+        while (!desc("一键锁屏").findOne(500)) {
             back();
         }
         return;
@@ -1084,7 +1054,7 @@ function SignIn_Alibaba_AlipayGphone() {
 
         } else {
             toastLog("支付宝没有找到首页图标！后退重启！");
-            while (!id("workspace_screen").findOne(500)) {
+            while (!desc("一键锁屏").findOne(500)) {
                 back();
             }
             return SignIn_Alibaba_AlipayGphone();
@@ -1120,7 +1090,7 @@ function SignIn_Alibaba_AlipayGphone() {
                             sleep(3000);
                             back();
                             save_log("支付宝里的阿里巴巴已完成！");
-                            while (!id("workspace_screen").findOne(500)) {
+                            while (!desc("一键锁屏").findOne(500)) {
                                 back();
                             }
                             return;
@@ -1129,14 +1099,14 @@ function SignIn_Alibaba_AlipayGphone() {
                 }
             } else {
                 toastLog("未找到阿里巴巴1，重启");
-                while (!id("workspace_screen").findOne(500)) {
+                while (!desc("一键锁屏").findOne(500)) {
                     back();
                 }
                 return SignIn_Alibaba_AlipayGphone();
             }
         } else {
             toastLog("未找到我的小程序，重启");
-            while (!id("workspace_screen").findOne(500)) {
+            while (!desc("一键锁屏").findOne(500)) {
                 back();
             }
             return SignIn_Alibaba_AlipayGphone();
@@ -1176,6 +1146,18 @@ function SignIn_Alipay() {
         if (理财) {
             var 理财 = 理财.bounds();
             click(理财.centerX(), 理财.centerY());
+
+            // var 去看看 = text("去看看").findOne(500);
+            // var 去完成 = text("去完成").findOne(500);
+            // var 黄金 = text("黄金").findOne(1000);
+            // if (去看看 | 去完成) {
+            //     continue;
+            // } else if (黄金) {
+            //     var 黄金=黄金.bounds();
+            //     click(黄金.centerX(), 黄金.centerY());
+            // }
+
+
             while (1) {
                 var 立即领取 = text("立即领取").findOne(2000);
                 var 去看看 = text("去看看").findOne(500);
@@ -1260,9 +1242,11 @@ function SignIn_Alipay() {
                 }
             }
         }
-        while (!id("workspace_screen").findOne(500)) {
+        while (!desc("一键锁屏").findOne(500)) {
             back();
         }
+        home();
+        sleep(1000);
     } catch (err) {
         toastLog(err);
         return SignIn_Alipay();
@@ -1280,6 +1264,13 @@ function SignIn_idlefish() {
             launch("com.taobao.idlefish");
             sleep(1000);
         }
+        // toastLog("进入广告检测");
+        var 跳过广告 = id("advert_close_text").findOne(3000);
+        if (跳过广告) {
+            var 跳过广告 = 跳过广告.bounds();
+            click(跳过广告.centerX(), 跳过广告.centerY());
+        }
+        // toastLog("已经过了广告");
         var 首页 = id("tab_title").findOne(6000);
         if (首页) {
             var 首页坐标 = 首页.bounds();
@@ -1287,7 +1278,7 @@ function SignIn_idlefish() {
             sleep(1000);
         } else {
             toastLog("闲鱼没有找到首页，退出重启");
-            while (!id("workspace_screen").findOne(500)) {
+            while (!desc("一键锁屏").findOne(500)) {
                 back();
             }
             return SignIn_idlefish();
@@ -1312,7 +1303,7 @@ function SignIn_idlefish() {
                             save_log("闲鱼搜索框已完成");
                         } else {
                             toastLog("搜索未完成！后退重启！");
-                            while (!id("workspace_screen").findOne(500)) {
+                            while (!desc("一键锁屏").findOne(500)) {
                                 back();
                             }
                             return SignIn_idlefish();
@@ -1509,7 +1500,7 @@ function SignIn_idlefish() {
         toastLog("出现错误" + err);
         return SignIn_idlefish();
     } finally {
-        while (!id("workspace_screen").findOne(500)) {
+        while (!desc("一键锁屏").findOne(500)) {
             back();
         }
         return;
@@ -1559,13 +1550,13 @@ function Sign_autonavi() {
                     home();
                     sleep(1000);
                     save_log("高德地图已完成!");
-                    return;
+
                 } else if (text("签到战绩").findOne(2500)) {
                     back();
                     home();
                     sleep(1000);
                     save_log("高德地图已完成!");
-                    return;
+
                 } else {
                     toastLog("未找到表示签到成功的标识！");
                     back();
@@ -1573,7 +1564,7 @@ function Sign_autonavi() {
                     sleep(1000);
                 }
             } else {
-                while (!id("workspace_screen").findOne(500)) {
+                while (!desc("一键锁屏").findOne(500)) {
                     back();
                 }
                 sleep(1000);
@@ -1582,7 +1573,7 @@ function Sign_autonavi() {
         }
     } catch (err) {
         toastLog("出现错误" + err);
-        while (!id("workspace_screen").findOne(500)) {
+        while (!desc("一键锁屏").findOne(500)) {
             back();
         }
         sleep(1000);
@@ -1628,7 +1619,7 @@ function SignIn_Sfacg() {
                 }
             } else {
                 toast("没有找到我的主页，请重试！");
-                while (!id("workspace_screen").findOne(500)) {
+                while (!desc("一键锁屏").findOne(500)) {
                     back();
                 }
                 return SignIn_Sfacg();
@@ -1666,7 +1657,7 @@ function SignIn_Sfacg() {
     } catch (err) {
         toastLog(err);
     } finally {
-        while (!id("workspace_screen").findOne(500)) {
+        while (!desc("一键锁屏").findOne(500)) {
             back();
         }
         return;
@@ -1709,7 +1700,7 @@ function SignIn_Unicom() {
                 //     click(540, 1479);
                 //     sleep(4000);
                 //     save_log("联通营业厅已完成");
-                //     while (!id("workspace_screen").findOne(500)) {
+                //     while (!desc("一键锁屏").findOne(500)) {
                 //         back();
                 //     } 
                 //     return;

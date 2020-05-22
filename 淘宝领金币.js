@@ -90,14 +90,14 @@ function taobao_coins() {
         // }
         sleep(1000);
         click(540, 965); //收果实
-        sleep(1000);
+        sleep(2000);
         if (text_log) {
             var patter = text_log.search("今天淘金币全部好友找遍了！");
             if (patter != -1) {
                 toastLog("今天淘金币全部好友找遍了！");
             } else {
                 toastLog(("开始偷金币"));
-                if (text("偷金币").findOne(1000)) {
+                if (text("偷金币").findOne(3000)) {
                     toastLog("点击偷金币");
                     click(980, 900);
                     var num = 0;
@@ -157,18 +157,15 @@ function taobao_coins() {
                                 break;
                             }
                             swipe(540, 2000, 540, 900, 200); //下划
-                            sleep(1000);
                             if (text("个好友可偷金币").findOne(500)) {
                                 while (1) {
                                     var 点开好友列表 = text("个好友可偷金币").findOne().bounds();
-                                    if (点开好友列表.centerY() > 2300) {
-                                        swipe(540, 1500, 540, 1300, 200); //下划
-                                        sleep(1000);
-                                    } else if (点开好友列表.centerY() < 800) {
-                                        swipe(540, 1300, 540, 1500, 200); //上划
-                                        sleep(1000);
+                                    if (点开好友列表.centerY() > 1300) {
+                                        swipe(540, 1800, 540, 1000, 200); //下划
+                                        sleep(500);
                                     } else {
                                         click(点开好友列表.centerX(), 点开好友列表.centerY());
+                                        num += 1;
                                         break;
                                     }
                                 }
@@ -179,7 +176,7 @@ function taobao_coins() {
                                 sleep(2000);
                                 break;
                             }
-                            num += 1;
+
                         } else {
                             toastLog("未在偷金币界面");
                             exit();
@@ -202,12 +199,17 @@ function taobao_coins() {
             }
             while (1) {
                 var 去完成 = text("去完成").findOne(500);
+                if (x = 1) {
+                    var 去完成 = text("去完成").findOnce(1);
+                    toastLog(去完成);
+                }
                 var 去逛逛 = text("去逛逛").findOne(500);
                 var 去添加 = text("去添加").findOne(500);
+
                 if (去完成) {
-                    sleep(2000);
+                    sleep(1000);
                     去完成.click();
-                    coin_loop();
+                    x = coin_loop();
                 } else if (去逛逛) {
                     去逛逛.click();
                     coin_loop();
@@ -273,7 +275,7 @@ function taobao_coins() {
                 }
             }
         }
-        if (text("金币成就").findOne(10000)) {
+        if (text("金币成就").findOne(3000)) {
             while (1) {
                 var 领取奖励 = desc("领取奖励").findOne(2000);
                 if (领取奖励) {
@@ -287,9 +289,7 @@ function taobao_coins() {
                 }
             }
         }
-        while (!text("超级抵钱").findOne(1000)) {
-            back();
-        }
+        while (!text("超级抵钱").findOne(1000)) { back(); }
         sleep(1000);
         if (text_log) {
             var patter = text_log.search("淘金币福利中心已完成");
@@ -311,9 +311,9 @@ function taobao_coins() {
                 }
             }
         }
-        sleep(1000);
+        sleep(2000);
         toastLog("进入今日任务");
-        click(90, 1157);
+        click(90, 1180);
         if (desc("好店签到送金币").findOne(10000)) {
             var num = 0;
             while (1) {
@@ -359,6 +359,12 @@ function coin_loop() {
         while (!text("领水滴赚金币").findOne(1000)) {
             back();
         }
+    } else if (text("充值中心").findOne(200)) {
+        while (!text("领水滴赚金币").findOne(1000)) {
+            back();
+        }
+        toastLog("进入了充值中心");
+        return 1;
     } else if (id("scan_icon").findOne(3000)) {
         id("scan_icon").findOne().click();
         sleep(2000);
@@ -378,6 +384,12 @@ function coin_loop() {
         }
     } else if (text("历史搜索").findOne(500)) {
         toastLog("进入搜索领金币");
+        var 展开更多搜索历史 = desc("展开更多搜索历史").findOne(1000);
+        if (展开更多搜索历史) {
+            var 展开更多搜索历史 = 展开更多搜索历史.bounds();
+            click(展开更多搜索历史.centerX(), 展开更多搜索历史.centerY());
+            sleep(500);
+        }
         click(40, 400); //点第一个历史搜索
         sleep(12000);
         while (!text("领水滴赚金币").findOne(500)) {
@@ -440,7 +452,7 @@ function coin_loop() {
     } else {
         toastLog("退回");
         sleep(1000);
-        back();
+        if (!text("领水滴赚金币").findOne(500)) { back(); }
         sleep(2000);
     }
     while (1) {
