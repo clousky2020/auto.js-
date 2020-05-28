@@ -7,11 +7,14 @@ setScreenMetrics(1080, 2340); //设定以下坐标点击的基准屏幕分辨率
 var now = new Date();
 var log_name = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
 var path = files.cwd() + "/运行日志/日志" + log_name + ".txt";
-if (files.isFile(path)) {
-    var text_log = files.read(path);
-}
-home();
-
+files.createWithDirs(path);
+var text_log = files.read(path);
+// if (files.isFile(path)) {
+//     var text_log = files.read(path);
+// }
+// home();
+sleep(250);
+SignIn_jingdong(); //京东
 sleep(250);
 SignIn_Unicom(); //联通营业厅
 sleep(250);
@@ -31,11 +34,9 @@ SignIn_Alibaba(); //阿里巴巴领元宝
 sleep(250);
 SignIn_Fandengreader(); //樊登读书
 sleep(250);
-SignIn_Miguaikan(); //咪咕爱看签到
-sleep(250);
 SignIn_Baidu_netdisk(); //百度网盘
 sleep(250);
-SignIn_jingdong(); //京东
+SignIn_Miguaikan(); //咪咕爱看签到
 sleep(250);
 Signin_TaobaoPhone(); //领取淘宝的话费
 sleep(250);
@@ -59,12 +60,10 @@ function save_log(text) {
 
 function SignIn_ximalaya() {
     try {
-        if (text_log) {
-            var patter = text_log.search("喜马拉雅已签到");
-            if (patter != -1) {
-                toastLog("喜马拉雅跳过");
-                return;
-            }
+        var patter = text_log.search("喜马拉雅已签到");
+        if (patter != -1) {
+            toastLog("喜马拉雅跳过");
+            return;
         }
         sleep(1000);
         var appRun = currentActivity();
@@ -99,39 +98,39 @@ function SignIn_ximalaya() {
                     //sleep(1000);
                     //var 积分图标=积分图标.bounds();
                     //click(积分图标.centerX(),积分图标.centerY());
-                    while (1) {
-                        var 日常任务 = text("日常任务").findOne(3000);
-                        if (日常任务) { //出现这个字样，说明进入了福利中心
-                            while (1) {
-                                var 我知道了 = text("我知道了").findOne(2000);
-                                if (我知道了) {
-                                    我知道了.click();
-                                    sleep(1000);
-                                }
-                                while (1) {
-                                    var 领取 = text("领取").findOne(2000);
-                                    if (领取) {
-                                        var 领取坐标 = 领取.bounds();
-                                        if (领取坐标.centerY() > 2300) {
-                                            swipe(540, 2000, 540, 1800, 300);
-                                            continue;
-                                        }
-                                        领取.click();
-                                        sleep(1000);
-                                    } else {
-                                        save_log("喜马拉雅已签到");
-                                        back();
-                                        return;
-                                    }
-                                }
 
+                    var 日常任务 = text("日常任务").findOne(3000);
+                    if (日常任务) { //出现这个字样，说明进入了福利中心
+                        while (1) {
+                            var 我知道了 = text("我知道了").findOne(2000);
+                            if (我知道了) {
+                                我知道了.click();
+                                sleep(1000);
                             }
-                        } else {
-                            toastLog("未进入福利中心！");
-                            back();
-                            sleep(1000);
+                            while (1) {
+                                var 领取 = text("领取").findOne(2000);
+                                if (领取) {
+                                    var 领取坐标 = 领取.bounds();
+                                    if (领取坐标.centerY() > 2300) {
+                                        swipe(540, 2000, 540, 1800, 300);
+                                        continue;
+                                    }
+                                    领取.click();
+                                    sleep(1000);
+                                } else {
+                                    save_log("喜马拉雅已签到");
+                                    back();
+                                    return;
+                                }
+                            }
+
                         }
+                    } else {
+                        toastLog("未进入福利中心！");
+                        back();
+                        sleep(1000);
                     }
+
                 }
             } else {
                 toastLog("喜马拉雅未找到，重启");
@@ -154,13 +153,12 @@ function SignIn_ximalaya() {
 
 function SignIn_Miguaikan() {
     try {
-        if (text_log) {
-            var patter = text_log.search("咪咕爱看已完成");
-            if (patter != -1) {
-                toastLog("咪咕爱看跳过");
-                return;
-            }
+        var patter = text_log.search("咪咕爱看已完成");
+        if (patter != -1) {
+            toastLog("咪咕爱看跳过");
+            return;
         }
+
         sleep(1000);
         var appRun = currentActivity();
         if (appRun != "com.wondertek.miguaikan") {
@@ -180,10 +178,10 @@ function SignIn_Miguaikan() {
             click(close.centerX(), close.centerY());
             back();
         }
-        sleep(2000);
+        sleep(1000);
         back();
 
-        var 我的 = text("我的").findOne(4000);
+        var 我的 = text("我的").findOne(5000);
         if (我的) {
             sleep(1000);
             var 我的 = 我的.bounds();
@@ -202,7 +200,8 @@ function SignIn_Miguaikan() {
                     click(领取.centerX(), 领取.centerY());
                     if (text("签到成功").findOne(10000)) {
                         sleep(1000);
-                        click(495, 1596, 585, 1686); //关闭
+                        textContains("W5Xj+xIcv3b53j1mQr1wAAAAASUVORK5CYII=").findOne().click();
+                        // click(495, 1596, 585, 1686); //关闭
                         sleep(1000);
                     } else {
                         back();
@@ -221,6 +220,43 @@ function SignIn_Miguaikan() {
                         click(点击抽奖.centerX(), 点击抽奖.centerY());
                     }
                 }
+                var 去分享 = text("去分享").findOne(3000);
+                if (去分享) {
+                    var 去分享 = 去分享.bounds();
+                    click(去分享.centerX(), 去分享.centerY());
+                    sleep(1000);
+                    var 分享 = text("分享").findOne(3000);
+                    if (分享) {
+                        var 分享 = 分享.bounds();
+                        click(分享.centerX(), 分享.centerY());
+                        sleep(1000);
+                        var 微信好友 = text("微信好友").findOne(3000);
+                        if (微信好友) {
+                            var 微信好友 = 微信好友.bounds();
+                            click(微信好友.centerX(), 微信好友.centerY());
+                            sleep(1000);
+                            while (1) {
+                                var 文件传输助手 = text("文件传输助手").findOne(4000);
+                                if (文件传输助手) {
+                                    var 文件传输助手 = 文件传输助手.bounds();
+                                    click(文件传输助手.centerX(), 文件传输助手.centerY());
+                                    text("取消").findOne().click();
+                                    sleep(2000);
+                                    while (!text("会员每日福利").findOne(1000)) { back(); }
+
+                                } else {
+                                    swipe(540, 1800, 540, 1300, 500);
+                                }
+                            }
+
+                        } else {
+                            while (!text("会员每日福利").findOne(1000)) { back(); }
+                        }
+                    } else {
+                        toastLog("没有找到分享的选择");
+                        back();
+                    }
+                }
                 save_log("咪咕爱看已完成！");
             } else {
                 toastLog("未找到福利界面，重启!");
@@ -228,7 +264,7 @@ function SignIn_Miguaikan() {
             }
         } else {
             toastLog("未找到我的，重启");
-            while (!text("我的").findOne(1000)) {
+            while (!desc("一键锁屏").findOne(1000)) {
                 back();
             }
             return SignIn_Miguaikan();
@@ -246,13 +282,13 @@ function SignIn_Miguaikan() {
 
 function SignIn_Baidu_Wenku() {
     try {
-        if (text_log) {
-            var patter = text_log.search("百度文库今日已签");
-            if (patter != -1) {
-                toastLog("百度文库跳过");
-                return;
-            }
+
+        var patter = text_log.search("百度文库今日已签");
+        if (patter != -1) {
+            toastLog("百度文库跳过");
+            return;
         }
+
         sleep(1000);
         var appRun = currentActivity();
         if (appRun != "com.baidu.wenku") {
@@ -333,13 +369,13 @@ function SignIn_Baidu_Wenku() {
 
 function Signin_TaobaoPhone() {
     try {
-        if (text_log) {
-            var patter = text_log.search("淘宝话费已经领取");
-            if (patter != -1) {
-                toastLog("淘宝话费跳过");
-                return;
-            }
+
+        var patter = text_log.search("淘宝话费已经领取");
+        if (patter != -1) {
+            toastLog("淘宝话费跳过");
+            return;
         }
+
         sleep(1000);
         var appRun = currentActivity();
         if (appRun != "com.taobao.taobao") {
@@ -433,11 +469,20 @@ function SignIn_jingdong() {
             launch("com.jingdong.app.mall");
             sleep(1000);
         }
-        while (!text("首页").findOne(2000)) {
+        app.launchApp("京东");
+        toastLog("打开京东");
+        // while (!desc("首页").findOne(2000)) {
+        //     back();
+        // }
+        // sleep(1000);
+
+        var 首页 = desc("首页").findOne(1000);
+        if (!首页) {
+            toastLog("没有找到首页，重启!");
             back();
+            return SignIn_jingdong();
         }
-        sleep(1000);
-        text("首页").findOne(1000).click();
+
         var 领京豆 = text("领京豆").findOne(5000);
         if (领京豆) {
             var 领京豆 = 领京豆.bounds();
@@ -464,7 +509,7 @@ function SignIn_jingdong() {
             click(1000, 300);
             sleep(2000);
             while (1) {
-                if (textMatches(/再来领取/).findOne(2000)) { break; }
+                if (textMatches(/x0/).findOne(2000)) { break; }
                 var 点击领取 = textMatches(/x\d/).findOne(2000);
                 if (点击领取) {
                     var 点击领取 = 点击领取.bounds();
@@ -475,13 +520,13 @@ function SignIn_jingdong() {
             }
             back();
             sleep(1000);
-            if (text_log) {
-                var patter = text_log.search("京东今天已领豆");
-                if (patter != -1) {
-                    toastLog("京东跳过");
-                    return;
-                }
+
+            var patter = text_log.search("京东今天已领豆");
+            if (patter != -1) {
+                toastLog("京东跳过");
+                return;
             }
+
             var 抽京豆 = text("抽京豆").findOne(5000);
             if (抽京豆) {
                 var 抽京豆 = 抽京豆.bounds();
@@ -611,13 +656,13 @@ function SignIn_jingdong() {
 
 function SignIn_Baidu_netdisk() {
     try {
-        if (text_log) {
-            var patter = text_log.search("百度网盘");
-            if (patter != -1) {
-                toastLog("百度网盘跳过");
-                return;
-            }
+
+        var patter = text_log.search("百度网盘");
+        if (patter != -1) {
+            toastLog("百度网盘跳过");
+            return;
         }
+
         sleep(1000);
         var appRun = currentActivity();
         if (appRun != "com.baidu.netdisk") {
@@ -694,13 +739,13 @@ function SignIn_Baidu_netdisk() {
 
 function SignIn_Fandengreader() {
     try {
-        if (text_log) {
-            var patter = text_log.search("樊登读书已签到");
-            if (patter != -1) {
-                toastLog("樊登读书跳过");
-                return;
-            }
+
+        var patter = text_log.search("樊登读书已签到");
+        if (patter != -1) {
+            toastLog("樊登读书跳过");
+            return;
         }
+
         sleep(1000);
         var appRun = currentActivity();
         if (appRun != "io.dushu.fandengreader") {
@@ -750,13 +795,13 @@ function SignIn_Fandengreader() {
 
 function SignIn_Netease_Cloudmusic() {
     try {
-        if (text_log) {
-            var patter = text_log.search("网易云音乐已签到");
-            if (patter != -1) {
-                toastLog("网易云音乐跳过");
-                return;
-            }
+
+        var patter = text_log.search("网易云音乐已签到");
+        if (patter != -1) {
+            toastLog("网易云音乐跳过");
+            return;
         }
+
         sleep(1000);
         var appRun = currentActivity();
         if (appRun != "com.netease.cloudmusic") {
@@ -812,13 +857,13 @@ function SignIn_Netease_Cloudmusic() {
 
 function SignIn_Mommypocket() {
     try {
-        if (text_log) {
-            var patter = text_log.search("美物清单已完成");
-            if (patter != -1) {
-                toastLog("美物清单跳过");
-                return;
-            }
+
+        var patter = text_log.search("美物清单已完成");
+        if (patter != -1) {
+            toastLog("美物清单跳过");
+            return;
         }
+
         sleep(1000);
 
         var appRun = currentActivity();
@@ -869,13 +914,13 @@ function SignIn_Mommypocket() {
 
 function SignIn_Smzdm() {
     try {
-        if (text_log) {
-            var patter = text_log.search("什么值得买");
-            if (patter != -1) {
-                toastLog("什么值得买跳过");
-                return;
-            }
+
+        var patter = text_log.search("什么值得买");
+        if (patter != -1) {
+            toastLog("什么值得买跳过");
+            return;
         }
+
         sleep(1000);
         var appRun = currentActivity();
         if (appRun != "com.smzdm.client.android") {
@@ -921,7 +966,7 @@ function SignIn_Smzdm() {
             while (!desc("一键锁屏").findOne(500)) {
                 back();
             }
-            return SignIn_Smzdm();
+            return;
         }
     } catch (err) {
         toastLog(err);
@@ -936,13 +981,13 @@ function SignIn_Smzdm() {
 
 function SignIn_Alibaba() {
     try {
-        if (text_log) {
-            var patter = text_log.search("阿里巴巴元宝已经领取");
-            if (patter != -1) {
-                toastLog("阿里巴巴跳过");
-                return;
-            }
+
+        var patter = text_log.search("阿里巴巴元宝已经领取");
+        if (patter != -1) {
+            toastLog("阿里巴巴跳过");
+            return;
         }
+
         sleep(1000);
         var appRun = currentActivity();
         if (appRun != 'com.alibaba.wireless') {
@@ -1032,13 +1077,13 @@ function SignIn_Alibaba() {
 
 function SignIn_Alibaba_AlipayGphone() {
     try {
-        if (text_log) {
-            var patter = text_log.search("支付宝里的阿里巴巴已完成");
-            if (patter != -1) {
-                toastLog("支付宝里的阿里巴巴跳过");
-                return;
-            }
+
+        var patter = text_log.search("支付宝里的阿里巴巴已完成");
+        if (patter != -1) {
+            toastLog("支付宝里的阿里巴巴跳过");
+            return;
         }
+
         sleep(1000);
         //支付宝里的阿里巴巴
         var appRun = currentActivity();
@@ -1122,13 +1167,13 @@ function SignIn_Alibaba_AlipayGphone() {
 
 function SignIn_Alipay() {
     try {
-        // if (text_log) {
+        // 
         //     var patter = text_log.search("支付宝里的积分已领取");
         //     if (patter != -1) {
         //         toastLog("支付宝里积分领取跳过");
         //         return;
         //     }
-        // }
+        // 
 
         //支付宝里的积分
         while (1) {
@@ -1146,18 +1191,6 @@ function SignIn_Alipay() {
         if (理财) {
             var 理财 = 理财.bounds();
             click(理财.centerX(), 理财.centerY());
-
-            // var 去看看 = text("去看看").findOne(500);
-            // var 去完成 = text("去完成").findOne(500);
-            // var 黄金 = text("黄金").findOne(1000);
-            // if (去看看 | 去完成) {
-            //     continue;
-            // } else if (黄金) {
-            //     var 黄金=黄金.bounds();
-            //     click(黄金.centerX(), 黄金.centerY());
-            // }
-
-
             while (1) {
                 var 立即领取 = text("立即领取").findOne(2000);
                 var 去看看 = text("去看看").findOne(500);
@@ -1175,8 +1208,9 @@ function SignIn_Alipay() {
                 } else if (去完成) {
                     break;
                 } else {
-                    swipe(1120, 1750, 200, 1750, 300); //左滑
-                    sleep(500);
+                    break;
+                    // swipe(1120, 1750, 200, 1750, 300); //左滑
+                    // sleep(500);
                 }
             }
         } else {
@@ -1231,7 +1265,8 @@ function SignIn_Alipay() {
             click(我的家.centerX(), 我的家.centerY());
             while (1) {
                 // var 家庭积分 = textMatches("\+\d").findOne(2000);
-                var 家庭积分 = textContains("签到").findOne(2000);
+                // var 家庭积分 = textContains("签到").findOne(2000);
+                var 家庭积分 = textMatches(/\+\d/).findOne(2000);
                 if (家庭积分) {
                     var 家庭积分 = 家庭积分.bounds();
                     click(家庭积分.centerX(), 家庭积分.centerY());
@@ -1283,42 +1318,42 @@ function SignIn_idlefish() {
             }
             return SignIn_idlefish();
         }
-        if (text_log) {
-            var patter = text_log.search("闲鱼搜索框已完成");
-            if (patter != -1) {
-                toastLog("闲鱼搜索框跳过");
-            } else {
-                var 搜索框 = id("search_bar_layout").findOne(3000);
-                if (搜索框) {
-                    toastLog("找到搜索框");
-                    sleep(1000);
-                    var 搜索框 = 搜索框.bounds();
-                    click(搜索框.centerX(), 搜索框.centerY());
-                    if (text("历史搜索").findOne(7000)) {
-                        toastLog("选择宝贝");
-                        sleep(2000);
-                        click(130, 376); //点击历史记录第一个
-                        if (text("综合排序").findOne(5000)) {
-                            back();
-                            save_log("闲鱼搜索框已完成");
-                        } else {
-                            toastLog("搜索未完成！后退重启！");
-                            while (!desc("一键锁屏").findOne(500)) {
-                                back();
-                            }
-                            return SignIn_idlefish();
-                        }
-                    } else {
-                        toastLog("历史搜索未加载");
+
+        var patter = text_log.search("闲鱼搜索框已完成");
+        if (patter != -1) {
+            toastLog("闲鱼搜索框跳过");
+        } else {
+            var 搜索框 = id("search_bar_layout").findOne(3000);
+            if (搜索框) {
+                toastLog("找到搜索框");
+                sleep(1000);
+                var 搜索框 = 搜索框.bounds();
+                click(搜索框.centerX(), 搜索框.centerY());
+                if (text("历史搜索").findOne(7000)) {
+                    toastLog("选择宝贝");
+                    sleep(2000);
+                    click(130, 376); //点击历史记录第一个
+                    if (text("综合排序").findOne(5000)) {
                         back();
+                        save_log("闲鱼搜索框已完成");
+                    } else {
+                        toastLog("搜索未完成！后退重启！");
+                        while (!desc("一键锁屏").findOne(500)) {
+                            back();
+                        }
                         return SignIn_idlefish();
                     }
                 } else {
-                    toastLog("未找到搜索框！重启！");
+                    toastLog("历史搜索未加载");
+                    back();
                     return SignIn_idlefish();
                 }
+            } else {
+                toastLog("未找到搜索框！重启！");
+                return SignIn_idlefish();
             }
         }
+
 
         toastLog("切换到我的界面");
         while (1) {
@@ -1332,64 +1367,71 @@ function SignIn_idlefish() {
                 break;
             }
         }
-        if (text_log) {
-            var patter = text_log.search("今天边逛边赚宝箱领完了");
-            if (patter != -1) { //改成-1，今天实行过一次就会跳过
-                toastLog("边逛边赚跳过");
-            } else {
-                toastLog("开始边逛边赚");
-                var 边逛边赚钱入口 = text("边逛边赚钱").findOne(5000);
-                if (边逛边赚钱入口) {
-                    边逛边赚钱入口.click();
-                    if (desc("边逛边赚钱").findOne(8000)) {
-                        toastLog("进入边逛边赚钱了");
-                        sleep(1000);
-                        var 可获得 = desc("可获得").findOne(1000);
-                        while (可获得) {
-                            var 可获得 = 可获得.bounds();
-                            click(可获得.centerX(), 可获得.centerY());
-                            sleep(2000);
-                            descContains("恭喜获得红包").findOne(5000);
-                            click(848, 754); //关闭
+
+        var patter = text_log.search("今天边逛边赚宝箱领完了");
+        if (patter != -1) { //改成-1，今天实行过一次就会跳过
+            toastLog("边逛边赚跳过");
+        } else {
+            toastLog("开始边逛边赚");
+            var 边逛边赚钱入口 = text("边逛边赚钱").findOne(5000);
+            if (边逛边赚钱入口) {
+                边逛边赚钱入口.click();
+                if (desc("边逛边赚钱").findOne(8000)) {
+                    toastLog("进入边逛边赚钱了");
+                    sleep(1000);
+                    var 可获得 = desc("可获得").findOne(1000);
+                    while (可获得) {
+                        var 可获得 = 可获得.bounds();
+                        click(可获得.centerX(), 可获得.centerY());
+                        sleep(3000);
+                        if (descContains("恭喜获得红包").findOne(5000)) {
+                            click(848, 1500); //关闭
                             sleep(1000);
-                        }
-                        swipe(540, 2000, 540, 700, 200) //下滑
-                        var 点击看 = desc("点击看").findOne(2000);
-                        while (点击看) {
-                            for (i = 1; i <= 2; i++) {
-                                click(400 * i, 1330);
-                                if (text("留言").findOne()) {
-                                    back();
-                                    sleep(500);
-                                }
-                                var 点击打开 = desc("点击打开").findOne(2000);
-                                if (点击打开) {
-                                    var 点击打开 = 点击打开.bounds();
-                                    sleep(1000);
-                                    click(点击打开.centerX(), 点击打开.centerY());
-                                    if (descContains("恭喜获得").findOne(3000)) {
-                                        click(848, 754); //关闭
-                                        sleep(2000);
-                                        break;
-                                    }
-                                }
-                            }
-                            swipe(540, 2000, 540, 1000, 200); //下滑
-                            sleep(1000);
-                            var 点击看 = desc("点击看").findOne(1000);
-                        }
-                        if (!点击看) {
-                            //save_log("今天边逛边赚宝箱领完了");
                             back();
                             sleep(1000);
+                            边逛边赚钱入口.click();
+                            sleep(1000);
+                            break;
+                        } else {
+                            while (!desc("边逛边赚钱").findOne(1000)) { back(); }
                         }
-
                     }
+                    swipe(540, 2000, 540, 700, 200) //下滑
+                    var 点击看 = desc("点击看").findOne(2000);
+                    while (点击看) {
+                        for (i = 1; i <= 2; i++) {
+                            var 点击打开 = desc("点击打开").findOne(2000);
+                            click(400 * i, 1330);
+                            if (text("留言").findOne(3000)) {
+                                back();
+                                sleep(1000);
+                            }
+                            if (点击打开) {
+                                var 点击打开 = 点击打开.bounds();
+                                sleep(1000);
+                                click(点击打开.centerX(), 点击打开.centerY());
+                                if (descContains("恭喜获得").findOne()) {
+                                    click(848, 754); //关闭
+                                    sleep(2000);
+                                    break;
+                                }
+                            } else {
+                                while (!desc("边逛边赚钱").findOne(500)) { back(); }
+                            }
+                        }
+                        swipe(540, 2000, 540, 1000, 200); //下滑
+                        sleep(1000);
+                        var 点击看 = desc("点击看").findOne(1000);
+                    }
+                    if (!点击看) {
+                        //save_log("今天边逛边赚宝箱领完了");
+                        back();
+                        sleep(1000);
+                    }
+
                 }
             }
         }
-
-
 
         toastLog("开始签到");
         var 签到页面入口 = text("闲鱼币").findOne(3000);
@@ -1402,73 +1444,73 @@ function SignIn_idlefish() {
                 sleep(1000);
                 click(670, 900); //收鱼篓
                 sleep(1000);
-                if (text_log) {
-                    var patter = text_log.search("夺宝押注已结束");
-                    if (patter != -1) {
-                        toastLog("夺宝押注跳过");
-                    } else {
-                        toastLog("开始闲鱼币夺宝");
-                        if (text("100闲鱼币夺宝 >").findOne()) {
-                            text("100闲鱼币夺宝 >").findOne().click();
-                            sleep(2000);
-                            var 闲鱼币夺宝界面 = desc("无限投注，投注越多越容易中奖").findOne();
-                            if (闲鱼币夺宝界面) {
-                                //早上完善，晚上没有对应的按钮了
-                                toastLog("进入闲鱼夺宝页面");
-                                sleep(1000);
-                                while (1) {
-                                    var 签到页面 = desc("我的闲鱼币").findOne(1000);
-                                    var 夺宝押注入口 = desc("100闲鱼币夺宝").findOne(1000);
-                                    if (夺宝押注入口) {
-                                        sleep(1000);
-                                        var 夺宝押注入口 = 夺宝押注入口.bounds();
-                                        if (夺宝押注入口.centerY() > 2300) {
-                                            swipe(540, 2000, 540, 1500, 300); //把坐标点移上来
-                                            continue;
-                                        }
-                                        click(夺宝押注入口.centerX(), 夺宝押注入口.centerY());
-                                        sleep(1000);
-                                        if (desc("100闲鱼币夺宝").findOne(3000)) {
-                                            click(500, 1670); //点击进入押宝最终页面
-                                            sleep(1000);
-                                            if (desc("100闲鱼币夺宝").findOne()) {
-                                                click(226, 1900); //减少投注
-                                                sleep(800);
-                                                click(226, 1900); //减少投注
-                                                sleep(800);
-                                                while (desc("100闲鱼币夺宝").findOne(500)) {
-                                                    click(500, 2250); //确定投注
-                                                    sleep(1000);
-                                                }
-                                                back();
-                                            }
-                                            sleep(2000);
-                                            back();
-                                            text("100闲鱼币夺宝 >").findOne().click();
-                                        } else {
-                                            toastLog("本页面已压过了");
-                                            back();
-                                            sleep(1000);
-                                            back();
-                                            text("100闲鱼币夺宝 >").findOne().click();
-                                        }
-                                    } else {
-                                        save_log("夺宝押注已结束");
-                                        var 我的闲鱼币 = (desc("我的闲鱼币").findOne(2000));
-                                        if ("我的闲鱼币") {
-                                            var 我的闲鱼币 = 我的闲鱼币.bounds();
-                                            click(我的闲鱼币.centerX() - 229, 我的闲鱼币.centerY() + 46); //通过求出旁边的我的闲鱼币的控件坐标计算得到左边最终领取投资奖励的坐标
-                                        }
-                                        break;
+
+                var patter = text_log.search("夺宝押注已结束");
+                if (patter != -1) {
+                    toastLog("夺宝押注跳过");
+                } else {
+                    toastLog("开始闲鱼币夺宝");
+                    if (text("100闲鱼币夺宝 >").findOne()) {
+                        text("100闲鱼币夺宝 >").findOne().click();
+                        sleep(2000);
+                        var 闲鱼币夺宝界面 = desc("无限投注，投注越多越容易中奖").findOne();
+                        if (闲鱼币夺宝界面) {
+                            //早上完善，晚上没有对应的按钮了
+                            toastLog("进入闲鱼夺宝页面");
+                            sleep(1000);
+                            while (1) {
+                                var 签到页面 = desc("我的闲鱼币").findOne(1000);
+                                var 夺宝押注入口 = desc("100闲鱼币夺宝").findOne(1000);
+                                if (夺宝押注入口) {
+                                    sleep(1000);
+                                    var 夺宝押注入口 = 夺宝押注入口.bounds();
+                                    if (夺宝押注入口.centerY() > 2300) {
+                                        swipe(540, 2000, 540, 1500, 300); //把坐标点移上来
+                                        continue;
                                     }
+                                    click(夺宝押注入口.centerX(), 夺宝押注入口.centerY());
+                                    sleep(1000);
+                                    if (desc("100闲鱼币夺宝").findOne(3000)) {
+                                        click(500, 1670); //点击进入押宝最终页面
+                                        sleep(1000);
+                                        if (desc("100闲鱼币夺宝").findOne()) {
+                                            click(226, 1900); //减少投注
+                                            sleep(500);
+                                            click(226, 1900); //减少投注
+                                            sleep(500);
+                                            while (desc("100闲鱼币夺宝").findOne(500)) {
+                                                click(500, 2250); //确定投注
+                                                sleep(1000);
+                                            }
+                                            back();
+                                        }
+                                        sleep(2000);
+                                        back();
+                                        text("100闲鱼币夺宝 >").findOne().click();
+                                    } else {
+                                        toastLog("本页面已压过了");
+                                        back();
+                                        sleep(1000);
+                                        back();
+                                        text("100闲鱼币夺宝 >").findOne().click();
+                                    }
+                                } else {
+                                    save_log("夺宝押注已结束");
+                                    var 我的闲鱼币 = (desc("我的闲鱼币").findOne(2000));
+                                    if ("我的闲鱼币") {
+                                        var 我的闲鱼币 = 我的闲鱼币.bounds();
+                                        click(我的闲鱼币.centerX() - 229, 我的闲鱼币.centerY() + 46); //通过求出旁边的我的闲鱼币的控件坐标计算得到左边最终领取投资奖励的坐标
+                                    }
+                                    break;
                                 }
-                                sleep(1000);
-                                back();
-                                sleep(1000);
                             }
+                            sleep(1000);
+                            back();
+                            sleep(1000);
                         }
                     }
                 }
+
                 toastLog("开始任务");
                 click(114, 1160);
                 sleep(2000);
@@ -1509,13 +1551,13 @@ function SignIn_idlefish() {
 
 function Sign_autonavi() {
     try {
-        if (text_log) {
-            var patter = text_log.search("高德地图已完成");
-            if (patter != -1) {
-                toastLog("高德地图跳过");
-                return;
-            }
+
+        var patter = text_log.search("高德地图已完成");
+        if (patter != -1) {
+            toastLog("高德地图跳过");
+            return;
         }
+
         sleep(1000);
         var appRun = currentActivity();
         if (appRun != 'com.autonavi.minimap') {
@@ -1585,13 +1627,13 @@ function Sign_autonavi() {
 
 function SignIn_Sfacg() {
     try {
-        if (text_log) {
-            var patter = text_log.search("SF已完成");
-            if (patter != -1) {
-                toastLog("SF跳过");
-                return;
-            }
+
+        var patter = text_log.search("SF已完成");
+        if (patter != -1) {
+            toastLog("SF跳过");
+            return;
         }
+
         sleep(1000);
         var appRun = currentActivity();
         if (appRun != 'com.sfacg') {
@@ -1666,13 +1708,13 @@ function SignIn_Sfacg() {
 
 function SignIn_Unicom() {
     try {
-        if (text_log) {
-            var patter = text_log.search("联通营业厅已完成");
-            if (patter != -1) {
-                toastLog("联通营业厅跳过");
-                return;
-            }
+
+        var patter = text_log.search("联通营业厅已完成");
+        if (patter != -1) {
+            toastLog("联通营业厅跳过");
+            return;
         }
+
         sleep(1000);
         var appRun = currentActivity();
         if (appRun != 'com.sinovatech.unicom.ui') {

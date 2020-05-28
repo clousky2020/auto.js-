@@ -199,7 +199,6 @@ function tmail_form() {
             //if (text("无星辰落").findOne()) {
             if (集果实图标.findOne(15000)) {
                 toast("已经进入福年种福果");
-
                 var 收下祝福 = text("收下祝福").findOne(2000);
                 if (收下祝福) {
                     var 收下祝福 = 收下祝福.bounds();
@@ -217,17 +216,18 @@ function tmail_form() {
                 sleep(1000);
                 click(1000, 1700); // 进入活动中心
                 collection_bless();
-
-                var 左移图标 = text("TB1X9ITzND1gK0jSZFsXXbldVXa-52-52.png_1080x1800Q50s50.jpg_").findOne(2000);
-                if (左移图标) {
-                    左移图标.click();
-                    sleep(3000);
-                    var 去种新福果 = textContains("去种新福果").findOne(500);
-                    if (!去种新福果) {
-                        click(1000, 1700); // 进入活动中心
-                        collection_bless();
-                    }
-                }
+                click(540, 1700) //浇水
+                sleep(1000);
+                // var 左移图标 = text("TB1X9ITzND1gK0jSZFsXXbldVXa-52-52.png_1080x1800Q50s50.jpg_").findOne(2000);
+                // if (左移图标) {
+                //     左移图标.click();
+                //     sleep(3000);
+                //     var 去种新福果 = textContains("去种新福果").findOne(500);
+                //     if (!去种新福果) {
+                //         click(1000, 1700); // 进入活动中心
+                //         collection_bless();
+                //     }
+                // }
                 while (!desc("我的淘宝").findOne(500)) { back(); } //后退至淘宝首页
                 home();
             } else {
