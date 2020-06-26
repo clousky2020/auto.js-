@@ -16,7 +16,7 @@ function tmail_form() {
             var 我的淘宝图标 = 我的淘宝图标.bounds();
             click(我的淘宝图标.centerX(), 我的淘宝图标.centerY());
             while (1) {
-                var 天猫农场入口 = desc("天猫农场").findOne(3000);
+                var 天猫农场入口 = text("芭芭农场").findOne(3000);
                 if (天猫农场入口) {
                     sleep(2000);
                     var 天猫农场入口 = 天猫农场入口.bounds();
@@ -42,32 +42,33 @@ function tmail_form() {
                 return tmail_form();
             }
             if (text("离线超过24小时，作物会停止自动生产哦~").findOne(3000)) {
+
                 click(526, 1743.3); //关闭长时间未进入后弹出的窗口
                 sleep(1000);
             }
             click(534.6, 1577.16); //宝箱点击关闭
             sleep(1000);
             var sun_list = [
-                [125, 658],
-                [292, 810],
-                [364, 639],
-                [557, 529],
-                [780, 578],
-                [742, 662],
-                [954, 744],
-                [949, 573],
+                [180, 900],
+                [380, 765],
+                [432, 970],
+                [590, 630],
+                [577, 851],
+                [800, 750],
+                [760, 990],
+                [975, 891],
                 [794, 1306]
             ]
             var coordinate_field = [
-                [535, 690],
-                [308, 826],
-                [761, 800],
-                [549, 927],
-                [299, 1086],
-                [789, 1053],
-                [526, 1207],
-                [322, 1320],
-                [512, 1470]
+                [535, 750],
+                [308, 876],
+                [761, 850],
+                [549, 977],
+                [299, 1136],
+                [789, 1100],
+                [526, 1257],
+                [322, 1370],
+                [512, 1520]
             ]
             toast("第一次开始收阳光");
             for (i = 0; i < sun_list.length; i++) {
@@ -92,7 +93,7 @@ function tmail_form() {
             click(535, 1577) //宝箱点击关闭
             sleep(1000);
             while (1) {
-                click(980, 1542) // 点击领阳光的图标
+                click(980, 1720) // 点击领阳光的图标
                 sleep(1000);
                 if (text("去APP完成").findOne(5000)) {
                     toastLog("进入了任务菜单");
@@ -112,7 +113,7 @@ function tmail_form() {
                     sleep(3000);
                     var num = 0;
                     while (1) {
-                        if (desc("立即打开").findOne(1000)) {
+                        if (desc("立即打开").findOne(700)) {
                             toast("立即打开");
                             var rect = desc("立即打开").findOne().bounds();
                             if (rect.centerY() > 2200) {
@@ -123,6 +124,14 @@ function tmail_form() {
                         } else if (desc("关注店铺").findOne(500)) {
                             toast("关注店铺");
                             var rect = desc("关注店铺").findOne().bounds();
+                            if (rect.centerY() > 2200) {
+                                swipe(540, 2000, 540, 1500, 300);
+                                continue;
+                            }
+                            click(rect.centerX(), rect.centerY());
+                        } else if (textContains("关注店铺").findOne(200)) {
+                            toast("关注店铺");
+                            var rect = textContains("关注店铺").findOne().bounds();
                             if (rect.centerY() > 2200) {
                                 swipe(540, 2000, 540, 1500, 300);
                                 continue;
@@ -194,7 +203,7 @@ function tmail_form() {
             }
             sleep(1000);
             toast("进入果园");
-            click(121, 1554);
+            click(128, 556);
             var 集果实图标 = text("gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==");
             //if (text("无星辰落").findOne()) {
             if (集果实图标.findOne(15000)) {
@@ -216,7 +225,8 @@ function tmail_form() {
                 sleep(1000);
                 click(1000, 1700); // 进入活动中心
                 collection_bless();
-                click(540, 1700) //浇水
+                sleep(1200);
+                click(540, 1700) //关闭
                 sleep(1000);
                 // var 左移图标 = text("TB1X9ITzND1gK0jSZFsXXbldVXa-52-52.png_1080x1800Q50s50.jpg_").findOne(2000);
                 // if (左移图标) {
@@ -298,7 +308,7 @@ function collection_bless() {
             }
         }
         while (1) {
-            var 去浏览 = textContains("去浏览").findOne(500);
+            var 去浏览 = text("去浏览").findOne(2000);
             if (去浏览) {
                 去浏览.click();
                 if (textContains("全部完成").findOne(3000)) {
@@ -308,21 +318,17 @@ function collection_bless() {
                     sleep(1000);
                     click(972, 1626) //打开任务窗口
                     sleep(1000);
-                    break;
                 } else if (textContains("滑动浏览").findOne(1000)) {
                     sleep(2000);
-                    swipe(540, 800, 540, 300, 300); //下滑
+                    swipe(540, 800, 540, 300, 800); //下滑
                     if (textContains("完成").findOne(22000)) {
                         back();
-                    } else {
-                        back();
                     }
-                    sleep(1000);
+                    sleep(2000);
                 } else if (text("今日已达上限继续逛逛吧").findOne(1000)) {
                     back();
                     sleep(1000);
-                } else if (textContains("浏览完成").findOne(20000)) {
-                    sleep(1000);
+                } else if (textContains("完成").findOne(20000)) {
                     back();
                     sleep(1000);
                 } else {
@@ -333,7 +339,7 @@ function collection_bless() {
                 break;
             }
         }
-        var 去换装 = textContains("去换装").findOne(1000);
+        var 去换装 = textContains("去换装").findOne(500);
         if (去换装) {
             去换装.click();
             sleep(10000);
@@ -344,7 +350,7 @@ function collection_bless() {
             click(549, 1509); //退出淘宝人生
             sleep(2000);
         }
-        var 去拍照 = textContains("去拍照").findOne(1000);
+        var 去拍照 = textContains("去拍照").findOne(500);
         if (去拍照) {
             去拍照.click();
             sleep(2000);
@@ -364,11 +370,6 @@ function collection_bless() {
                 }
             }
         }
-
-        if (textContains("gif").findOne(4000)) { //确定还是在这个任务界面
-            click(989, 957); //关闭任务菜单
-            sleep(1000);
-        }
-
+        click(989, 800); //关闭任务菜单
     }
 }
