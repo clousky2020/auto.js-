@@ -257,7 +257,7 @@ function taobao_coins() {
                     if (任务界面) {
                         sleep(1000);
                         var 去完成 = text("去完成").findOne(500);
-                        if (x > 2) { x = 0; };
+                        if (x > 3) { x = 0; };
                         if (x != 0) {
                             var 去完成 = text("去完成").findOnce(x);
                         }
@@ -282,6 +282,7 @@ function taobao_coins() {
                                 break;
                             }
                         }
+                        sleep(1000);
                     } else {
                         toastLog("不在任务页面，后退");
                         back_Goldinterface();
@@ -532,6 +533,7 @@ function coin_loop() {
             var 回到淘宝 = image_coor("./taobao/回到淘宝.png");
             if (coor) {
                 toastLog("消消乐-回到淘宝");
+                x += 1;
                 click(coor.x, coor.y);
                 sleep(1000);
             } else if (text("签到领红包").findOne(1000)) {

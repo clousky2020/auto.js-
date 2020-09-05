@@ -28,8 +28,9 @@ SignIn_Baidu_netdisk(); //百度网盘
 Signin_TaobaoPhone(); //领取淘宝的话费
 SignIn_ximalaya(); //喜马拉雅
 SignIn_Sfacg(); //sf小说签到
-SignIn_Baidu_Wenku(); //百度文库
 SignIn_Unicom(); //联通营业厅
+// SignIn_Baidu_Wenku(); //百度文库,被封了
+
 function save_log(text) {
     toastLog(text);
     var now = new Date();
@@ -51,6 +52,7 @@ function image_coor(template_path) {
 function back_home() {
     var num = 0;
     while (1) {
+        //因为在auto.js的文件中第一个就是蚂蚁庄园星星球，以此作为进入auto的判断
         var auto = text("蚂蚁庄园星星球").findOne(1000);
         //好像在auto的界面，可以正常启动后续的app
         if (num > 5 || id("workspace").findOne(500)) { //多次后退没有找到auto的界面，那就返回桌面重启
@@ -76,11 +78,11 @@ function back_home() {
 
 function SignIn_ximalaya() {
     try {
-        var patter = text_log.search("喜马拉雅已签到");
-        if (patter != -1) {
-            toastLog("喜马拉雅跳过");
-            return;
-        }
+        // var patter = text_log.search("喜马拉雅已签到");
+        // if (patter != -1) {
+        //     toastLog("喜马拉雅跳过");
+        //     return;
+        // }
         sleep(1000);
         var appRun = currentPackage();
         if (appRun != "com.ximalaya.ting.android") {
@@ -534,7 +536,7 @@ function SignIn_jingdong() {
                     sleep(1000);
                     click(900, 1050); //去京东金融app签到
                     sleep(3000);
-                    if (text("双签领奖励").findOne(2000)) {
+                    if (textContains("双签").findOne(2000)) {
                         toastLog("还停留在这个页面，可能是因为已经领取今日奖励了");
                         if (完成双签领取) {
                             完成双签领取 = 完成双签领取.bounds();
@@ -552,9 +554,13 @@ function SignIn_jingdong() {
                             sleep(2000);
                             var 签到领钢镚 = 签到领钢镚.bounds();
                             click(签到领钢镚.centerX(), 签到领钢镚.centerY());
-                            if (text("签到成功").findOne(5000)) {
+                            toastLog("进入签到钢镚");
+                            if (text("签到成功").findOne(3000)) {
                                 sleep(1000);
                                 back(); //退回桌面
+                            } else if (textContains("连签第").findOne(1000)) {
+                                back();
+                                continue;
                             }
                             click(900, 1812); //点击双签领奖励
                             sleep(2000);
@@ -780,12 +786,12 @@ function SignIn_Mommypocket() {
         var appRun = currentPackage();
         if (appRun != "com.shouqu.mommypocket") {
             launch("com.shouqu.mommypocket");
-
             sleep(1000);
         }
         //添加广告关闭的按钮
         var 广告 = id("push_popup_close").findOne(2000);
-        var 通知关闭 = id("system_notice_item_close").findOne(2000);
+        var 通知关闭 = id("system_notice_item_close").findOne(1000);
+        var 链接查询 = id("open_tao_password_dialog_close_btn").findOne(1000);
         if (广告) {
             toastLog("有广告！");
             var 广告 = 广告.bounds();
@@ -793,6 +799,9 @@ function SignIn_Mommypocket() {
             sleep(1000);
         } else if (通知关闭) {
             通知关闭.click();
+            sleep(1000);
+        } else if (链接查询) {
+            链接查询.click();
             sleep(1000);
         }
         var 通知关闭 = id("system_notice_item_close").findOne(2000);
@@ -854,8 +863,8 @@ function SignIn_Smzdm() {
                 if (签到) {
                     toastLog("签到找到了");
                     签到.click();
-                    sleep(1000);
-                    back();
+                    text("已连续签到").findOne(5000);
+                    while (!text("我的").findOne(1000)) { back(); }
                 } else if (textContains("已签").findOne(1000)) {
                     save_log("今天什么值得买已经签到");
                     // back_home();
@@ -1073,7 +1082,7 @@ function SignIn_Alipay() {
             click(理财.centerX(), 理财.centerY());
             sleep(2000);
             toastLog("查找黄金频道");
-            var 黄金 = text("黄金").depth(5).findOne(2000);
+            var 黄金 = text("黄金").id("title").findOne(2000);
             if (黄金) {
                 var 黄金 = 黄金.bounds();
                 click(黄金.centerX(), 黄金.centerY());
@@ -1614,7 +1623,7 @@ function SignIn_Unicom() {
     } catch (err) {
         toastLog(err);
     } finally {
-        home();
+        back_home();
         return;
     }
 }

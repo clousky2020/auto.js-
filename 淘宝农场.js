@@ -20,13 +20,28 @@ function image_coor(template_path) {
 
 function back_home() {
     var num = 0;
-    while (num < 5) {
-        if (!id("workspace").findOne(500)) {
+    while (1) {
+        //因为在auto.js的文件中第一个就是蚂蚁庄园星星球，以此作为进入auto的判断
+        var auto = text("蚂蚁庄园星星球").findOne(1000);
+        //好像在auto的界面，可以正常启动后续的app
+        if (num > 5 || id("workspace").findOne(500)) { //多次后退没有找到auto的界面，那就返回桌面重启
+            home();
+            sleep(500);
+            home();
+            var auto桌面 = text("Auto.js").findOne(4000);
+            if (auto桌面) {
+                auto桌面.click();
+                if (auto) { break; }
+            }
+        } else if (!auto) {
             back();
             num += 1;
-            // toastLog("第" + num + "次尝试后退");
-        } else { return; }
+            toast("第" + num + "次后退");
+        } else {
+            break;
+        }
     }
+    sleep(500);
     return;
 }
 

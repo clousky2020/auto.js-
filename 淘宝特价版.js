@@ -14,13 +14,28 @@ taobao_coins();
 
 function back_home() {
     var num = 0;
-    while (num < 5) {
-        if (!id("workspace").findOne(500)) {
+    while (1) {
+        //因为在auto.js的文件中第一个就是蚂蚁庄园星星球，以此作为进入auto的判断
+        var auto = text("蚂蚁庄园星星球").findOne(1000);
+        //好像在auto的界面，可以正常启动后续的app
+        if (num > 5 || id("workspace").findOne(500)) { //多次后退没有找到auto的界面，那就返回桌面重启
+            home();
+            sleep(500);
+            home();
+            var auto桌面 = text("Auto.js").findOne(4000);
+            if (auto桌面) {
+                auto桌面.click();
+                if (auto) { break; }
+            }
+        } else if (!auto) {
             back();
             num += 1;
-            // toastLog("第" + num + "次尝试后退");
-        } else { return; }
+            toast("第" + num + "次后退");
+        } else {
+            break;
+        }
     }
+    sleep(500);
     return;
 }
 
@@ -55,12 +70,17 @@ function taobao_coins() {
         }
         sleep(3000);
         click(100, 2250);
-
+        back_homepage();
         var 签到拿红包 = text("签到拿红包").findOne(10000);
         if (签到拿红包 && 签到拿红包.bounds().centerY() > 200) {
             sleep(1000);
             签到拿红包.click();
-            textContains("开启签到提醒").findOne(5000);
+            if (textContains("开启签到提醒").findOne(5000)) {
+                back();
+            } else {
+                back_homepage();
+                return taobao_coins();
+            }
         } else {
             return taobao_coins();
         }
@@ -84,7 +104,7 @@ function taobao_coins() {
             if (进入) {
                 var 进入 = 进入.bounds();
                 click(进入.centerX(), 进入.centerY());
-                sleep(2000);
+                sleep(1000);
                 num += 1;
                 back_homepage();
             }
@@ -302,7 +322,11 @@ function 赚币中心() {
 
 function 最终任务浏览界面() {
     if (text("爆款热卖").findOne(3000)) {
-        toastLog("进入爆款热卖了，后退");
+        toastLog("进入爆款热卖了，无用，后退");
+        x += 1;
+        return;
+    } else if (textContains("直播好").findOne(3000)) {
+        toastLog("进入了没有用的页面，后退");
         x += 1;
         return;
     }
