@@ -12,7 +12,7 @@ SignIn_Miguaikan(); //咪咕爱看签到
 function back_home() {
     var num = 0;
     while (num < 5) {
-        if (!id("workspace").findOne(500)) {
+        if (!id("workspace").findOne(200)) {
             back();
             num += 1;
             toastLog("第" + num + "次尝试后退");
@@ -21,8 +21,8 @@ function back_home() {
     return;
 }
 
-function back_homepage() {
-    while (!text("我的").findOne(1000)) { back(); }
+function back_daily_welfare() {
+    while (!text("会员每日福利").findOne(1000)) { back(); }
 }
 
 function SignIn_Miguaikan() {
@@ -33,16 +33,16 @@ function SignIn_Miguaikan() {
             sleep(1000);
         }
 
-        var close = id("close").findOne(3000);
+        var close = id("splash_time").findOne(3000);
         if (close) {
             var close = close.bounds();
             click(close.centerX(), close.centerY());
-
         }
         sleep(1000);
         back();
         红包待解锁 = 0; //设定一个开关，代表今天还有视频红包没有领
-        var 我的 = text("我的").findOne(5000);
+        // var 我的 = text("我的").findOne(5000);
+        var 我的 = id("image5_layout").findOne(5000);
         if (我的) {
             sleep(1000);
             var 我的 = 我的.bounds();
@@ -69,14 +69,18 @@ function SignIn_Miguaikan() {
                 while (1) {
                     var 去完成 = text("去完成").findOne(1000);
                     if (!去完成) {
-                        var 去完成 = text("去查看").findOne(1000);
+                        var 去完成 = text("去查看").findOne(100);
                     }
                     if (去完成) {
+                        toastLog("有去完成按钮");
                         sleep(1000);
-                        var 去完成 = 去完成.bounds();
-                        click(去完成.centerX(), 去完成.centerY());
+                        去完成.click();
+                        // var 去完成 = 去完成.bounds();
+                        // click(去完成.centerX(), 去完成.centerY());
+
                         var 点击抽奖 = text("点击抽奖").findOne(8000);
                         if (点击抽奖) {
+                            toastLog("点击抽奖");
                             sleep(1000);
                             var 点击抽奖 = 点击抽奖.bounds();
                             click(点击抽奖.centerX(), 点击抽奖.centerY());
@@ -85,12 +89,13 @@ function SignIn_Miguaikan() {
                                 break;
                             }
                         }
-                        back();
+                        back_daily_welfare();
                     }
                 }
                 sleep(1000);
                 var 去分享 = text("去分享").findOne(1000);
                 if (去分享) {
+                    toastLog("有去分享按钮");
                     var 去分享 = 去分享.bounds();
                     click(去分享.centerX(), 去分享.centerY());
                     sleep(1000);
@@ -109,11 +114,11 @@ function SignIn_Miguaikan() {
                             sleep(2000);
                         }
                         sleep(1000);
-                        while (!text("会员每日福利").findOne(1000)) { back(); }
+                        back_daily_welfare();
 
                     } else {
                         toastLog("没有找到分享的选择");
-                        while (!text("会员每日福利").findOne(1000)) { back(); }
+                        back_daily_welfare();
                     }
                 }
                 sleep(1000);
@@ -122,13 +127,11 @@ function SignIn_Miguaikan() {
                     if (领取) {
                         var 领取 = 领取.bounds();
                         click(领取.centerX(), 领取.centerY());
-                        var 关闭按钮 = text("W5Xj+xIcv3b53j1mQr1wAAAAASUVORK5CYII=").findOne(5000);
+                        var 关闭按钮 = text("X").findOne(5000);
                         if (关闭按钮) {
                             var 关闭按钮 = 关闭按钮.bounds();
                             click(关闭按钮.centerX(), 关闭按钮.centerY());
                         }
-                        // sleep(3000);
-                        // click(498,1566,584,1656);
                         sleep(1000);
                     } else {
                         break;
@@ -186,13 +189,17 @@ function SignIn_Miguaikan() {
     }
 }
 
-function 观看视频领红包() {
-    while (!text("我的").findOne(1000)) { back(); }
+function back_homepage() {
+    while (!id("image5_layout").findOne(1000)) { back(); }
     if (我的) {
         sleep(1000);
         var 我的 = 我的.bounds();
         click(我的.centerX(), 我的.centerY());
     }
+}
+
+function 观看视频领红包() {
+    back_homepage();
     var 路人超能100 = text("路人超能100").findOne(5000);
     if (路人超能100) {
         sleep(1000);

@@ -2,13 +2,11 @@ auto.waitFor();
 setScreenMetrics(1080, 2340); //设定以下坐标点击的基准屏幕分辨率
 var height = device.height;
 var width = device.width;
-
-
 if (!images.requestScreenCapture()) { //可指定参数true（横屏截图） 或者 false（竖屏截图）
     toast("请求截图失败");
     exit();
 }
-home();
+retry = 0;
 sleep(1000);
 taobao_coins();
 
@@ -64,18 +62,33 @@ function match_image_coor(template_path) {
 
 function taobao_coins() {
     try {
+        if (retry > 1) {
+            alert("重试次数超出" + retry + "次，退出");
+            exit;
+        }
         var appRun = currentActivity();
         if (appRun != 'com.taobao.litetao') {
             launch("com.taobao.litetao");
         }
-        sleep(3000);
+        sleep(2000);
+        var 关闭 = desc("关闭").findOne(2000);
+        if (关闭) {
+            toastLog("剪贴板中有链接，点击关闭");
+            关闭.click();
+        }
         click(100, 2250);
         back_homepage();
-        var 签到拿红包 = text("签到拿红包").findOne(10000);
+        var 签到拿红包 = text("签到拿红包").findOne(5000);
         if (签到拿红包 && 签到拿红包.bounds().centerY() > 200) {
             sleep(1000);
             签到拿红包.click();
             if (textContains("开启签到提醒").findOne(5000)) {
+                var withdraw = text("点击提现到支付宝").findOne(2000);
+                if (withdraw) {
+                    var withdraw = withdraw.bounds();
+                    click(withdraw.centerX(), withdraw.centerY());
+                    textContains("知道了").findOne().click();
+                }
                 back();
             } else {
                 back_homepage();
@@ -86,7 +99,6 @@ function taobao_coins() {
         }
         //开始玩别的
         back_homepage();
-
         var 立即领取 = text("立即领取").findOne(3000);
         if (立即领取) {
             var 立即领取 = 立即领取.bounds();
@@ -94,7 +106,6 @@ function taobao_coins() {
             // back();
             sleep(1500);
         }
-
         click(900, 2300); //点击进入我的页面
         sleep(2000);
         //进入频道拿特币
@@ -118,13 +129,20 @@ function taobao_coins() {
             if (进入赚特币标志) {
                 toastLog("已进入赚特币界面");
                 sleep(2000);
+                var 立即领取 = text("立即领取").findOne(3000);
+                if (立即领取) {
+                    var 立即领取 = 立即领取.bounds();
+                    click(立即领取.centerX(), 立即领取.centerY());
+                    sleep(1500);
+                    back();
+                }
                 click(660, 1100); //特币收钱
             } else {
                 toastLog("未知原因，未进入赚特币界面,后退重启");
-                back();
+                retry += 1;
+                back_home();
                 return taobao_coins();
             }
-
             var num = 0;
             while (num < 2) {
                 toastLog("第" + num + "次找图赚特币");
@@ -137,6 +155,7 @@ function taobao_coins() {
                     sleep(1000);
                 }
             }
+            sleep(1000);
             click(660, 1100); //特币收钱
             var 要这个 = text("要这个").findOne(2000);
             if (要这个) {
@@ -145,40 +164,49 @@ function taobao_coins() {
                 sleep(1000);
                 back();
             }
+            sleep(1000);
             //早起打卡
+            toastLog("早起打卡");
             var 早起打卡 = text("TB1VVsrIHY1gK0jSZTEXXXDQVXa-89-43.png_").findOne(5000);
             if (早起打卡) {
                 toastLog("找到早起打卡赚钱的图标了");
                 var 早起打卡 = 早起打卡.bounds();
                 click(早起打卡.centerX(), 早起打卡.centerY());
-                var 报名 = text("50特币报名赚更多").findOne(4000);
-
-                if (!报名) {
-                    var 报名 = text("速速打卡").findOne(1000);
-                }
-                var coor = image_coor("./litetao/早起打卡-开心收下.png");
-                if (coor) {
-                    click(coor.x, coor.y);
-                }
-                if (报名) {
-                    var 报名 = 报名.bounds();
-                    click(报名.centerX(), 报名.centerY());
-                    sleep(1000);
-                    var 继续报名 = textContains("继续报名").findOne(2000);
-                    if (继续报名) {
-                        继续报名.click();
+                var 打卡界面 = text("早起打卡挑战赛").findOne(4000);
+                if (打卡界面) {
+                    var 报名 = text("50特币报名赚更多").findOne(2000);
+                    if (!报名) {
+                        var 报名 = text("速速打卡").findOne(1000);
+                    }
+                    var coor = image_coor("./litetao/早起打卡-开心收下.png");
+                    if (coor) {
+                        click(coor.x, coor.y);
+                    }
+                    if (报名) {
+                        var 报名 = 报名.bounds();
+                        click(报名.centerX(), 报名.centerY());
                         sleep(1000);
+                        var 继续报名 = textContains("继续报名").findOne(2000);
+                        if (继续报名) {
+                            继续报名.click();
+                            sleep(1000);
+                        }
+                    } else {
+                        click(540, 1050);
+                        click(540, 1500);
                     }
                 } else {
-                    click(540, 1050);
-                    click(540, 1500);
+                    toastLog("没有找到早起打卡界面，重启");
+                    back_homepage();
+                    return taobao_coins();
                 }
                 back();
             } else {
                 toastLog("没有进入签到页面，重启");
+                back_homepage();
                 return taobao_coins();
             }
-            sleep(1000);
+            sleep(2000);
             //特币收钱
             // var coor = image_coor("./litetao/特币收钱.png");
             // if (coor) {
@@ -189,20 +217,20 @@ function taobao_coins() {
             //     toastLog("没有了收钱");
             // }
             click(660, 1100); //特币收钱
-
             sleep(1000);
-
-
             //做任务
             var coor = image_coor("./litetao/特币任务.png");
             if (coor) {
                 click(coor.x, coor.y);
-                sleep(1000);
                 sleep(2000);
                 赚币中心();
+            } else {
+                back_homepage();
+                return taobao_coins();
             }
-
+            // while(!text("兑换").findOne(1000)){back();}
             sleep(1000);
+            for (var i = 0; i < 3; i++) { swipe(540, 1000, 540, 2000, 500); }
             //收任务奖励
             var num = 0;
             while (num < 4) {
@@ -257,11 +285,32 @@ function taobao_coins() {
             }
         }
         back_homepage();
+        // 百万开奖
+        var 百万入口 = text("天天100万").findOne(2000);
+        if (百万入口) {
+            百万入口.click();
+            var 知道了 = text("知道了").findOne(5000);
+            if (知道了) {
+                var 知道了 = 知道了.bounds();
+                click(知道了.centerX(), 知道了.centerY());
+            }
+            var 下注 = text("100特币去下注赢一百万").findOne(2000);
+            if (下注) {
+                下注.click();
+                var 下注成功 = textContains("知道了").findOne(4000);
+                if (下注成功) {
+                    下注成功.click();
+                }
+
+            }
+        }
+        back_homepage();
+
     } catch (err) {
         alert(err);
     } finally {
         back_home();
-        exit();
+        return;
     }
 }
 
@@ -282,25 +331,28 @@ function 开始翻牌() {
 }
 
 function 赚币中心() {
-
     var 赚币中心 = text("赚币中心").findOne(2000);
     if (赚币中心) {
-        list1 = ["去发现", "去完成", "去浏览", "去参与"];
+        list1 = ["去发现", "去完成", "去浏览"];
         for (var i = 0; i < list1.length; i++) {
             x = 0;
             while (1) {
+                if (x > 2) { x = 0 };
                 if (x == 0) {
-                    var 点击 = text(list1[i]).findOne(2000);
+                    var 点击 = text(list1[i]).findOne(1000);
                 } else {
                     var 点击 = text(list1[i]).findOnce(x);
                 }
                 if (点击) {
+                    toastLog("现在点击的是" + list1[i]);
                     var 点击 = 点击.bounds();
                     if (点击.centerY() > 2300) {
                         swipe(540, 2000, 540, 1200, 500);
+                        sleep(500);
                         continue;
                     } else if (点击.centerY() < 1200) {
                         swipe(540, 1400, 540, 2000, 500);
+                        sleep(500);
                         continue;
                     }
                     click(点击.centerX(), 点击.centerY());
@@ -316,7 +368,10 @@ function 赚币中心() {
         toastLog("没有进入赚币中心，重启");
         return taobao_coins();
     }
-    text("关闭").findOne(4000).click();
+    var close = text("关闭").findOne(3000);
+    if (close) {
+        close.click();
+    }
     return;
 }
 
@@ -325,7 +380,11 @@ function 最终任务浏览界面() {
         toastLog("进入爆款热卖了，无用，后退");
         x += 1;
         return;
-    } else if (textContains("直播好").findOne(3000)) {
+        // } else if (textContains("直播好").findOne(1000)) {
+        //     toastLog("进入了没有用的页面，后退");
+        //     x += 1;
+        //     return;
+    } else if (textContains("一分钱").findOne(1000)) {
         toastLog("进入了没有用的页面，后退");
         x += 1;
         return;
@@ -360,7 +419,7 @@ function 最终任务浏览界面() {
             检查完成标志();
             break;
         } else if (image_coor("./litetao/看30秒最高得.png")) {
-            sleep(25000);
+            sleep(20000);
             检查完成标志();
             break;
         } else if (num > 5) {
@@ -369,7 +428,7 @@ function 最终任务浏览界面() {
         } else {
             toastLog("第" + num + "次找不到目标图片");
             num += 1;
-            sleep(1000);
+            sleep(500);
         }
     }
     return;
