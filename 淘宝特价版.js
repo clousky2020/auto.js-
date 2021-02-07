@@ -136,13 +136,11 @@ function match_image_coor (template_path) {
     img.recycle(); // 回收图片
     template.recycle(); // 回收图片
     return coor;
-  }
-  catch (err) { throw err }
-  finally { return }
+  } catch (err) { throw err } finally { return }
 }
 
 function back_to_homepage () {
-  back_to(textContains, "工厂直供", 1000);
+  back_to(text, "天天领红包", 2000);
 }
 
 function go_to_personal () {
@@ -151,6 +149,7 @@ function go_to_personal () {
 }
 
 function search_for_money () {
+  toastLog("进入搜索");
   var num = 0;
   if (find_click(text, "搜索", 1000)) {
     sleep(2000);
@@ -188,12 +187,12 @@ function taobao_coins () {
         }
       }
     }
-    //开始玩别的
-    back_to_homepage();
     back();
-    find_click(text, "立即领取", 2000);
-    find_click(desc, "图片", 1000);
+    toastLog("开始玩别的");
+    // find_click(text, "立即领取", 2000);
+    // find_click(desc, "图片", 1000);
     sleep(1000);
+    toastLog("进入频道拿特币");
     //进入频道拿特币
     search_for_money();
 
@@ -227,6 +226,8 @@ function taobao_coins () {
         sleep(1000);
         back();
       }
+      sleep(1000);
+      find_click(textContains, '放弃膨胀', 1000);
       sleep(1000);
       //早起打卡
       toastLog("早起打卡");
@@ -262,20 +263,64 @@ function taobao_coins () {
           } else {
             toastLog("没有找到早起打卡界面");
           }
-          back_to(text, day_day_sign, 1000);
+          back_to(text, '特币娱乐', 1000);
         } else {
           toastLog("没有进入签到页面");
-          back_to(text, day_day_sign, 1000);
+          back_to(text, '特币娱乐', 1000);
         }
       }
-      sleep(1000);
+      find_click(textContains, '放弃膨胀', 1000);
+      幸运卡牌 = text('去赚币').findOnce(1);
+      if (幸运卡牌) {
+        toastLog('找到幸运卡牌了');
+        幸运卡牌.click();
+        sleep(2000);
+        //检测是否进入了翻牌界面
+        var 开始翻牌 = text("TB1gcO6k4rI8KJjy0FpXXb5hVXa-584-247").findOne(5000);
+        if (开始翻牌) {
+          var 开始翻牌 = 开始翻牌.bounds();
+          while (1) {
+            var coor = image_coor("./litetao/不能翻牌.png");
+            if (coor) {
+              toastLog("已经不能翻牌了");
+              sleep(1000);
+              break;
+            } else {
+              click(开始翻牌.centerX(), 开始翻牌.centerY());
+              // sleep(5000);
+              // text("继续玩").findOne(3000).click();
+              sleep(1000);
+              back();
+              sleep(1000);
+              幸运卡牌.click();
+              sleep(1000);
+            }
+          }
+        } else {
+          toastLog("没有找到开始翻牌");
+        }
+      }
+      back_to(text, '特币娱乐', 1000);
+      find_click(textContains, '放弃膨胀', 1000);
       if (find(text, "特币娱乐", 2000)) {
+        find_click(text, "关闭", 1000);
         find_click(text, "关闭", 1000);
       }
 
       sleep(1000);
       click(834, 1228); //特币收钱
       sleep(1000);
+      // 打卡领猫粮
+      if (find_click(text, '打卡领猫粮', 2000)) {
+        if (find(text, "明日来打卡", 1000)) {
+          toastLog("已经打卡过了");
+        } else {
+          find_click(text, '立即打卡领猫粮', 2000);
+        }
+      }
+      // 点击关闭打卡领猫粮界面
+      find_click(text, "TB1VVsWoiDsXe8jSZR0XXXK6FXa-72-72.png_", 1000);
+
       //做任务
       find_click(text, "TB1QFwGsQ9l0K4jSZFKXXXFjpXa-110-110.png_", 3000);
       sleep(2000);
@@ -335,21 +380,7 @@ function taobao_coins () {
         }
         sleep(1000);
       }
-      var num = 0;
-      // while (num < 7) {
-      //   var coor = image_coor("./litetao/任务奖励.png");
-      //   if (coor.matches.length > 0) {
-      //     coor.matches.forEach(match => {
-      //       click(match.point.x, match.point.y);
-      //       sleep(200);
-      //     })
-      //     num += 1;
-      //     sleep(1000);
-      //   } else {
-      //     toastLog("没有了任务奖励");
-      //     break;
-      //   }
-      // }
+
       sleep(1000);
       click(834, 1228); //特币收钱
       sleep(1000);
@@ -360,84 +391,6 @@ function taobao_coins () {
     }
     back_to_homepage();
     go_to_personal();
-    if (find_click(text, "翻卡牌", 1000)) {
-      //检测是否进入了翻牌界面
-      var 开始翻牌 = text("TB1gcO6k4rI8KJjy0FpXXb5hVXa-584-247").findOne(5000);
-      if (开始翻牌) {
-        var 开始翻牌 = 开始翻牌.bounds();
-        while (1) {
-          var coor = image_coor("./litetao/不能翻牌.png");
-          if (coor) {
-            toastLog("已经不能翻牌了");
-            sleep(1000);
-            break;
-          } else {
-            click(开始翻牌.centerX(), 开始翻牌.centerY());
-            sleep(5000);
-            text("继续玩").findOne(3000).click();
-            sleep(1000);
-          }
-        }
-      } else {
-        toastLog("没有找到开始翻牌");
-      }
-    }
-    back_to_homepage();
-    go_to_personal();
-    // 百万开奖
-
-    // var 百万入口 = text("天天100万").findOne(2000);
-    // if (百万入口) {
-    //     百万入口.click();
-    //     var 知道了 = text("知道了").findOne(5000);
-    //     if (知道了) {
-    //         var 知道了 = 知道了.bounds();
-    //         click(知道了.centerX(), 知道了.centerY());
-    //     }
-    //     var 下注 = text("100特币").findOne(1000);
-    //     if (下注) {
-    //         下注.click();
-    //         sleep(2000);
-    //         click(540, 1700); //确定下注按钮
-    //         var 下注成功 = textContains("下注成功").findOne(3000);
-    //         if (下注成功) {
-    //             back();
-    //             back_to_homepage();
-    //         }
-    //     }
-    //     var 去解锁 = text("去解锁").findOne(1000);
-    //     if (去解锁) {
-    //         去解锁.click();
-    //         sleep(3000);
-    //         while (1) {
-    //             var 当前页面 = textContains('当前页面浏览').findOne(2000);
-    //             // var 当前页面 = textContains('天天100万').findOne(2000);
-    //             if (当前页面) {
-    //                 var n = 0
-    //                 if (n < 10) {
-    //                     swipe(540, 1500, 540, 1300, 300);
-    //                     sleep(500);
-    //                     n += 1;
-    //                 }
-    //                 if (n > 10) {
-    //                     swipe(540, 1200, 540, 1500, 300);
-    //                     sleep(500);
-    //                     n -= 1;
-    //                 }
-    //             } else if (text("开奖后可使用道具").findOne(500)) {
-    //                 toastLog("已经完成了任务，退出");
-    //                 break;
-    //             } else {
-    //                 break;
-    //             }
-    //         }
-    //         back();
-    //     }
-
-    // }
-
-    back_to_homepage();
-
   } catch (err) {
     alert(err);
   } finally {
@@ -543,7 +496,7 @@ function 最终任务浏览界面 () {
       sleep(30000);
       检查完成标志();
       break;
-    } else if (num > 8) {
+    } else if (num > 10) {
       x += 1;
       break;
     } else {
@@ -561,6 +514,8 @@ function 检查完成标志 () {
     var coor = image_coor("./litetao/去收.png");
     if (coor) {
       back();
+      sleep(1000);
+      find_click(text, '直接退出', 1000);
       return;
     } else if (num > 10) {
       toastLog("多次未找到,退回");

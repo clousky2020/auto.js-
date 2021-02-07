@@ -184,6 +184,7 @@ function back_home () {
         auto桌面.click();
         if (auto) { break; }
       }
+      back();
     } else if (!auto) {
       back();
       num += 1;
@@ -232,7 +233,7 @@ function tmail_form () {
           return tmail_form();
         }
       }
-      if (text("兑换好礼（每天10:00上新）").findOne(7000)) {
+      if (text("兑换好礼（每天10:00上新）").findOne(10000)) {
         toast("进入农场");
         sleep(2000);
       } else {
@@ -414,7 +415,15 @@ function tmail_form () {
       //if (text("无星辰落").findOne()) {
       if (集果实图标.findOne(10000)) {
         toast("已经进入福年种福果");
-        find_click(text, "继续努力", 5000);
+        var num = 0;
+        while (num > 2) {
+          if (find_click(textContains, "继续努力", 2000)) {
+            num = 3;
+          } else {
+            sleep(1000);
+            num += 1;
+          }
+        }
         sleep(1000);
         click(756, 1219); //收取昨日的福气
         sleep(1000);

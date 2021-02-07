@@ -179,8 +179,7 @@ function taobao_coins () {
         click(coor.x, coor.y);
         sleep(1000);
       }
-      // find_click(textContains, "领取", 2000);
-      loop_find_click(textContains, "领取", 1000, 4);
+      loop_find_click(text, "我知道了", 1000, 4);
     }
     合力次数 = text("合力").find().length * 2;
     toastLog('当前合力次数：' + 合力次数);
@@ -257,7 +256,7 @@ function taobao_coins () {
               var state = 0;
               //有部分内容不需要进入，直接跳过
               var head_text = 去完成.parent().children()[0].children()[0].text();
-              var skip_texts = ['消消乐', '充话费', '天猫APP', '桌面', '菜鸟裹裹', '买', '车险', '抢', '淘金币'];
+              var skip_texts = ['消消乐', '充话费', '天猫APP', '桌面', '菜鸟裹裹', '买', '车险', '抢','淘金币免费'];
               for (i = 0; i < skip_texts.length; i++) {
                 //检查查找的内容中有没有需要skip的内容，有就跳过
                 if (head_text.search(skip_texts[i]) != -1) {

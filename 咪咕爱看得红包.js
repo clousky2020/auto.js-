@@ -6,7 +6,8 @@ var width = device.width;
 // toastLog("本设备的分辨率为，\n宽："+device.width+"\n长："+device.height);//输出设备的分辨率
 setScreenMetrics(1080, 2340); //设定以下坐标点击的基准屏幕分辨率
 
-
+红包待解锁 = 0; //设定一个开关，代表今天还有视频红包没有领
+会员福利页面标示 = '会员每日福利'
 home();
 sleep(1000);
 SignIn_Miguaikan(); //咪咕爱看签到
@@ -31,8 +32,8 @@ function back_to (type, text, time) {
       toastLog("已经返回到{" + text + "}的内容了,次数为" + num + "次");
       return true;
     } else if (num > 10) {
-      toastLog(num + "次返回没有到达指定地点，结束任务");
-      exit();
+      toastLog(num + "次返回没有到达指定地点");
+      return false;
     } else {
       back();
       num += 1;
@@ -100,7 +101,29 @@ function find (type, text, time) {
     return false;
   }
 }
-
+// 从我的页面进入福利页面
+function goToWelfare () {
+  back_homepage();
+  if (find_click(text, '我的', 3000) || find_click(id, 'image5_layout', 2000)) {
+    while (1) {
+      var 福利 = textContains("福利").findOne(5000);
+      var 福利 = 福利.bounds();
+      if (福利.centerY() < 200) {
+        swipe(540, 500, 540, 2000, 500);
+      } else if (福利.centerY() > 2000) {
+        swipe(540, 2000, 540, 500, 500);
+      } else {
+        click(福利.centerX(), 福利.centerY())
+        break;
+      }
+    }
+  } else {
+    toastLog("没有找到我的页面");
+    back_home();
+    return SignIn_Miguaikan();
+  }
+  return;
+}
 
 
 function SignIn_Miguaikan () {
@@ -111,150 +134,127 @@ function SignIn_Miguaikan () {
       sleep(1000);
     }
 
-    find_click(id, "splash_time", 5000);
-    //back_homepage();
-    红包待解锁 = 0; //设定一个开关，代表今天还有视频红包没有领
-    var 我的 = text("我的").findOne(5000);
-    // var 我的 = id("image5_layout").findOne(5000);
-    if (我的) {
+    find_click(id, "splash_time", 3000);
+
+    // 进入福利界面
+    goToWelfare();
+    var 界面 = text(会员福利页面标示).findOne(10000);
+    if (界面) {
+      toastLog("咪咕爱看福利界面出现了");
+      swipe(540, 2000, 540, 1400, 500);
+    } else {
+      toastLog("没有福利界面，重启");
+      return SignIn_Miguaikan();
+    }
+    sleep(1000);
+    if (find_click(text, "去观看", 1000)) {
       sleep(1000);
-      var 我的 = 我的.bounds();
-      click(我的.centerX(), 我的.centerY());
-      while (1) {
-        var 福利 = textContains("福利").findOne(5000);
-        var 福利 = 福利.bounds();
-        if (福利.centerY() < 200) {
-          swipe(540, 500, 540, 2000, 500);
-        } else { break; }
+      goToWelfare();
+    }
+    // 抽奖
+    while (1) {
+      var 去完成 = text("去完成").findOne(1000);
+      if (!去完成) {
+        var 去完成 = text("去查看").findOne(100);
       }
-
-      if (福利) {
+      if (去完成) {
+        toastLog("有去完成按钮");
         sleep(1000);
-        click(福利.centerX(), 福利.centerY());
-        var 界面 = text("会员每日福利").findOne(10000);
-        if (界面) {
-          toastLog("咪咕爱看福利界面出现了");
-          swipe(540, 2000, 540, 1400, 500);
-        } else {
-          toastLog("没有福利界面，重启");
-          return SignIn_Miguaikan();
-        }
-        sleep(1000);
-        if (find_click(text, "去观看", 1000)) {
-          return SignIn_Miguaikan();
-        }
-        while (1) {
-          var 去完成 = text("去完成").findOne(1000);
-          if (!去完成) {
-            var 去完成 = text("去查看").findOne(100);
-          }
-          if (去完成) {
-            toastLog("有去完成按钮");
-            sleep(1000);
-            去完成.click();
-            var 点击抽奖 = text("点击抽奖").findOne(8000);
-            if (点击抽奖) {
-              toastLog("点击抽奖");
-              sleep(1000);
-              var 点击抽奖 = 点击抽奖.bounds();
-              click(点击抽奖.centerX(), 点击抽奖.centerY());
-              if (textContains("当前剩余抽奖次数 0 次").findOne(1000)) {
-                back();
-                break;
-              }
-            }
-            back_to(text, "会员每日福利", 1000);
-            sleep(1000);
-          }
-        }
-        sleep(1000);
-        var 去分享 = text("去分享").findOne(1000);
-        if (去分享) {
-          toastLog("有去分享按钮");
-          var 去分享 = 去分享.bounds();
-          click(去分享.centerX(), 去分享.centerY());
+        去完成.click();
+        var 点击抽奖 = text("点击抽奖").findOne(8000);
+        if (点击抽奖) {
+          toastLog("点击抽奖");
           sleep(1000);
-          var 分享 = text("分享").findOne(10000);
-          if (分享) {
-            var 分享 = 分享.bounds();
-            click(分享.centerX(), 分享.centerY());
-            var 微信好友 = text("微信好友").findOne(5000);
-            if (微信好友) {
-              var 微信好友 = 微信好友.bounds();
-              click(微信好友.centerX(), 微信好友.centerY());
-              text("创建新聊天").findOne(10000);
-              back_homepage();
-              sleep(1000);
-              click(福利.centerX(), 福利.centerY());
-              sleep(2000);
-            }
-            sleep(1000);
-            back_to(text, "会员每日福利", 1000);
-          } else {
-            toastLog("没有找到分享的选择");
-            back_to(text, "会员每日福利", 1000);
-
-          }
-        }
-        sleep(1000);
-        while (1) {
-          if (find_click(text, "领取", 2000)) {
-            sleep(2000);
-            find_click(text, "X", 2000);
-            if (!find(text, "会员每日福利", 2000)) {
-              back_to(text, "会员每日福利", 1000);
-            }
-          } else {
-            break;
-          }
-
-        }
-
-        sleep(1000);
-        while (1) {
-          var 立即领取 = text("立即领取").findOne(1000);
-          if (立即领取) {
-            toastLog("有奖励领取");
-            var 立即领取 = 立即领取.bounds();
-            click(立即领取.centerX(), 立即领取.centerY());
-            sleep(3000);
-            click(540, 1550); //关闭奖励页面
-            sleep(1000);
-          } else {
-            toastLog("没有奖励了");
+          var 点击抽奖 = 点击抽奖.bounds();
+          click(点击抽奖.centerX(), 点击抽奖.centerY());
+          if (textContains("当前剩余抽奖次数 0 次").findOne(1000)) {
+            back();
             break;
           }
         }
+        back_to(text, 会员福利页面标示, 1000);
         sleep(1000);
-        toastLog("待解锁检测");
-
-        var 待解锁 = text("待解锁").findOne(3000);
-        if (待解锁) {
-          var a = text("待解锁").find();
-          toastLog("找到的待解锁数量：" + a.length);
-          红包待解锁 = a.length;
-        } else {
-          toastLog("没有找到未解锁的奖励");
-          红包待解锁 = 0;
+      }
+    }
+    sleep(1000);
+    // 分享得流量
+    var 去分享 = text("去分享").findOne(1000);
+    if (去分享) {
+      toastLog("有去分享按钮");
+      var 去分享 = 去分享.bounds();
+      click(去分享.centerX(), 去分享.centerY());
+      sleep(1000);
+      var 分享 = text("分享").findOne(10000);
+      if (分享) {
+        var 分享 = 分享.bounds();
+        click(分享.centerX(), 分享.centerY());
+        var 微信好友 = text("微信好友").findOne(5000);
+        if (微信好友) {
+          var 微信好友 = 微信好友.bounds();
+          click(微信好友.centerX(), 微信好友.centerY());
+          text("创建新聊天").findOne(10000);
+          back_homepage();
+          sleep(1000);
+          click(福利.centerX(), 福利.centerY());
+          sleep(2000);
         }
-        sleep(2000);
-        //观看视频领红包
-        if (红包待解锁 != 0) {
-          toastLog("进入看视频环节");
-          观看视频领红包();
+        sleep(1000);
+        back_to(text, 会员福利页面标示, 1000);
+      } else {
+        toastLog("没有找到分享的选择");
+        back_to(text, 会员福利页面标示, 1000);
+
+      }
+    }
+    sleep(1000);
+    // 循环领取奖励
+    while (1) {
+      if (find_click(text, "领取", 2000)) {
+        sleep(3000);
+        find_click(text, "X", 3000);
+        if (!find(text, 会员福利页面标示, 2000)) {
+          back_to(text, 会员福利页面标示, 1000);
         }
       } else {
-        toastLog("未找到福利界面，重启!");
-        return SignIn_Miguaikan();
+        break;
       }
+    }
+    sleep(1000);
+    // 领取话费奖励
+    while (1) {
+      var 立即领取 = text("立即领取").findOne(1000);
+      if (立即领取) {
+        toastLog("有奖励领取");
+        var 立即领取 = 立即领取.bounds();
+        click(立即领取.centerX(), 立即领取.centerY());
+        sleep(3000);
+        click(540, 1550); //关闭奖励页面
+        sleep(1000);
+      } else {
+        toastLog("没有奖励了");
+        break;
+      }
+    }
+    sleep(1000);
+
+    toastLog("待解锁检测");
+    var 待解锁 = text("待解锁").findOne(3000);
+    if (待解锁) {
+      var a = text("待解锁").find();
+      toastLog("找到的待解锁数量：" + a.length);
+      红包待解锁 = a.length;
     } else {
-      toastLog("未找到我的，重启");
-      back_home();
-      return SignIn_Miguaikan();
+      toastLog("没有找到未解锁的奖励");
+      红包待解锁 = 0;
+    }
+    sleep(2000);
+    //观看视频领红包
+    if (红包待解锁 != 0) {
+      toastLog("进入看视频环节");
+      观看视频领红包();
     }
   } catch (err) {
     toastLog(err);
-
   } finally {
     back_home();
     return;
@@ -262,19 +262,9 @@ function SignIn_Miguaikan () {
 }
 
 function back_homepage () {
-  // while (1) {
-  //   var 我的 = t_type(t_text).findOne(1000);
-  //   if (我的) {
-  //     var 我的 = 我的.bounds();
-  //     click(我的.centerX(), 我的.centerY());
-  //     toastLog("已经退回到包含" + t_type + "=" + t_text + "界面");
-  //     break;
-  //   } else {
-  //     back();
-  //   }
-  // }
-
-  back_to(text, "我的", 1000);
+  if (!back_to(text, "我的", 1000)) {
+    back_to(id, "image5_layout", 1000)
+  }
 }
 
 function 观看视频领红包 () {
@@ -345,6 +335,6 @@ function 进入视频 () {
     toastLog("等待180分钟");
     sleep(184 * 60 * 1000);
   }
-  back_homepage(id, "image5_layout")
+  back_homepage()
   return SignIn_Miguaikan();
 }
