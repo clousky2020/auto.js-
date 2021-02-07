@@ -128,11 +128,16 @@ function find_click (type, text, time) {
 
 function loop_find_click (type, text, time, num) {
   var n = 1;
-  while (n < num) {
-    toastLog("第" + n + "次查找点击");
-    find_click(type, text, time);
-    n += 1;
+  while (1) {
+    if (n < num) {
+      toastLog("第" + n + "次查找点击");
+      find_click(type, text, time);
+      n += 1;
+    } else {
+      break;
+    }
   }
+  return;
 }
 
 function loop_find_click_position (type, text, time, position1, position2, num) {
@@ -688,52 +693,26 @@ function SignIn_Netease_Cloudmusic () {
       launch("com.netease.cloudmusic");
       sleep(1000);
     }
-    while (1) {
-      find_click(text, "不用，流量够用", 2000);
-      var 每日推荐 = text("每日推荐").findOne(6000);
-      if (每日推荐) {
-        sleep(1000);
-        click(100, 150); //打开菜单栏
-        sleep(1000);
-        var 云贝中心 = text("云贝中心").findOne(2000);
-        if (云贝中心) {
-          var 云贝中心 = 云贝中心.bounds();
-          click(云贝中心.centerX(), 云贝中心.centerY());
-          // click(627,563,828,623);
-          sleep(2000);
-          if (text("云贝中心").findOne(5000)) {
-            save_log("网易云音乐已签到");
-            var num = 0;
-            while (num < 3) {
-              var 已完成 = text("已完成").findOne(1000);
-              if (已完成) {
-                var 已完成 = 已完成.bounds();
-                click(已完成.centerX(), 已完成.centerY());
-                num += 1;
-                sleep(2000);
-              } else {
-                break;
-              }
-            }
-          } else {
-            toastLog("没有进入云贝中心");
-          }
-          break;
-        } else if (text("免费兑黑胶VIP").findOne(2000)) {
-          save_log("网易云音乐已签到");
-          home();
-          break;
-          // } else {
-          //     save_log("网易云音乐已签到");
-          //     back();
-          //     break;
+    find_click(text, "不用，流量够用", 2000);
+    if (find_click(desc, '抽屉菜单', 5000)) {
+      sleep(1000);
+      if (find_click(text, '云贝中心', 2000)) {
+        sleep(2000);
+        if (find(text, '云贝账单', 2000)) {
+          loop_find_click(text, '已完成', 1000, 4)
+        } else {
+          toastLog("没有进入云贝中心");
+          back();
         }
-      } else {
-        toastLog("未找到网易云音乐主界面，重启");
-        swipe(540, 1500, 540, 2000, 500);
-        back();
-        return SignIn_Netease_Cloudmusic();
+      } else if (text("免费兑黑胶VIP").findOne(2000)) {
+        save_log("网易云音乐已签到");
+        home();
       }
+    } else {
+      toastLog("未找到网易云音乐主界面，重启");
+      swipe(540, 1500, 540, 2000, 500);
+      back();
+      return SignIn_Netease_Cloudmusic();
     }
   } catch (err) {
     toastLog(err);
