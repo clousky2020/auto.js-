@@ -61,9 +61,10 @@ function find_click_position (type, text, time, position1, position2) {
       } else if (object.centerY() > position2) {
         swipe(540, 1200, 540, 1000, 200);
         continue;
+      } else {
+        click(object.centerX(), object.centerY());
+        return true;
       }
-      click(object.centerX(), object.centerY());
-      return true;
     } else {
       toast("没有找到" + text + "的目标");
       return false;
@@ -83,13 +84,14 @@ function find_click (type, text, time) {
   }
 }
 
+// 循环点击
 function loop_find_click (type, text, time, num) {
-  var n = 1;
-  while (n < num) {
-    toastLog("第" + n + "次查找点击");
+  for (var i = 0; i < num; i++) {
+    toastLog("第" + i + "次查找点击");
     find_click(type, text, time);
-    n += 1;
+    sleep(1000);
   }
+  return;
 }
 
 function loop_find_click_position (type, text, time, position1, position2, num) {
@@ -130,6 +132,17 @@ function get_sun () {
     }
   }
 }
+// 查找图片后点击
+function image_click (path) {
+  var p = image_coor(path);
+  if (p) {
+    click(p.x, p.y);
+    return true;
+  } else {
+    toastLog('没找到' + path);
+    return false;
+  }
+}
 
 function take_the_sun () {
   // var p = image_coor("./taobao/采阳光.png");
@@ -152,27 +165,23 @@ function take_the_sun () {
           立刻采集.click();
         }
         back_to(text, "今日最多可采集", 1000);
-        sleep(2000);
+        sleep(1000);
       } else {
         toastLog("没有采阳光了");
-
         break;
       }
     }
   }
   var 关闭按钮 = text('TB1A0cdMBr0gK0jSZFnXXbRRXXa-36-36').findOne(1000).bounds();
   click(关闭按钮.centerX(), 关闭按钮.centerY());
-  // } else {
-  //   toastLog("没有找到采阳光的图标");
-  // }
   return;
 }
 
 function back_home () {
   var num = 0;
   while (1) {
-    //因为在auto.js的文件中第一个就是蚂蚁庄园星星球，以此作为进入auto的判断
-    // var auto = text("蚂蚁庄园星星球").findOne(500);
+    //因为在auto.js的文件中社区比较独特，其他应用少有，以此作为进入auto的判断
+    // var auto = text("社区").findOne(500);
     var auto = id("fab").findOne(500);
     //好像在auto的界面，可以正常启动后续的app
     if (num > 3 || id("workspace").findOne(500)) { //多次后退没有找到auto的界面，那就返回桌面重启
@@ -233,7 +242,7 @@ function tmail_form () {
           return tmail_form();
         }
       }
-      if (text("兑换好礼（每天10:00上新）").findOne(10000)) {
+      if (text("兑换好礼（每天10:00上新）").findOne(5000)) {
         toast("进入农场");
         sleep(2000);
       } else {
@@ -271,9 +280,7 @@ function tmail_form () {
       ]
       toast("第一次开始收阳光");
       get_sun();
-      // for (i = 0; i < sun_list.length; i++) {
-      //     click(sun_list[i][0], sun_list[i][1]);
-      // }
+      back_to(text, "兑换好礼（每天10:00上新）", 1000);
       var 立即收下 = textContains("立即收下").findOne(1000);
       if (立即收下) {
         var 立即收下 = 立即收下.bounds();
@@ -351,20 +358,19 @@ function tmail_form () {
           sleep(1000);
           去进店领阳光.click();
           toast("进店领阳光");
-          sleep(4000);
+          sleep(3000);
           var num = 0;
 
           while (1) {
             var click_list = ['立即打开', '关注店铺'];
             for (i = 0; i < click_list.length; i++) {
-              if (find_click_position(desc, click_list[i], 300, 250, 1000)) {
+              if (find_click_position(desc, click_list[i], 1000, 250, 2000)) {
                 break;
               }
-              if (find_click_position(text, click_list[i], 300, 250, 1000)) {
+              if (find_click_position(text, click_list[i], 1000, 250, 2000)) {
                 break;
               }
             }
-
             if (desc("经过搜寻，你获得了").findOne(500) || textContains("已获得").findOne(100) || descContains("已关注，").findOne(100)) {
               toast("已经得到阳光,退回");
               while (!text("进店开宝箱").findOne(1000)) { back(); }
@@ -377,11 +383,10 @@ function tmail_form () {
             if (num == 15) {
               toastLog("下滑15次还没看到目标值，向上，重新来");
               num += 1;
-              // for (i1 = 0; i1 < 18; i1++) {
-              //   swipe(540, 400, 540, 2100, 200); //向上滑
-              // }
-              click(100, 2300);//最左边图标双击回到最顶端
-              click(100, 2300);//最左边图标双击回到最顶端
+              for (i1 = 0; i1 < 18; i1++) {
+                swipe(540, 400, 540, 2100, 200); //向上滑
+              }
+              // click(100, 2300);//最左边图标双击回到最顶端（废弃，有些页面不能返回最上层）
             } else if (num > 50) {
               toast("下滑多次未找到目标，退回");
               while (!text("进店开宝箱").findOne(1000)) { back(); }
@@ -416,12 +421,16 @@ function tmail_form () {
       if (集果实图标.findOne(10000)) {
         toast("已经进入福年种福果");
         var num = 0;
-        while (num > 2) {
-          if (find_click(textContains, "继续努力", 2000)) {
-            num = 3;
+        while (1) {
+          find_click(text, "继续努力", 1000);
+          var coor = image_coor("./taobao/果园-继续努力.jpg")
+          if (coor) {
+            break;
+          } else if (num > 3) {
+            break;
           } else {
-            sleep(1000);
             num += 1;
+            sleep(500);
           }
         }
         sleep(1000);
@@ -429,7 +438,8 @@ function tmail_form () {
         sleep(1000);
         click(540, 1521) //点掉今天已经领过了，明天再领
         sleep(1000);
-        click(1000, 1700); // 进入活动中心
+        // click(1000, 1700); // 进入活动中心
+        find_click(text, "O1CN01JYnXvW1QLiwr6jdoO_!!6000000001960-2-tps-126-126.png_140x10000.jpg_", 2000); // 进入活动中心
         collection_bless();
         sleep(1200);
         toastLog("关闭任务菜单");
@@ -441,9 +451,19 @@ function tmail_form () {
           var coor = image_coor("./taobao/施肥数为零.jpg");
           if (!coor) {
             // toastLog("施肥数还有");
-            click(540, 1650); //点击施肥
-            sleep(500);
+            if (image_click("./taobao/点击施肥.jpg")) {
+              toastLog("已点击了一次施肥");
+            } else {
+              back_to(text, "O1CN01JYnXvW1QLiwr6jdoO_!!6000000001960-2-tps-126-126.png_140x10000.jpg_", 1000);
+            }
+            // click(540, 1650); //点击施肥
           } else {
+            break;
+          }
+          if (find_click(text, '肥料礼包', 1000)) {
+            find_click(text, '开心收下', 3000);
+            sleep(1000);
+            find_click(text, 'TB12m9K2Rr0gK0jSZFnXXbRRXXa-74-74.png_1080x1800Q50s50.jpg_', 5000);
             break;
           }
         }
@@ -468,8 +488,22 @@ function tmail_form () {
 }
 
 function back_to_TaskInterface () {
-  back_to(text, "跳转链接", 1000);
+  back_to(textContains, "邀请好友助力", 1000);
   return;
+}
+
+function ifSkipClick (clickModule) {
+  //有部分内容不需要进入，直接跳过
+  var head_text = clickModule.parent().children()[1].text();
+  var skip_texts = ['下单'];
+  for (i = 0; i < skip_texts.length; i++) {
+    //检查查找的内容中有没有需要skip的内容，有就跳过
+    if (head_text.search(skip_texts[i]) != -1) {
+      toastLog(head_text + "属于需要跳过的内容");
+      return false;
+    }
+  }
+  return true;
 }
 
 function collection_bless () {
@@ -481,6 +515,74 @@ function collection_bless () {
       if (rect != null) {
         toast("签到");
         rect.click();
+      }
+      var x = 0;
+      l1 = ['去逛逛', '去浏览', '去完成'];
+      for (var i = 0; i < l1.length; i++) {
+        while (1) {
+          var 去逛逛 = text(l1[i]).findOne(1000);
+          if (x != 0) {
+            var 去逛逛 = text(l1[i]).findOnce(x);
+          }
+          if (去逛逛) {
+            去逛逛.click();
+            if (textContains("全部完成").findOne(2000)) {
+              back();
+              sleep(1000);
+              click(985, 976) //关闭任务窗口
+              sleep(1000);
+              click(972, 1626) //打开任务窗口
+              sleep(1000);
+              break;
+            } else if (find(textContains, '下单', 1000)) {
+              x += 1;
+              toastLog('这个页面不要，后退');
+              back();
+              break;
+            } else if (textContains("滑动浏览得").findOne(5000)) {
+              sleep(2000);
+              swipe(540, 2000, 540, 500, 500);
+            } else if (text("启动桌面快捷方式").findOne(1000)) {
+              back();
+              break;
+            } else if (text("继续赚肥料").findOne(1000)) {
+              toastLog("进入了支付宝的农场");
+              find_click(text, "继续赚肥料", 5000);
+              find_click(text, "去签到", 1000);
+              loop_find_click(text, "领取", 1000, 4);
+
+              find_click(text, "继续赚肥料", 4000);
+            } else if (image_coor("./taobao/进入心愿盒界面2.jpg")) {
+              toastLog('进入心愿盒界面');
+              click(540, 2200);
+              sleep(3000);
+              while (1) {
+                if (find(textContains, "分享给好友", 1000)) { break };
+                back();
+                sleep(1000);
+                var 回到淘宝 = image_coor("./taobao/回到淘宝.png");
+                if (回到淘宝) {
+                  toastLog("回到淘宝");
+                  click(回到淘宝.x, 回到淘宝.y);
+                  sleep(2000);
+                } else {
+                  break;
+                }
+              }
+              sleep(1000);
+            }
+            if (textContains("完成").findOne(20000)) {
+              back_to_TaskInterface();
+              sleep(1000);
+            } else {
+              toastLog("什么都没有找到，返回");
+              back_to_TaskInterface();
+              sleep(1000);
+            }
+          } else {
+            break;
+          }
+        }
       }
       while (1) {
         var rect = text("去领取").findOne(500);
@@ -535,63 +637,7 @@ function collection_bless () {
       //     find_click(textContains, "点击撸猫", 5000);
       //     back_to_TaskInterface();
       // }
-      l1 = ['去逛逛', '去浏览', '去完成'];
-      for (var i = 0; i < l1.length; i++) {
-        while (1) {
-          var 去逛逛 = text(l1[i]).findOne(1000);
-          if (去逛逛) {
-            去逛逛.click();
-            if (textContains("全部完成").findOne(2000)) {
-              back();
-              sleep(1000);
-              click(985, 976) //关闭任务窗口
-              sleep(1000);
-              click(972, 1626) //打开任务窗口
-              sleep(1000);
-              break;
-            } else if (textContains("滑动浏览得").findOne(5000)) {
-              sleep(2000);
-              swipe(540, 2000, 540, 500, 500);
-            } else if (text("启动桌面快捷方式").findOne(1000)) {
-              back();
-              break;
-            } else if (text("继续赚肥料").findOne(1000)) {
-              find_click(text, "继续赚肥料", 2000);
-              find_click(text, "去签到", 2000);
-              loop_find_click(text, "领取", 2000, 4);
-              find_click(text, "继续赚肥料", 4000);
-            } else if (image_coor("./taobao/进入心愿盒界面2.jpg")) {
-              toastLog('进入心愿盒界面');
-              click(540, 2217);
-              sleep(3000);
-              while (1) {
-                if (find(textContains, "分享给好友", 1000)) { break };
-                back();
-                sleep(1000);
-                var 回到淘宝 = image_coor("./taobao/回到淘宝.png");
-                if (回到淘宝) {
-                  toastLog("回到淘宝");
-                  click(回到淘宝.x, 回到淘宝.y);
-                  sleep(2000);
-                } else {
-                  break;
-                }
-              }
-              sleep(1000);
-            }
-            if (textContains("完成").findOne(20000)) {
-              back_to_TaskInterface();
-              sleep(1000);
-            } else {
-              toastLog("什么都没有找到，返回");
-              back_to_TaskInterface();
-              sleep(1000);
-            }
-          } else {
-            break;
-          }
-        }
-      }
+
       find_click(textContains, "去兑换", 5000);
       // var rect = textContains("去兑换").findOne(500);
       // if (rect != null) {

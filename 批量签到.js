@@ -22,7 +22,9 @@ SignIn_idlefish(); //闲鱼签到
 SignIn_Mommypocket(); //美物清单
 SignIn_Netease_Cloudmusic(); //网易云音乐
 SignIn_Fandengreader(); //樊登读书
-SignIn_ximalaya(); //喜马拉雅
+
+
+// SignIn_ximalaya(); //喜马拉雅
 // SignIn_Alibaba_AlipayGphone(); //支付宝阿里巴巴领元宝
 // SignIn_Baidu_netdisk(); //百度网盘
 // SignIn_Smzdm(); //什么值得买
@@ -52,8 +54,8 @@ function image_coor (template_path) {
 function back_home () {
   var num = 0;
   while (1) {
-    //因为在auto.js的文件中第一个就是蚂蚁庄园星星球，以此作为进入auto的判断
-    var auto = text("蚂蚁庄园星星球").findOne(200);
+    //因为在auto.js的文件中社区比较独特，其他应用少有，以此作为进入auto的判断
+    var auto = text("社区").findOne(200);
     //好像在auto的界面，可以正常启动后续的app
     if (num > 5 || id("workspace").findOne(200)) { //多次后退没有找到auto的界面，那就返回桌面重启
       home();
@@ -104,16 +106,27 @@ function find_click_position (type, text, time, position1, position2) {
       } else if (object.centerY() > position2) {
         swipe(540, 1200, 540, 1000, 200);
         continue;
+      } else {
+        click(object.centerX(), object.centerY());
+        return true;
       }
-      click(object.centerX(), object.centerY());
-      return true;
     } else {
       toast("没有找到" + text + "的目标");
       return false;
     }
   }
 }
-
+// 查找图片后点击
+function image_click (path) {
+  var p = image_coor(path);
+  if (p) {
+    click(p.x, p.y);
+    return true;
+  } else {
+    toastLog('没找到' + path);
+    return false;
+  }
+}
 function find_click (type, text, time) {
   var object = type(text).findOne(time);
   if (object) {
@@ -125,17 +138,12 @@ function find_click (type, text, time) {
     return false;
   }
 }
-
+// 循环点击
 function loop_find_click (type, text, time, num) {
-  var n = 1;
-  while (1) {
-    if (n < num) {
-      toastLog("第" + n + "次查找点击");
-      find_click(type, text, time);
-      n += 1;
-    } else {
-      break;
-    }
+  for (var i = 0; i < num; i++) {
+    toastLog("第" + i + "次查找点击");
+    find_click(type, text, time);
+    sleep(1000);
   }
   return;
 }
@@ -367,7 +375,21 @@ function Signin_TaobaoPhone () {
     return;
   }
 }
-
+// 进入京东页面
+function goToJD () {
+  while (1) {
+    if (find_click(text, "领京豆", 1000)) {
+      toastLog("点击领京豆");
+      sleep(3000);
+    }
+    if (find(text, '购物返豆', 1000)) {
+      return true;
+    } else {
+      toastLog("没有在签到页面，后退！");
+      back();
+    }
+  }
+}
 function SignIn_jingdong () {
   try {
     var appRun = currentPackage();
@@ -382,177 +404,190 @@ function SignIn_jingdong () {
       back();
       return SignIn_jingdong();
     }
-    if (find_click(text, "领京豆", 5000)) {
-      if (!find(text, "进店领豆", 3000)) {
-        toastLog("可能没有进入签到页面，后退重启！");
-        back_to(text, "领京豆", 1000);
-        return SignIn_jingdong();
-      }
+    if (goToJD()) {
       if (find_click(text, "签到领京豆", 1000)) {
         sleep(2000);
-        back_to(text, "进店领豆", 1000);
+        goToJD();
       }
       //种豆得豆
-      if (find_click(textContains, "营养液待收取", 1000) || find_click(textContains, "生产还剩", 200) || find_click(textContains, "待领取", 200)) {
-        if (!find(text, "豆苗成长值", 3000)) {
-          back_to(text, "进店领豆", 1000)
-        }
-        l1 = ["1"]
-        for (i = 0; i < l1.length; i++) {
-          while (1) {
-            var 逛逛会场 = text(l1[i]).depth(3).findOne(1500);
-            if (逛逛会场) {
-              逛逛会场 = 逛逛会场.bounds();
-              click(逛逛会场.centerX(), 逛逛会场.centerY());
-              sleep(1000);
-              back_to(text, "豆苗成长值", 1000);
-            } else { break; }
-          }
-        }
-        var 营养液坐标 = [
-          [420, 850],
-          [580, 780],
-          [750, 900]
-        ];
-        //自己的营养液点击三次
-        for (j = 0; j < 3; j++) {
-          for (i = 0; i < 营养液坐标.length; i++) {
-            click(营养液坐标[i][0], 营养液坐标[i][1]);
-          }
-        }
-        toastLog("检查朋友的营养液");
-        swipe(540, 1800, 540, 1500, 500);
-        sleep(500);
-
-        list1 = ["./images/京东朋友2豆.png", "./images/京东朋友3豆.png"];
-        var num_limit = 0;
-        for (i = 0; i < list1.length; i++) {
-          while (num_limit < 5) {
-            var coor = image_coor(list1[i]);
-            if (coor) {
-              click(coor.x, coor.y);
-              var 朋友界面 = text("你收取Ta").findOne(5000);
-              if (朋友界面) {
-                click(540, 800);
-                sleep(500);
-                back();
-                sleep(500);
-              }
-              num_limit += 1;
-
-            } else { toastLog("没有符合条件的营养液可以收取了"); break; }
-          }
-        }
-        sleep(1000);
-        swipe(540, 1200, 540, 1700, 500);
-        //自己的营养液点击三次
-        for (j = 0; j < 3; j++) {
-          for (i = 0; i < 营养液坐标.length; i++) {
-            click(营养液坐标[i][0], 营养液坐标[i][1]);
-          }
-        }
-      } else {
-        toastLog("种豆得豆还没到时候");
+      click(955, 762);
+      if (!find(text, "豆苗成长值", 3000)) {
+        goToJD();
       }
+      l1 = ["1"]
+      for (i = 0; i < l1.length; i++) {
+        while (1) {
+          var 逛逛会场 = text(l1[i]).depth(3).findOne(1500);
+          if (逛逛会场) {
+            逛逛会场 = 逛逛会场.bounds();
+            click(逛逛会场.centerX(), 逛逛会场.centerY());
+            sleep(1000);
+            back_to(text, "豆苗成长值", 1000);
+          } else { break; }
+        }
+      }
+      var 营养液坐标 = [
+        [420, 850],
+        [580, 780],
+        [750, 900]
+      ];
+      //自己的营养液点击三次
+      for (j = 0; j < 3; j++) {
+        for (i = 0; i < 营养液坐标.length; i++) {
+          click(营养液坐标[i][0], 营养液坐标[i][1]);
+        }
+      }
+      toastLog("检查朋友的营养液");
+      swipe(540, 1800, 540, 1500, 500);
+      sleep(500);
+
+      list1 = ["./images/京东朋友2豆.png", "./images/京东朋友3豆.png"];
+      var num_limit = 0;
+      for (i = 0; i < list1.length; i++) {
+        while (num_limit < 5) {
+          var coor = image_coor(list1[i]);
+          if (coor) {
+            click(coor.x, coor.y);
+            var 朋友界面 = text("你收取Ta").findOne(5000);
+            if (朋友界面) {
+              click(540, 800);
+              sleep(500);
+              back();
+              sleep(500);
+            }
+            num_limit += 1;
+
+          } else { toastLog("没有符合条件的营养液可以收取了"); break; }
+        }
+      }
+      sleep(1000);
+      swipe(540, 1200, 540, 1700, 500);
+      //自己的营养液点击三次
+      for (j = 0; j < 3; j++) {
+        for (i = 0; i < 营养液坐标.length; i++) {
+          click(营养液坐标[i][0], 营养液坐标[i][1]);
+        }
+      }
+
       //返回任务界面
-      back_to(text, "进店领豆", 1000);
+      goToJD();
       //检查要不要做其他的任务
       var patter = text_log.search("京东今天已领豆");
       if (patter == -1) {
-
         //转盘抽京豆
-        if (find_click(text, "抽京豆", 2000)) {
-          if (find(text, "规则", 5000)) {
-            sleep(1000);
-            click(554, 1100);
-            back();
-          } else {
-            toastLog("没有进入京东领豆页面！");
-            back_to(text, "进店领豆", 1000);
-          }
+        click(800, 1320);
+        if (find(text, "规则", 5000)) {
+          sleep(1000);
+          click(554, 1100);
+          back();
         } else {
-          toastLog("未找到抽京豆");
+          toastLog("没有进入京东领豆页面！");
+          goToJD();
         }
 
         //进店领豆
-        if (find_click(text, "进店领豆", 2000)) {
-          sleep(1000);
-          var num = 0
-          while (1) {
-            if (find_click(text, "进店+2京豆", 2000)) {
-              num += 1;
-              sleep(1000);
-              back();
-              sleep(1000);
-            } else if (num > 3) {
-              break;
-            } else {
-              break;
-            }
-          }
-          back_to(text, "进店领豆", 1000);
-        } else {
-          toastLog("未找到进店领豆");
-        }
-        //摇京豆
-        if (find_click(text, "摇京豆", 2000)) {
-          if (find(textContains, "今日剩余免费次数", 5000)) {
+        click(283, 1323);
+        sleep(1000);
+        var num = 0
+        while (1) {
+          if (find_click(text, "进店+2京豆", 2000)) {
+            num += 1;
             sleep(1000);
-            find_click(textContains, "摇一摇", 1000);
             back();
+            sleep(1000);
+          } else if (num > 3) {
+            break;
           } else {
-            toastLog("没有进入摇京豆页面！");
-            back_to(text, "进店领豆", 1000);
+            break;
           }
+        }
+        goToJD();
+
+        //摇京豆
+        click(964, 1308);
+        if (find(text, "摇京豆", 5000)) {
+          sleep(2000);
+          click(540, 2100);
+          sleep(1000);
+          back();
         } else {
-          toastLog("未找到摇京豆");
+          toastLog("没有进入摇京豆页面！");
+          goToJD();
         }
       }
       sleep(1000);
       //双签领豆
-      if (find_click(text, "双签领豆", 5000)) {
-        toastLog("找到双签领豆了");
+      goToJD();
+      click(100, 1250);//点击进入双签领豆界面
+      sleep(2000);
+      if (find_click(text, "双签领奖励", 5000)) {
         sleep(2000);
-        if (find_click(text, "双签领奖励", 5000)) {
-          sleep(2000);
-          click(900, 1050); //去京东金融app签到
-          sleep(2000);
-          if (find_click(text, "双签领奖励", 1000)) {
-            toastLog("还停留在这个页面，可能是因为已经领取今日奖励了");
-            find_click(text, "完成双签领取", 3000);
-            press(877, 1279, 300);
-            save_log("京东今天已领豆！");
-            back_to(text, "进店领豆", 1000);
-          } else {
-            sleep(3000);
-            while (1) {
-              if (find(text, "每日签到", 10000)) {
-                if (find_click(textContains, "签到领钢镚", 3000) || find_click(textContains, "签到并瓜分", 1000)) {
-                  find_click(text, "立即获得", 1000);
-                  find_click(text, "立即收下", 1000);
-                  find_click(text, "去完成", 1000);
-                  back_to(text, "进店领豆", 1000);
-                  find_click(text, "双签领豆", 1000);
-                  find_click(text, "完成双签领取", 3000);
-                  press(877, 1279, 300);
-                  back_to(text, "进店领豆", 1000);
-                  break;
-                } else {
-                  toastLog("没有找到签到领钢镚,后退重来");
-                  back();
-                  // back_to(text, "每日签到", 1000);
-                  find_click(text, "每日签到", 1000);
-                }
+        click(900, 1050); //去京东金融app签到
+        sleep(2000);
+        if (find_click(text, "双签领奖励", 1000)) {
+          toastLog("还停留在这个页面，可能是因为已经领取今日奖励了");
+          find_click(text, "完成双签领取", 3000);
+          press(877, 1279, 300);
+          save_log("京东今天已领豆！");
+          goToJD();
+        } else {
+          sleep(3000);
+          while (1) {
+            if (find(text, "每日签到", 10000)) {
+              if (find_click(textContains, "签到领", 3000) || find_click(textContains, "签到并", 1000)) {
+                find_click(text, "立即获得", 1000);
+                find_click(text, "立即收下", 1000);
+                find_click(text, "去完成", 1000);
+                back_to(text, '购物返豆', 1000);
+                sleep(2000);
+                click(100, 1250);//点击进入双签领豆界面
+                // find_click(text, "双签领豆", 1000);
+                find_click(text, "完成双签领取", 3000);
+                press(877, 1279, 300);
+                goToJD();
+                break;
               } else {
-                toastLog("没有找到每日签到");
+                toastLog("没有找到签到领钢镚,后退重来");
+                back();
+                // back_to(text, "每日签到", 1000);
+                find_click(text, "每日签到", 1000);
               }
+            } else {
+              toastLog("没有找到每日签到");
             }
           }
         }
-      } else {
-        toastLog("没有找到双签领豆的图标");
-        return SignIn_jingdong();
       }
+      // 升级赚京豆
+      goToJD();
+      click(540, 1300);
+      sleep(2000);
+      while (1) {
+        if (find_click(text, '去完成', 2000)) {
+          sleep(5000);
+          back();
+          sleep(1000);
+          var coor = image_coor("./images/拆开盲盒.jpg");
+          if (coor) {
+            toastLog("有盲盒，点击");
+            click(coor.x, coor.y);
+            sleep(5000);
+            var coor = image_coor("./images/开心收下.jpg");
+            if (coor) {
+              click(coor.x, coor.y);
+              goToJD();
+            } else {
+              back();
+              goToJD();
+              click(540, 1300);
+            }
+          }
+        } else {
+          toastLog("升级赚京豆结束");
+          break;
+        }
+      }
+
       //完成全部任务，得任务奖励
       find_click(text, "领取京豆奖励", 1000);
     } else {
@@ -694,12 +729,16 @@ function SignIn_Netease_Cloudmusic () {
       sleep(1000);
     }
     find_click(text, "不用，流量够用", 2000);
-    if (find_click(desc, '抽屉菜单', 5000)) {
+    back_to(text, '每日推荐', 1000);
+    click(100, 150)
+    if (find(desc, '抽屉菜单', 5000)) {
       sleep(1000);
       if (find_click(text, '云贝中心', 2000)) {
         sleep(2000);
-        if (find(text, '云贝账单', 2000)) {
-          loop_find_click(text, '已完成', 1000, 4)
+        if (find(text, '赚云贝', 5000)) {
+          toastLog("进入云贝中心了");
+          sleep(1000);
+          loop_find_click(text, '已完成', 1000, 4);
         } else {
           toastLog("没有进入云贝中心");
           back();
@@ -858,7 +897,6 @@ function SignIn_Alibaba () {
     if (赚元宝) {
       toastLog("找到赚元宝了");
       sleep(2000);
-      //click(450,640);
       var 赚元宝 = 赚元宝.bounds();
       press(赚元宝.centerX(), 赚元宝.centerY(), 600);
       var 做任务赚元宝 = text("做任务赚元宝").findOne(10000);
@@ -866,22 +904,20 @@ function SignIn_Alibaba () {
         sleep(1000); //有时候会出现抽奖
         var 做任务赚元宝 = 做任务赚元宝.bounds();
         click(做任务赚元宝.centerX(), 做任务赚元宝.centerY());
-        // 2020年11月06日看不到搜索领元宝了
-        // save_log("阿里巴巴元宝已经领取过了");
-        // return;
         if (text("今日已领取").findOne(1000)) {
           save_log("阿里巴巴已搜索领元宝");
           return;
         } else {
           toastLog("阿里巴巴今日未领取，去搜好货");
           while (1) {
+            // find_click(text,'去搜好货',2000)
+            sleep(1000);
             click(800, 1000);
             sleep(1000);
-            var 搜索历史 = text("搜索历史").findOne(4000);
-            // var 搜索历史 = id('tv_search_hot_keyword_title').findOne(3000);
+            var 搜索历史 = text("大家都在搜").findOne(4000);
             if (搜索历史) {
               sleep(1000);
-              click(70, 500); //第一条搜索历史
+              click(150, 380); //第一条搜索历史
               sleep(2000);
               while (!text("做任务赚元宝").findOne(500)) {
                 back();
@@ -1062,6 +1098,37 @@ function SignIn_Alipay () {
       launch("com.eg.android.AlipayGphone");
       sleep(1000);
     }
+    // 进入首页领取消费金
+    back_to(text, "首页", 1000);
+    find_click(text, "首页", 1000);
+    if (find_click(text, "消费金", 5000)) {
+      if (find(text, '攻略', 5000)) {
+        for (var i = 0; i < 2; i++) {
+          if (find_click(textContains, '签到', 1000) || find_click(textContains, '逛一逛赚金币', 1000)) {
+            if (find(text, '每日签到', 5000)) {
+              while (1) {
+                if (!find(text, '已获得30金币', 2000)) {
+                  swipe(540, 1000, 540, 500, 300);
+                  sleep(5000);
+                } else {
+                  break;
+                }
+              }
+              // back_to(id,'h5_tv_title',1000);
+              back_to(text, '支付宝消费金', 1000);
+              break;
+            }
+          }
+        }
+
+
+        for (var i = 0; i < 3; i++) {
+          find_click(text, '消费支付奖励', 2000);
+        }
+      }
+    }
+    back_to(text, "首页", 1000);
+
     var 我的 = text("我的").findOne(3000);
     if (我的) {
       var 我的 = 我的.bounds();
@@ -1074,30 +1141,30 @@ function SignIn_Alipay () {
       return SignIn_Alipay();
     }
     toastLog("点击进入支付宝会员页面");
-    var coor = image_coor("./images/支付宝会员.png");
-    if (coor) {
-      click(coor.x, coor.y);
-      sleep(1000);
-      if (find(text, "我的积分", 5000)) {
-
-        if (find_click(textContains, "今日签到", 2000)) {
-          toast("进入签到领积分");
-          sleep(1000);
-          find_click(text, "签到领积分", 3000);
-          sleep(1000);
+    while (1) {
+      var coor = image_coor("./images/支付宝会员.png");
+      if (coor) {
+        click(coor.x, coor.y);
+        sleep(1000);
+        if (find(text, "我的积分", 5000)) {
+          if (find_click(textContains, "今日签到", 2000)) {
+            toast("进入签到领积分");
+            sleep(1000);
+            find_click(text, "签到领积分", 3000);
+            sleep(1000);
+            back();
+          }
+          find_click(text, "全部领取", 1000);
+        } else {
+          toastLog("未找到支付宝会员领积分，可能是领过了！");
           back();
+          return SignIn_Alipay();
         }
-        find_click(text, "全部领取", 1000);
-      } else {
-        toastLog("未找到支付宝会员领积分，可能是领过了！");
-        back();
-        return SignIn_Alipay();
+        break;
       }
     }
-
     toastLog("进入我的家，领取家庭积分");
     var 我的家 = text("我的家").findOne(1000);
-    // while (!text("我的家").findOne(1000)) { back(); }
     if (我的家) {
       var 我的家 = 我的家.bounds();
       click(我的家.centerX(), 我的家.centerY());
@@ -1454,6 +1521,8 @@ function SignIn_Sfacg () {
       launch("com.sfacg");
       sleep(1000);
     }
+    find_click(descContains, '跳过', 5000);
+    find_click(textContains, '跳过', 1000);
     while (1) {
       var rect = id("main_tab_container5").findOne(3000);
       if (rect) {

@@ -6,18 +6,70 @@ if (!images.requestScreenCapture()) { //可指定参数true（横屏截图） �
   toast("请求截图失败");
   exit();
 }
-day_day_sign = "TB14jdYtaNj0u4jSZFyXXXgMVXa-76-77.png_";
-
+day_day_sign = "TB14jdYtaNj0u4jSZFyXXXgMVXa-76-77";
+// day_day_sign = "TB1jfBvXnM11u4jSZPxXXahcXXa-110-110";
 
 retry = 0;
 sleep(1000);
-taobao_coins();
+main();
 
+function main () {
+  app_start();
+  sign_in();
+  search_for_money();
+  earn_coin_every_day();
+  go_to_personal();
+  click(108, 2250);
+  sleep(1000);
+  chicken_gift();
+  back_home();
+}
+// 启动app
+function app_start () {
+  var appRun = currentActivity();
+  if (appRun != 'com.taobao.litetao') {
+    launch("com.taobao.litetao");
+  }
+  sleep(1000);
+  return;
+}
+// 点击签到
+function sign_in () {
+  // 首页进去关闭可以关闭的其他内容
+  find_click(desc, "关闭", 1000);
+  find_click(desc, "@关闭按钮", 1000);
+  toastLog("开始签到");
+  if (find_click(text, "天天领红包", 3000)) {
+    if (find(textContains, "开启签到提醒", 5000)) {
+      if (find_click(text, "点击提现到支付宝", 1000)) {
+        find_click(textContains, "知道了", 3000)
+      }
+    }
+  }
+  back();
+  // back_to(text, "天天领红包", 1000);
+  toastLog("签到结束");
+  sleep(1000);
+  return;
+}
+// 查找图片后点击
+function image_click (path) {
+  var p = image_coor(path);
+  if (p) {
+    toastLog('找到图片坐标了，' + p.x + ',' + p.y);
+    click(p.x, p.y);
+    return true;
+  } else {
+    toastLog('没找到' + path);
+    return false;
+  }
+}
+// 返回桌面上的auto界面
 function back_home () {
   var num = 0;
   while (1) {
-    //因为在auto.js的文件中第一个就是蚂蚁庄园星星球，以此作为进入auto的判断
-    var auto = text("蚂蚁庄园星星球").findOne(1000);
+    //因为在auto.js的文件中社区比较独特，其他应用少有，以此作为进入auto的判断
+    var auto = text("社区").findOne(1000);
     //好像在auto的界面，可以正常启动后续的app
     if (num > 5 || id("workspace").findOne(500)) { //多次后退没有找到auto的界面，那就返回桌面重启
       home();
@@ -69,9 +121,10 @@ function find_click_position (type, text, time, position1, position2) {
       } else if (object.centerY() > position2) {
         swipe(540, 1200, 540, 1000, 200);
         continue;
+      } else {
+        click(object.centerX(), object.centerY());
+        return true;
       }
-      click(object.centerX(), object.centerY());
-      return true;
     } else {
       toast("没有找到" + text + "的目标");
       return false;
@@ -83,7 +136,7 @@ function find_click (type, text, time) {
   var object = type(text).findOne(time);
   if (object) {
     var object = object.bounds();
-    click(object.centerX(), object.centerY());
+    press(object.centerX(), object.centerY(), 500);
     return true;
   } else {
     toast("没有找到" + text + "的目标");
@@ -91,13 +144,14 @@ function find_click (type, text, time) {
   }
 }
 
+// 循环点击
 function loop_find_click (type, text, time, num) {
-  var n = 1;
-  while (n < num) {
-    toastLog("第" + n + "次查找点击");
+  for (var i = 0; i < num; i++) {
+    toastLog("第" + i + "次查找点击");
     find_click(type, text, time);
-    n += 1;
+    sleep(1000);
   }
+  return;
 }
 
 function loop_find_click_position (type, text, time, position1, position2, num) {
@@ -144,6 +198,8 @@ function back_to_homepage () {
 }
 
 function go_to_personal () {
+  back_to_homepage();
+  toastLog('进入个人主页');
   click(900, 2300); //点击进入我的页面
   sleep(1000);
 }
@@ -151,10 +207,10 @@ function go_to_personal () {
 function search_for_money () {
   toastLog("进入搜索");
   var num = 0;
-  if (find_click(text, "搜索", 1000)) {
-    sleep(2000);
-    while (num < 3) {
-      if (find_click(id, "searchbtn", 3000)) {
+  while (num < 3) {
+    if (find_click(text, "5.9包邮", 1000)) {
+      sleep(1000);
+      if (find(textContains, "全部", 2000)) {
         sleep(1000);
         num += 1;
         swipe(540, 2000, 540, 500, 400);
@@ -164,62 +220,42 @@ function search_for_money () {
       } else {
         num += 1;
       }
+      back_to_homepage();
     }
+
   }
   back_to_homepage();
   return;
 }
 
-
-function taobao_coins () {
+// 进入天天赚特币
+function earn_coin_every_day () {
   try {
-    var appRun = currentActivity();
-    if (appRun != 'com.taobao.litetao') {
-      launch("com.taobao.litetao");
-    }
-    sleep(2000);
-
-    find_click(desc, "关闭", 1000);
-    if (result = find_click(text, "天天领红包", 3000)) {
-      if (find(textContains, "开启签到提醒", 5000)) {
-        if (find_click(text, "点击提现到支付宝", 1000)) {
-          find_click(textContains, "知道了", 3000)
-        }
-      }
-    }
-    back();
-    toastLog("开始玩别的");
-    // find_click(text, "立即领取", 2000);
-    // find_click(desc, "图片", 1000);
-    sleep(1000);
-    toastLog("进入频道拿特币");
-    //进入频道拿特币
-    search_for_money();
-
     var 赚特币 = text("天天赚特币").findOne(4000);
     if (赚特币) {
       sleep(1000);
       var 赚特币 = 赚特币.bounds();
       click(赚特币.centerX(), 赚特币.centerY());
 
-      if (find(text, day_day_sign, 10000)) {
+      find_click(textContains, '放弃膨胀', 3000);
+      if (find(text, 'TB1jfBvXnM11u4jSZPxXXahcXXa-110-110', 10000)) {
         toastLog("已进入赚特币界面");
         sleep(1000);
+
         var coor = image_coor("./litetao/点击领取.jpg");
         if (coor) {
           click(coor.x, coor.y);
           sleep(1000);
         }
-        click(834, 1228); //特币收钱
       } else {
         toastLog("未知原因，未进入赚特币界面,后退重启");
         retry += 1;
         back_home();
-        return taobao_coins();
+        return earn_coin_every_day();
       }
       sleep(1000);
       click(834, 1228); //特币收钱
-      var 要这个 = text("要这个").findOne(2000);
+      var 要这个 = text("要这个").findOne(4000);
       if (要这个) {
         var 要这个 = 要这个.bounds();
         click(要这个.centerX(), 要这个.centerY());
@@ -230,14 +266,17 @@ function taobao_coins () {
       find_click(textContains, '放弃膨胀', 1000);
       sleep(1000);
       //早起打卡
-      toastLog("早起打卡");
-      if (find_click(text, "TB1.wwziAcx_u4jSZFlXXXnUFXa-110-111.png_", 2000)) {
+      if (find_click(text, "TB1.wwziAcx_u4jSZFlXXXnUFXa-110-111", 2000)) {
+        toastLog("早起打卡");
+        sleep(1000);
         if (find_click(text, "去赚币", 2000)) {
           if (find(text, "早起打卡挑战赛", 2000)) {
             if (find(textContains, "已报名", 2000)) {
               toastLog("已经报名打卡了");
               back();
             } else {
+              image_click("./litetao/早起打卡-开心收下.png");
+
               var 报名 = text("50特币报名赚更多").findOne(2000);
               if (!报名) {
                 var 报名 = text("速速打卡").findOne(1000);
@@ -268,61 +307,64 @@ function taobao_coins () {
           toastLog("没有进入签到页面");
           back_to(text, '特币娱乐', 1000);
         }
-      }
-      find_click(textContains, '放弃膨胀', 1000);
-      幸运卡牌 = text('去赚币').findOnce(1);
-      if (幸运卡牌) {
-        toastLog('找到幸运卡牌了');
-        幸运卡牌.click();
-        sleep(2000);
-        //检测是否进入了翻牌界面
-        var 开始翻牌 = text("TB1gcO6k4rI8KJjy0FpXXb5hVXa-584-247").findOne(5000);
-        if (开始翻牌) {
-          var 开始翻牌 = 开始翻牌.bounds();
-          while (1) {
-            var coor = image_coor("./litetao/不能翻牌.png");
-            if (coor) {
-              toastLog("已经不能翻牌了");
-              sleep(1000);
-              break;
-            } else {
-              click(开始翻牌.centerX(), 开始翻牌.centerY());
-              // sleep(5000);
-              // text("继续玩").findOne(3000).click();
-              sleep(1000);
-              back();
-              sleep(1000);
-              幸运卡牌.click();
-              sleep(1000);
+
+        find_click(textContains, '放弃膨胀', 1000);
+        幸运卡牌 = text('去赚币').findOnce(1);
+        if (幸运卡牌) {
+          toastLog('找到幸运卡牌了');
+          幸运卡牌.click();
+          sleep(2000);
+          //检测是否进入了翻牌界面
+          var 开始翻牌 = text("TB1gcO6k4rI8KJjy0FpXXb5hVXa-584-247").findOne(5000);
+          if (开始翻牌) {
+            var 开始翻牌 = 开始翻牌.bounds();
+            sleep(1000);
+            while (1) {
+              var coor = image_coor("./litetao/不能翻牌.png");
+              if (coor) {
+                toastLog("已经不能翻牌了");
+                sleep(1000);
+                break;
+              } else {
+                click(开始翻牌.centerX(), 开始翻牌.centerY());
+                // sleep(5000);
+                // text("继续玩").findOne(3000).click();
+                sleep(1000);
+                back();
+                sleep(1000);
+                幸运卡牌.click();
+                sleep(2000);
+              }
             }
+          } else {
+            toastLog("没有找到开始翻牌");
           }
-        } else {
-          toastLog("没有找到开始翻牌");
+        }
+        back_to(text, '特币娱乐', 1000);
+        // find_click(textContains, '放弃膨胀', 1000);
+        if (find(text, "特币娱乐", 2000)) {
+          find_click(text, "关闭", 1000);
+          find_click(text, "关闭", 1000);
         }
       }
-      back_to(text, '特币娱乐', 1000);
-      find_click(textContains, '放弃膨胀', 1000);
-      if (find(text, "特币娱乐", 2000)) {
-        find_click(text, "关闭", 1000);
-        find_click(text, "关闭", 1000);
-      }
-
       sleep(1000);
       click(834, 1228); //特币收钱
       sleep(1000);
       // 打卡领猫粮
       if (find_click(text, '打卡领猫粮', 2000)) {
-        if (find(text, "明日来打卡", 1000)) {
+        if (find_click(text, "明日来打卡", 1000)) {
           toastLog("已经打卡过了");
         } else {
           find_click(text, '立即打卡领猫粮', 2000);
         }
       }
+      // image_click('./litetao/猫粮签到打卡关闭.jpg');
       // 点击关闭打卡领猫粮界面
-      find_click(text, "TB1VVsWoiDsXe8jSZR0XXXK6FXa-72-72.png_", 1000);
-
+      find_click(text, "TB1VVsWoiDsXe8jSZR0XXXK6FXa-72-72", 1000);
+      sleep(1000);
+      click(834, 1228); //特币收钱
       //做任务
-      find_click(text, "TB1QFwGsQ9l0K4jSZFKXXXFjpXa-110-110.png_", 3000);
+      find_click(text, "TB1QFwGsQ9l0K4jSZFKXXXFjpXa-110-110", 3000);
       sleep(2000);
       赚币中心();
       sleep(1000);
@@ -343,6 +385,13 @@ function taobao_coins () {
               if (find(text, "下单返任务", 2000)) {
                 toastLog("不下单，退回");
                 x += 1;
+              } else if (find(text, "聚划算开宝箱领红包", 2000)) {
+                toastLog("进入了聚划算开宝箱领红包,退回");
+                x += 1;
+              } else if (find(text, "超级抵钱", 2000)) {
+                toastLog("进入了淘宝页面");
+                back_to(textContains, "邀请好友助力得猫粮", 2000);
+                sleep(1000);
               } else {
                 swipe(540, 2000, 540, 1000, 400);
                 toastLog("等待15s后退回");
@@ -354,7 +403,8 @@ function taobao_coins () {
               toastLog("没有任务了，关闭");
               back_to(textContains, "邀请好友助力得猫粮", 1000);
               find_click(text, "关闭", 1000);
-              var n = 11;
+
+              n = 10;
               break;
             }
           } else {
@@ -364,7 +414,18 @@ function taobao_coins () {
           }
         }
       }
+      // 把猫粮吃完
+      while (1) {
+        click(540, 1680);
+        if (find(textContains, "邀请好友助力得猫粮", 5000)) {
+          find_click(text, "关闭", 1000);
+          break;
+        } else {
+          break;
+        }
+      }
       sleep(1000);
+      click(834, 1228); //特币收钱
       for (var i = 0; i < 3; i++) { swipe(540, 1000, 540, 2000, 500); }
       //收任务奖励
       var click_positions = [
@@ -387,14 +448,15 @@ function taobao_coins () {
     } else {
       toastLog("不在首页,后退重启！");
       back_to_homepage();
-      return taobao_coins();
+      return earn_coin_every_day();
     }
     back_to_homepage();
-    go_to_personal();
+    sleep(1000);
+
   } catch (err) {
+    back_home();
     alert(err);
   } finally {
-    back_home();
     return;
   }
 }
@@ -419,30 +481,33 @@ function 赚币中心 () {
   var 赚币中心 = text("关闭").findOne(3000);
   // var 坐标 = 赚币中心.bounds();
   if (赚币中心) {
-    list1 = ["去发现", "去完成", "去浏览", "去逛逛", "去看看"];
-    for (var i = 0; i < list1.length; i++) {
-      x = 0;
-      while (1) {
-        if (x > 2) { x = 0 };
-        if (x == 0) {
-          var 点击 = text(list1[i]).findOne(1000);
-        } else {
-          var 点击 = text(list1[i]).findOnce(x);
-        }
-        if (点击 && find_click_position(text, list1[i], 2000, 1000, 2250)) {
-          toastLog("现在点击的是" + list1[i]);
-          最终任务浏览界面();
-          toastLog("后退到关闭");
-          back_to(text, "关闭", 1000);
-          sleep(1000);
-        } else {
-          break;
+    for (var n = 0; n < 2; n++) {
+      toastLog("第" + n + '次遍历赚金币的选项');
+      list1 = ["去发现", "去完成", "去浏览", "去逛逛", "去看看"];
+      for (var i = 0; i < list1.length; i++) {
+        x = 0;
+        while (1) {
+          if (x > 2) { x = 0 };
+          if (x == 0) {
+            var 点击 = text(list1[i]).findOne(1000);
+          } else {
+            var 点击 = text(list1[i]).findOnce(x);
+          }
+          if (点击 && find_click_position(text, list1[i], 2000, 1000, 2250)) {
+            toastLog("现在点击的是" + list1[i]);
+            最终任务浏览界面();
+            toastLog("后退到关闭");
+            back_to(text, "关闭", 1000);
+            sleep(1000);
+          } else {
+            break;
+          }
         }
       }
     }
   } else {
     toastLog("没有进入赚币中心，重启");
-    return taobao_coins();
+    return earn_coin_every_day();
   }
   var close = text("关闭").findOne(3000);
   if (close) {
@@ -462,14 +527,12 @@ function 最终任务浏览界面 () {
     x += 1;
     return;
   }
-  var 点击领取今日特币 = text("点击领取今日特币").findOne(1000);
-  var 特币已存 = text("特币已存，明天再来").findOne(1000);
-  if (点击领取今日特币) {
-    点击领取今日特币.click();
+
+  if (find_click(text, '点击领取今日特币', 1000)) {
     x += 1;
     sleep(1000);
     return;
-  } else if (特币已存) {
+  } else if (find(text, '特币已存，明天再来', 1000)) {
     toastLog("特币已存");
     x += 1;
     return;
@@ -492,13 +555,13 @@ function 最终任务浏览界面 () {
       sleep(15000);
       检查完成标志();
       break;
-    } else if (image_coor("./litetao/看30秒最高得.jpg")) {
+    } else if (image_coor("./litetao/逛30秒.jpg")) {
       sleep(30000);
       检查完成标志();
       break;
     } else if (num > 10) {
       x += 1;
-      break;
+      break
     } else {
       toastLog("第" + num + "次找不到目标图片");
       num += 1;
@@ -509,22 +572,173 @@ function 最终任务浏览界面 () {
 }
 
 function 检查完成标志 () {
-  var num = 0;
+  var n = 0;
   while (1) {
-    var coor = image_coor("./litetao/去收.png");
-    if (coor) {
+    if (image_click("./litetao/去收.png")) {
       back();
       sleep(1000);
       find_click(text, '直接退出', 1000);
       return;
-    } else if (num > 10) {
+    } else if (image_click("./litetao/任务完成.jpg")) {
+      toastLog("找到任务完成的标志了");
+      sleep(4000);
+      if (find(text, '兑换', 1000)) {
+        find_click(text, "TB1QFwGsQ9l0K4jSZFKXXXFjpXa-110-110", 3000);
+      } else {
+        toastLog("没有在兑换界面，重启");
+        return earn_coin_every_day();
+      }
+      return;
+    } else if (n > 10) {
       toastLog("多次未找到,退回");
-      back();
+      // back();
       return;
     } else {
       toastLog("没有找到去收图标");
-      num += 1;
+      n += 1;
       sleep(1000);
     }
+  }
+}
+
+function chicken_gift () {
+  if (find_click(text, '小鸡送好礼', 3000)) {
+    sleep(5000);
+    if (find(text, '邀请好友', 5000)) {
+      // 领取每日鸡食
+      if (find_click(text, 'TB1wTmx34z1gK0jSZSgXXavwpXa-272-96', 2000)) {
+        find_click(text, 'TB1aOl1pCslXu8jSZFuXXXg7FXa-354-109', 4000);
+      }
+      // 每日签到
+      toastLog("去找到登录领现金");
+      sleep(2000);
+      if (image_click("./litetao/小鸡饲料登录领现金.jpg")) {
+        sleep(1000);
+        image_click("./litetao/小鸡饲料点击签到.jpg");
+
+      }
+
+      var coor = image_coor("./litetao/小鸡领饲料图标.jpg");
+      if (coor) {
+        click(coor.x, coor.y);
+        sleep(1000);
+        if (find(text, '分享得饲料', 1000)) {
+          toastLog('已经进入赚饲料任务界面了');
+          var list2 = ["去浏览"];
+          for (var i = 0; i < list2.length; i++) {
+            while (1) {
+              var coor = image_coor('./litetao/小鸡饲料' + list2[i] + '.jpg');
+              if (coor) {
+                click(coor.x, coor.y);
+                sleep(3000);
+                // 进入浏览后的内容
+                if (find(text, "浏览得饲料", 3000)) {
+                  var n = 0
+                  while (n < 3) {
+                    swipe(540, 2000, 540, 1500, 500);
+                    sleep(5000);
+                    n += 1;
+                  }
+                  back();
+                  sleep(1000);
+                  find_click(textContains, '收下', 2000);
+                  find_click(textContains, '去喂', 1000);
+
+                } else {
+                  toastLog("没有进入浏览得饲料");
+                  sleep(1000);
+                }
+              } else {
+                toastLog("没有可以点击的内容了");
+                break;
+              }
+            }
+            // 从首页返回
+            if (image_click('./litetao/小鸡饲料去完成.jpg')) {
+              sleep(1000);
+              image_click('./litetao/小鸡饲料返回首页去完成.jpg');
+              if (find_click(text, '小鸡送好礼', 3000)) {
+                if (find(text, '邀请好友', 5000)) {
+                  toastLog("已再次进入小鸡页面");
+                  if (image_click("./litetao/小鸡领饲料图标.jpg")) {
+                    if (find(text, '分享得饲料', 10000)) {
+                      toastLog("已再次进入任务页面");
+                    }
+                  }
+                }
+              } else {
+                toastLog("未进入首页，重启");
+                return chicken_gift();
+              }
+            }
+            while (1) {
+              var coor = image_coor('./litetao/小鸡饲料领取.jpg');
+              if (coor) {
+                click(coor.x, coor.y);
+                sleep(1000);
+                find_click(textContains, '去喂', 5000);
+                find_click(text, 'TB1aOl1pCslXu8jSZFuXXXg7FXa-354-109', 5000);
+              } else {
+                toastLog("没有可以领取的奖励了");
+                break;
+              }
+            }
+            sleep(2000);
+            var coor = image_coor('./litetao/小鸡饲料任务界面关闭.jpg');
+            if (coor) {
+              click(coor.x, coor.y);
+              sleep(1000);
+            }
+          }
+        } else {
+          toastLog('没有进入赚饲料任务界面了，后退');
+          back_to_homepage();
+          return chicken_gift();
+        }
+      } else {
+        toastLog("未找到领饲料图标");
+      }
+
+
+
+      // 点击喂食
+      // toastLog("点击喂食");
+      // var num = 0
+      // find_click(text, '克', 1000);
+      // sleep(1000);
+      // find_click(text, 'TB1ds7c4oY1gK0jSZFMXXaWcVXa-354-109', 2000);
+
+      /*while (1) {
+        var feed = text('克').findOnce(1);
+        if (feed) {
+          num += 1;
+          feed.click();
+          sleep(1000);
+          var coor = image_coor('./litetao/小鸡饲料任务界面关闭.jpg');
+          if (coor) {
+            click(coor.x, coor.y);
+            sleep(1000);
+            break;
+          }
+        } else if (num > 5) {
+          toastLog('喂食次数已达到');
+          break;
+        } else {
+          toastLog('没有找到喂食内容');
+          break;
+        }
+      }*/
+
+      back_to_homepage();
+      return;
+    } else {
+      toastLog("没有进入小鸡送好礼界面");
+      back_to_homepage();
+      return chicken_gift();
+    }
+  } else {
+    toastLog("没有找到小鸡送好礼");
+    back_to_homepage();
+    return chicken_gift();
   }
 }

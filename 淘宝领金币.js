@@ -60,7 +60,17 @@ function back_to (type, text, time) {
     }
   }
 }
-
+// 查找图片后点击
+function image_click (path) {
+  var p = image_coor(path);
+  if (p) {
+    click(p.x, p.y);
+    return true;
+  } else {
+    toastLog('没找到' + path);
+    return false;
+  }
+}
 function find_click_position (type, text, time, position1, position2) {
   while (1) {
     var object = type(text).findOne(time);
@@ -72,9 +82,10 @@ function find_click_position (type, text, time, position1, position2) {
       } else if (object.centerY() > position2) {
         swipe(540, 1200, 540, 1000, 200);
         continue;
+      } else {
+        click(object.centerX(), object.centerY());
+        return true;
       }
-      click(object.centerX(), object.centerY());
-      return true;
     } else {
       toast("没有找到" + text + "的目标");
       return false;
@@ -93,18 +104,23 @@ function find_click (type, text, time) {
     return false;
   }
 }
-
+function find_longClick (type, text, time) {
+  var object = type(text).findOne(time);
+  if (object) {
+    var object = object.bounds();
+    longClick(object.centerX(), object.centerY());
+    return true;
+  } else {
+    toast("没有找到" + text + "的目标");
+    return false;
+  }
+}
+// 循环点击
 function loop_find_click (type, text, time, num) {
-  var n = 1;
-  while (1) {
-    if (n <= num) {
-      toastLog("第" + n + "次循环查找点击");
-      find_click(type, text, time)
-      sleep(500);
-      n += 1;
-    } else {
-      break;
-    }
+  for (var i = 0; i < num; i++) {
+    toastLog("第" + i + "次查找点击");
+    find_click(type, text, time);
+    sleep(1000);
   }
   return;
 }
@@ -183,18 +199,12 @@ function taobao_coins () {
     }
     合力次数 = text("合力").find().length * 2;
     toastLog('当前合力次数：' + 合力次数);
-    // loop_find_click(text, "合力", 1000, 合力次数);
-    var num = 0;
-    while (1) {
-      if (num < 合力次数) {
-        find_click(text, "合力", 1000);
-        sleep(2000);
-        num += 1;
-        toastLog("第" + num + "次点击合力");
-      } else {
-        break;
-      }
+    for (var num = 0; num < 合力次数; num++) {
+      find_click(textContains, "合力", 1000);
+      toastLog("第" + num + "次点击合力");
+      sleep(2000);
     }
+
     sleep(1000);
     //买东西后有返回的金币
     click(150, 650);
@@ -256,7 +266,7 @@ function taobao_coins () {
               var state = 0;
               //有部分内容不需要进入，直接跳过
               var head_text = 去完成.parent().children()[0].children()[0].text();
-              var skip_texts = ['消消乐', '充话费', '天猫APP', '桌面', '菜鸟裹裹', '买', '车险', '抢','淘金币免费'];
+              var skip_texts = ['消消乐', '充话费', '天猫APP', '桌面', '菜鸟裹裹', '买', '车险', '夺宝', '淘金币免费', '点击商品图片', '逛淘金币新商家专场'];
               for (i = 0; i < skip_texts.length; i++) {
                 //检查查找的内容中有没有需要skip的内容，有就跳过
                 if (head_text.search(skip_texts[i]) != -1) {
@@ -265,6 +275,7 @@ function taobao_coins () {
                   toastLog(head_text + "跳过");
                   break;
                 }
+
               }
               //检查状态，决定是否点击
               if (state == 0) {
@@ -337,7 +348,7 @@ function taobao_coins () {
             } else { break; }
           }
           sleep(9000);
-          var 关注 = text("关注+10").findOne(1000);
+          var 关注 = text("订阅+10").findOne(1000);
           if (关注) {
             var 关注 = 关注.bounds();
             click(关注.centerX(), 关注.centerY());
@@ -416,9 +427,9 @@ function help_friends () {
             去助力.click();
             if (text("本月互助比拼").findOne(10000)) {
               sleep(1000);
-              var 助力 = text("立即助力").findOne(1000);
+              var 助力 = text("立即助力").findOne(500);
               if (!助力) {
-                var 助力 = text(l_1[i]).findOne(1000);
+                var 助力 = text(l_1[i]).findOne(500);
               }
               if (助力) {
                 var 助力 = 助力.bounds();
@@ -450,7 +461,7 @@ function help_friends () {
       //     break;
       //   }
       // }
-      loop_find_click(text, "邀请Ta", 1000, 5);
+      loop_find_click(text, "邀请Ta", 500, 4);
       if (num > 0) {
         toastLog("前" + num + "页好友已检查完，关闭！");
         save_log("今天淘金币全部好友找遍了！");
@@ -492,6 +503,7 @@ function coin_loop () {
     toastLog("还在任务界面");
     return;
   }
+  sleep(2000);
   swipe(540, 2000, 540, 1500, 500);
   if (descContains("添加").findOne(1000)) {
     toastLog("进入添加好友界面");
@@ -519,9 +531,7 @@ function coin_loop () {
       sleep(2000);
     }
     return taobao_coins();
-
-
-  } else if (id("scan_icon").findOne(500)) {
+  } else if (id("scan_icon").findOne(1000)) {
     id("scan_icon").findOne().click();
     sleep(2000);
     var 继续上传 = text("继续上传").findOne(2000);
@@ -536,7 +546,7 @@ function coin_loop () {
       toastLog("未找到扫一扫");
       back();
     }
-  } else if (text("历史搜索").findOne(500)) {
+  } else if (text("历史搜索").findOne(1000)) {
     toastLog("进入搜索领金币");
     var 展开更多搜索历史 = desc("展开更多搜索历史").findOne(1000);
     if (展开更多搜索历史) {
@@ -552,10 +562,12 @@ function coin_loop () {
     // } else if (find_click(textContains, "收下", 500)) {
     //   sleep(10000);
     //   backGoldInterface();
-    // } else if (find_click(textContains, "领取", 500)) {
+    // } else if (find_click(textContains, "领取", 500) || find_click(descContains, "领取", 500)) {
+    //   toastLog("领取");
     //   sleep(8000);
     //   backGoldInterface();
   } else if (find_click(textContains, "我的猫", 500)) {
+    toastLog("我的猫");
     find_click(textContains, "领取", 1000);
     sleep(1000);
     find_click(text, "我知道啦！", 1000);
@@ -564,16 +576,19 @@ function coin_loop () {
     sleep(1000);
     backGoldInterface();
   } else if (find_click(text, "训练", 500)) {
+    toastLog("训练");
     sleep(1000);
     backGoldInterface();
-  } else if (textContains("滑动浏览").findOne(500)) {
-    toastLog("滑动浏览得奖励");
+  } else if (textContains("滑动浏览").findOne(1000) || descContains("滑动浏览").findOne(1000)) {
+    sleep(1000);
+    toastLog("滑动浏览");
     swipe(540, 2000, 540, 1500, 500);
-    if (text("任务完成").findOne(16000)) {
+    if (textContains("任务完成").findOne(20000)) {
       toastLog("滑动浏览得奖励已完成");
     }
     backGoldInterface();
   } else if (text("我要自拍").findOne(500)) {
+    toastLog("我要自拍");
     x += 1;
     back();
     sleep(1000);
@@ -631,8 +646,19 @@ function coin_loop () {
       }
     }
     x += 1;
+  } else if (textContains("关注我呀").findOne(1000)) {
+    toastLog("淘宝浏览出来关注的了");
+    click(540, 400);
+    swipe(540, 300, 540, 600, 500);
+    toastLog("关注主播划掉,滑动浏览得奖励");
+    swipe(540, 2000, 540, 1500, 500);
+    if (textContains("任务完成").findOne(20000)) {
+      toastLog("滑动浏览得奖励已完成");
+    }
+    backGoldInterface();
   } else {
-    sleep(10000);
+    toastLog("没有找到设定内容，等待15秒")
+    sleep(15000);
   }
   while (1) {
     if (text("今日总能量").findOne(1000)) {

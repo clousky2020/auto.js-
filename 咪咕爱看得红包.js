@@ -14,13 +14,28 @@ SignIn_Miguaikan(); //咪咕爱看签到
 
 function back_home () {
   var num = 0;
-  while (num < 5) {
-    if (!id("workspace").findOne(200)) {
+  while (1) {
+    //因为在auto.js的文件中社区比较独特，其他应用少有，以此作为进入auto的判断
+    var auto = text("社区").findOne(200);
+    //好像在auto的界面，可以正常启动后续的app
+    if (num > 5 || id("workspace").findOne(200)) { //多次后退没有找到auto的界面，那就返回桌面重启
+      home();
+      sleep(500);
+      home();
+      var auto桌面 = text("Auto.js").findOne(4000);
+      if (auto桌面) {
+        auto桌面.click();
+        if (auto) { break; }
+      }
+    } else if (!auto) {
       back();
       num += 1;
-      toastLog("第" + num + "次尝试后退");
-    } else { return; }
+      toast("第" + num + "次后退");
+    } else {
+      break;
+    }
   }
+  sleep(500);
   return;
 }
 
@@ -41,7 +56,17 @@ function back_to (type, text, time) {
     }
   }
 }
-
+// 查找图片后点击
+function image_click (path) {
+  var p = image_coor(path);
+  if (p) {
+    click(p.x, p.y);
+    return true;
+  } else {
+    toastLog('没找到' + path);
+    return false;
+  }
+}
 function find_click_position (type, text, time, position1, position2) {
   while (1) {
     var object = type(text).findOne(time);
@@ -53,9 +78,10 @@ function find_click_position (type, text, time, position1, position2) {
       } else if (object.centerY() > position2) {
         swipe(540, 1200, 540, 1000, 200);
         continue;
+      } else {
+        click(object.centerX(), object.centerY());
+        return true;
       }
-      click(object.centerX(), object.centerY());
-      return true;
     } else {
       toast("没有找到" + text + "的目标");
       return false;
@@ -74,13 +100,14 @@ function find_click (type, text, time) {
   }
 }
 
+// 循环点击
 function loop_find_click (type, text, time, num) {
-  var n = 1;
-  while (n < num) {
-    toastLog("第" + n + "次查找点击");
+  for (var i = 0; i < num; i++) {
+    toastLog("第" + i + "次查找点击");
     find_click(type, text, time);
-    n += 1;
+    sleep(1000);
   }
+  return;
 }
 
 function loop_find_click_position (type, text, time, position1, position2, num) {
@@ -103,9 +130,11 @@ function find (type, text, time) {
 }
 // 从我的页面进入福利页面
 function goToWelfare () {
+  find_click(id, "close", 500);
   back_homepage();
-  if (find_click(text, '我的', 3000) || find_click(id, 'image5_layout', 2000)) {
+  if (find_click(id, 'ft_my', 3000) || text, '我的', 2000) {
     while (1) {
+      find_click(id, "close", 100);
       var 福利 = textContains("福利").findOne(5000);
       var 福利 = 福利.bounds();
       if (福利.centerY() < 200) {
@@ -116,6 +145,14 @@ function goToWelfare () {
         click(福利.centerX(), 福利.centerY())
         break;
       }
+    }
+    var 界面 = text(会员福利页面标示).findOne(10000);
+    if (界面) {
+      toastLog("咪咕爱看福利界面出现了");
+      swipe(540, 2000, 540, 1400, 500);
+    } else {
+      toastLog("没有福利界面，重启");
+      return SignIn_Miguaikan();
     }
   } else {
     toastLog("没有找到我的页面");
@@ -133,19 +170,11 @@ function SignIn_Miguaikan () {
       launch("com.wondertek.miguaikan");
       sleep(1000);
     }
-
     find_click(id, "splash_time", 3000);
-
+    back_to(text, "首页", 1000);
     // 进入福利界面
     goToWelfare();
-    var 界面 = text(会员福利页面标示).findOne(10000);
-    if (界面) {
-      toastLog("咪咕爱看福利界面出现了");
-      swipe(540, 2000, 540, 1400, 500);
-    } else {
-      toastLog("没有福利界面，重启");
-      return SignIn_Miguaikan();
-    }
+
     sleep(1000);
     if (find_click(text, "去观看", 1000)) {
       sleep(1000);
@@ -193,27 +222,28 @@ function SignIn_Miguaikan () {
           var 微信好友 = 微信好友.bounds();
           click(微信好友.centerX(), 微信好友.centerY());
           text("创建新聊天").findOne(10000);
-          back_homepage();
-          sleep(1000);
-          click(福利.centerX(), 福利.centerY());
-          sleep(2000);
+          goToWelfare();
+        } else {
+          return SignIn_Miguaikan();
         }
         sleep(1000);
         back_to(text, 会员福利页面标示, 1000);
       } else {
         toastLog("没有找到分享的选择");
         back_to(text, 会员福利页面标示, 1000);
-
       }
     }
     sleep(1000);
     // 循环领取奖励
     while (1) {
-      if (find_click(text, "领取", 2000)) {
-        sleep(3000);
-        find_click(text, "X", 3000);
-        if (!find(text, 会员福利页面标示, 2000)) {
-          back_to(text, 会员福利页面标示, 1000);
+      if (find_click(text, "领取", 2000) || find_click(text, "X", 1000)) {
+        if (find(text, 'X', 5000)) {
+          sleep(1000);
+          find_click(text, "X", 1000);
+          sleep(1000);
+        }
+        if (!find(text, 会员福利页面标示, 3000)) {
+          goToWelfare();
         }
       } else {
         break;
@@ -262,8 +292,8 @@ function SignIn_Miguaikan () {
 }
 
 function back_homepage () {
-  if (!back_to(text, "我的", 1000)) {
-    back_to(id, "image5_layout", 1000)
+  if (!back_to(id, "ft_my", 1000)) {
+    back_to(text, "我的", 1000);
   }
 }
 
@@ -309,7 +339,13 @@ function 进入视频 () {
         toast("点开清晰度了");
         sleep(1000);
         if (find_click(text, '标清', 2000)) { break } else { back() }
-      } else { back() }
+      } else {
+        toastLog("没有找到视频清晰度");
+        return 观看视频领红包();
+      }
+    } else {
+      toastLog("没有找到视频");
+      return 观看视频领红包();
     }
   }
   sleep(1000);
