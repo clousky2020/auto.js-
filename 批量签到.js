@@ -18,10 +18,10 @@ SignIn_Sfacg(); //sf小说签到
 Sign_autonavi(); //高德地图签到
 SignIn_Alipay(); //支付宝签到领积分
 SignIn_Alibaba(); //阿里巴巴领元宝
-SignIn_idlefish(); //闲鱼签到
 SignIn_Mommypocket(); //美物清单
 SignIn_Netease_Cloudmusic(); //网易云音乐
 SignIn_Fandengreader(); //樊登读书
+SignIn_idlefish(); //闲鱼签到
 
 
 // SignIn_ximalaya(); //喜马拉雅
@@ -381,8 +381,13 @@ function goToJD () {
     if (find_click(text, "领京豆", 1000)) {
       toastLog("点击领京豆");
       sleep(3000);
+
     }
-    if (find(text, '购物返豆', 1000)) {
+    if (find_click(text, "签到领京豆", 1000)) {
+      sleep(2000);
+      goToJD();
+      return true;
+    } else if (find(textContains, "已连签", 1000)) {
       return true;
     } else {
       toastLog("没有在签到页面，后退！");
@@ -405,10 +410,7 @@ function SignIn_jingdong () {
       return SignIn_jingdong();
     }
     if (goToJD()) {
-      if (find_click(text, "签到领京豆", 1000)) {
-        sleep(2000);
-        goToJD();
-      }
+
       //种豆得豆
       click(955, 762);
       if (!find(text, "豆苗成长值", 3000)) {
@@ -531,6 +533,7 @@ function SignIn_jingdong () {
           save_log("京东今天已领豆！");
           goToJD();
         } else {
+          find_click(text, "允许", 1000);
           sleep(3000);
           while (1) {
             if (find(text, "每日签到", 10000)) {
@@ -738,7 +741,7 @@ function SignIn_Netease_Cloudmusic () {
         if (find(text, '赚云贝', 5000)) {
           toastLog("进入云贝中心了");
           sleep(1000);
-          loop_find_click(text, '已完成', 1000, 4);
+          loop_find_click(text, '听音乐30分钟', 1000, 4);
         } else {
           toastLog("没有进入云贝中心");
           back();
@@ -1100,33 +1103,24 @@ function SignIn_Alipay () {
     }
     // 进入首页领取消费金
     back_to(text, "首页", 1000);
-    find_click(text, "首页", 1000);
-    if (find_click(text, "消费金", 5000)) {
-      if (find(text, '攻略', 5000)) {
-        for (var i = 0; i < 2; i++) {
-          if (find_click(textContains, '签到', 1000) || find_click(textContains, '逛一逛赚金币', 1000)) {
-            if (find(text, '每日签到', 5000)) {
-              while (1) {
-                if (!find(text, '已获得30金币', 2000)) {
-                  swipe(540, 1000, 540, 500, 300);
-                  sleep(5000);
-                } else {
-                  break;
-                }
-              }
-              // back_to(id,'h5_tv_title',1000);
-              back_to(text, '支付宝消费金', 1000);
-              break;
-            }
-          }
-        }
-
-
-        for (var i = 0; i < 3; i++) {
-          find_click(text, '消费支付奖励', 2000);
-        }
-      }
-    }
+    // find_click(text, "首页", 1000);
+    // if (find_click(text, "消费金", 5000)) {
+    //   if (find(text, '我的兑换 >', 5000)) {
+    //     sleep(2000);
+    //     for (var i = 0; i < 2; i++) {
+    //       find_click(textContains, '奖励', 1000);
+    //       find_click(textContains, '逛一逛赚金币', 1000);
+    //     }
+    //     find_click(text, '签到金币', 1000);
+    //     image_click("./images/消费金赚金币.jpg");
+    //     sleep(2000);
+    //     if (image_click("./images/消费金逛橱窗.jpg")) {
+    //       sleep(16000);
+    //       back();
+    //     }
+    //     back();
+    //   }
+    // }
     back_to(text, "首页", 1000);
 
     var 我的 = text("我的").findOne(3000);
@@ -1142,7 +1136,7 @@ function SignIn_Alipay () {
     }
     toastLog("点击进入支付宝会员页面");
     while (1) {
-      var coor = image_coor("./images/支付宝会员.png");
+      var coor = image_coor("./images/支付宝会员.jpg");
       if (coor) {
         click(coor.x, coor.y);
         sleep(1000);
@@ -1244,9 +1238,9 @@ function SignIn_idlefish () {
     }
     sleep(1000);
     if (find_click(desc, "闲鱼签到", 5000)) {
-      if (find(text, "100闲鱼币夺宝 >", 2000)) {
+      if (find(text, "闲鱼币抢好物，开红包~", 2000)) {
         toastLog("进入签到页面");
-
+        click_my_coin();
         find_click(textContains, "签到领币", 2000);
         sleep(1000);
         click(950, 150); //点击每日签到
@@ -1275,11 +1269,12 @@ function SignIn_idlefish () {
           }
         }
         //向上到顶
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < 15; i++) {
           swipe(540, 600, 540, 1700, 300);
         }
+        // find_click_position(text, '闲鱼币抢好物，开红包~', 1000, 1006, 1057);
 
-        find_click_position(textContains, "第2个标签", 1000, 1577, 1685);
+        // find_click_position(textContains, "第2个标签", 1000, 1577, 1685);
         click(950, 150); //点击每日签到
 
         闲鱼签到();
@@ -1291,8 +1286,7 @@ function SignIn_idlefish () {
           toastLog("夺宝押注跳过");
         } else {
           toastLog("开始闲鱼币夺宝");
-          if (text("100闲鱼币夺宝 >").findOne()) {
-            text("100闲鱼币夺宝 >").findOne().click();
+          if (find_click(text, '100币抢好物', 3000)) {
             sleep(2000);
             var 闲鱼币夺宝界面 = desc("无限投注，投注越多越容易中奖").findOne();
             if (闲鱼币夺宝界面) {
@@ -1315,10 +1309,10 @@ function SignIn_idlefish () {
                     click(500, 1670); //点击进入押宝最终页面
                     sleep(1000);
                     if (desc("100闲鱼币夺宝").findOne()) {
-                      click(226, 1900); //减少投注
-                      sleep(500);
-                      click(226, 1900); //减少投注
-                      sleep(500);
+                      // click(226, 1900); //减少投注
+                      // sleep(500);
+                      // click(226, 1900); //减少投注
+                      // sleep(500);
                       while (desc("100闲鱼币夺宝").findOne(500)) {
                         click(500, 2250); //确定投注
                         sleep(1000);
@@ -1327,21 +1321,17 @@ function SignIn_idlefish () {
                     }
                     sleep(1000);
                     // back();
-                    // text("100闲鱼币夺宝 >").findOne().click();
+                    // text("闲鱼币抢好物，开红包~").findOne().click();
                   } else {
                     toastLog("本页面已压过了");
                     back();
                     sleep(1000);
                     back();
-                    text("100闲鱼币夺宝 >").findOne().click();
+                    text("闲鱼币抢好物，开红包~").findOne().click();
                   }
                 } else {
                   save_log("夺宝押注已结束");
-                  var 我的闲鱼币 = (desc("我的闲鱼币").findOne(2000));
-                  if ("我的闲鱼币") {
-                    var 我的闲鱼币 = 我的闲鱼币.bounds();
-                    click(我的闲鱼币.centerX() - 229, 我的闲鱼币.centerY() + 46); //通过求出旁边的我的闲鱼币的控件坐标计算得到左边最终领取投资奖励的坐标
-                  }
+                  click_my_coin();
                   break;
                 }
               }
@@ -1425,7 +1415,14 @@ function SignIn_idlefish () {
     return;
   }
 }
-
+function click_my_coin () {
+  var 我的闲鱼币 = (desc("我的闲鱼币").findOne(2000));
+  if (我的闲鱼币) {
+    var 我的闲鱼币 = 我的闲鱼币.bounds();
+    click(我的闲鱼币.centerX() - 229, 我的闲鱼币.centerY() + 46); //通过求出旁边的我的闲鱼币的控件坐标计算得到左边最终领取投资奖励的坐标
+  }
+  return;
+}
 function 闲鱼签到 () {
   var 签到领币 = textContains("签到领币").findOne(1000);
   if (签到领币) {
@@ -1436,7 +1433,7 @@ function 闲鱼签到 () {
   } else {
     toastLog("没有找到签到领币按钮");
   }
-  back_to(text, "100闲鱼币夺宝 >", 1000);
+  back_to(text, "闲鱼币抢好物，开红包~", 1000);
 }
 
 function Sign_autonavi () {

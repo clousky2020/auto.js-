@@ -8,6 +8,10 @@ setScreenMetrics(1080, 2340); //设定以下坐标点击的基准屏幕分辨率
 
 红包待解锁 = 0; //设定一个开关，代表今天还有视频红包没有领
 会员福利页面标示 = '会员每日福利'
+if (!images.requestScreenCapture()) { //可指定参数true（横屏截图） 或者 false（竖屏截图）
+  toast("请求截图失败");
+  exit();
+}
 home();
 sleep(1000);
 SignIn_Miguaikan(); //咪咕爱看签到
@@ -39,6 +43,15 @@ function back_home () {
   return;
 }
 
+function image_coor (template_path) {
+  var template = images.read(template_path); //模板图片的位置
+  var img = captureScreen(); //截取当前图像
+  var coor = images.findImage(img, template)
+  img.recycle(); // 回收图片
+  template.recycle(); // 回收图片
+  return coor;
+}
+
 function back_to (type, text, time) {
   var num = 0;
   while (1) {
@@ -48,7 +61,8 @@ function back_to (type, text, time) {
       return true;
     } else if (num > 10) {
       toastLog(num + "次返回没有到达指定地点");
-      return false;
+      return;
+      // exit;
     } else {
       back();
       num += 1;
@@ -132,7 +146,7 @@ function find (type, text, time) {
 function goToWelfare () {
   find_click(id, "close", 500);
   back_homepage();
-  if (find_click(id, 'ft_my', 3000) || text, '我的', 2000) {
+  if (find_click(id, 'image5_layout', 4000) || find_click(text, '我的', 1000) || image_click('./images/咪咕爱看-我的.jpg') || click(973, 2245)) {
     while (1) {
       find_click(id, "close", 100);
       var 福利 = textContains("福利").findOne(5000);
@@ -170,8 +184,8 @@ function SignIn_Miguaikan () {
       launch("com.wondertek.miguaikan");
       sleep(1000);
     }
-    find_click(id, "splash_time", 3000);
-    back_to(text, "首页", 1000);
+    find_click(id, 'splash_time', 3000);
+    find_click(id, 'close', 1000);
     // 进入福利界面
     goToWelfare();
 
@@ -196,7 +210,7 @@ function SignIn_Miguaikan () {
           sleep(1000);
           var 点击抽奖 = 点击抽奖.bounds();
           click(点击抽奖.centerX(), 点击抽奖.centerY());
-          if (textContains("当前剩余抽奖次数 0 次").findOne(1000)) {
+          if (textContains("当前剩余抽奖次数 0 次").findOne(2000)) {
             back();
             break;
           }
@@ -207,20 +221,15 @@ function SignIn_Miguaikan () {
     }
     sleep(1000);
     // 分享得流量
-    var 去分享 = text("去分享").findOne(1000);
-    if (去分享) {
+    if (find_click(text, '去分享', 2000)) {
       toastLog("有去分享按钮");
-      var 去分享 = 去分享.bounds();
-      click(去分享.centerX(), 去分享.centerY());
       sleep(1000);
-      var 分享 = text("分享").findOne(10000);
-      if (分享) {
-        var 分享 = 分享.bounds();
-        click(分享.centerX(), 分享.centerY());
-        var 微信好友 = text("微信好友").findOne(5000);
-        if (微信好友) {
-          var 微信好友 = 微信好友.bounds();
-          click(微信好友.centerX(), 微信好友.centerY());
+      find_click(id, 'act_play_detail_fi_close', 2000);
+      sleep(1000);
+      if (find_click(text, '分享', 10000)) {
+        sleep(1000)
+        if (find_click(text,'微信好友',10000)) {
+          toastLog("进入微信分享");
           text("创建新聊天").findOne(10000);
           goToWelfare();
         } else {
@@ -292,20 +301,21 @@ function SignIn_Miguaikan () {
 }
 
 function back_homepage () {
-  if (!back_to(id, "ft_my", 1000)) {
-    back_to(text, "我的", 1000);
-  }
+  // if (!back_to(text, "精选", 800)) {
+  //   if (!back_to(textContains, "福利", 800)) {
+  //     back_to(text, "我的", 800);
+  //   }
+  // }
+  back_to(id, "image5_layout", 800);
+  
+  return;
 }
 
 function 观看视频领红包 () {
   back_homepage();
-  var 路人超能100 = text("路人超能100").findOne(5000);
-  if (路人超能100) {
+  if (find_click(text, '精灵宝可梦XY1', 5000)) {
     sleep(1000);
-    var 路人超能100 = 路人超能100.bounds();
-    click(路人超能100.centerX(), 路人超能100.centerY());
-    sleep(1000);
-    if (text("共12集").findOne(5000)) {
+    if (find(id, 'tv_name', 5000)) {
       toastLog("开始看视频");
       进入视频();
     } else {
@@ -331,6 +341,11 @@ function 进入视频 () {
   }
 
   sleep(1000);
+  //点击多次选择最左边的集数
+  for (var i = 0; i < 4; i++) {
+    click(100, 1350);
+    sleep(1000);
+  }
   //把视频清晰度调低
   while (1) {
     find_click(id, "surface_container", 2000);
@@ -338,7 +353,13 @@ function 进入视频 () {
       if (find_click(text, '清晰度', 3000)) {
         toast("点开清晰度了");
         sleep(1000);
-        if (find_click(text, '标清', 2000)) { break } else { back() }
+        if (find_click(text, '标清', 2000)) {
+          break
+        } else if (find_click(text, '高清', 2000)) {
+          break
+        } else {
+          back()
+        }
       } else {
         toastLog("没有找到视频清晰度");
         return 观看视频领红包();
@@ -350,15 +371,11 @@ function 进入视频 () {
   }
   sleep(1000);
   //调低音量
-  for (var i = 0; i < 5; i++) {
+  for (var i = 0; i < 7; i++) {
     swipe(940, 200, 940, 500, 500);
     sleep(500);
   }
-  //点击多次选择最左边的集数
-  for (var i = 0; i < 4; i++) {
-    click(100, 1350);
-    sleep(1000);
-  }
+
 
   //等待
   if (红包待解锁 == 1) {

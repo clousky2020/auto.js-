@@ -410,15 +410,14 @@ function tmail_form () {
       get_sun();
       //蜜蜂采阳光
       take_the_sun();
-
-
+      
+      return;
+      
       sleep(1000);
       toast("进入果园");
       sleep(1000);
       click(128, 556);
-      var 集果实图标 = text("gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==");
-      //if (text("无星辰落").findOne()) {
-      if (集果实图标.findOne(10000)) {
+      if (find_click(text,'gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==',10000)) {
         toast("已经进入福年种福果");
         var num = 0;
         while (1) {
@@ -443,8 +442,7 @@ function tmail_form () {
         collection_bless();
         sleep(1200);
         toastLog("关闭任务菜单");
-        var 关闭任务菜单 = text("关闭").findOne(2000);
-        关闭任务菜单.click();
+        find_click(text,'关闭',2000)
         sleep(1000);
         toastLog("检查施肥数");
         while (1) {
@@ -495,7 +493,7 @@ function back_to_TaskInterface () {
 function ifSkipClick (clickModule) {
   //有部分内容不需要进入，直接跳过
   var head_text = clickModule.parent().children()[1].text();
-  var skip_texts = ['下单'];
+  var skip_texts = ['下单','礼物'];
   for (i = 0; i < skip_texts.length; i++) {
     //检查查找的内容中有没有需要skip的内容，有就跳过
     if (head_text.search(skip_texts[i]) != -1) {

@@ -184,9 +184,8 @@ function taobao_coins () {
     sleep(1000);
     寻找淘金币图标进入();
     sleep(2000);
-    var 领淘金币 = textContains("签到领").findOne(2000);
-    if (领淘金币) {
-      领淘金币.click(); //领淘金币
+    if (find_click(textContains,'签到领金',2000)) {
+      toastLog("签到领");
       sleep(1000);
       find_click(textContains, "领取", 2000);
       sleep(2000);
@@ -195,8 +194,8 @@ function taobao_coins () {
         click(coor.x, coor.y);
         sleep(1000);
       }
-      loop_find_click(text, "我知道了", 1000, 4);
     }
+    find_click(text, "我知道了", 5000);
     合力次数 = text("合力").find().length * 2;
     toastLog('当前合力次数：' + 合力次数);
     for (var num = 0; num < 合力次数; num++) {
@@ -218,8 +217,6 @@ function taobao_coins () {
       back_home();
 
     }
-
-
     var 任务界面 = text("今日总能量").findOne(8000);
     if (任务界面) {
       toastLog("进入领水滴界面");
@@ -266,7 +263,7 @@ function taobao_coins () {
               var state = 0;
               //有部分内容不需要进入，直接跳过
               var head_text = 去完成.parent().children()[0].children()[0].text();
-              var skip_texts = ['消消乐', '充话费', '天猫APP', '桌面', '菜鸟裹裹', '买', '车险', '夺宝', '淘金币免费', '点击商品图片', '逛淘金币新商家专场'];
+              var skip_texts = ['消消乐', '充话费', '天猫APP', '桌面', '菜鸟裹裹', '买', '车险', '夺宝', '淘金币免费', '点击商品图片', '逛淘金币新商家专场','小说','金币红包赛','618','猫'];
               for (i = 0; i < skip_texts.length; i++) {
                 //检查查找的内容中有没有需要skip的内容，有就跳过
                 if (head_text.search(skip_texts[i]) != -1) {
@@ -578,6 +575,13 @@ function coin_loop () {
   } else if (find_click(text, "训练", 500)) {
     toastLog("训练");
     sleep(1000);
+    backGoldInterface();
+  } else if (find(textContains, "继续滑动", 500)) {
+    toastLog("需要不断下滑");
+    for (var i = 1; i < 20; i++) {
+      swipe(540, 1000, 540, 500, 300);
+      sleep(1500);
+    }
     backGoldInterface();
   } else if (textContains("滑动浏览").findOne(1000) || descContains("滑动浏览").findOne(1000)) {
     sleep(1000);
