@@ -371,13 +371,13 @@ function tmail_form () {
                 break;
               }
             }
-            if (desc("经过搜寻，你获得了").findOne(500) || textContains("已获得").findOne(100) || descContains("已关注，").findOne(100)) {
+            if (find(textContains,"已开启",300)||find(desc,"经过搜寻，你获得了",500) ||  find(textContains,"已获得",300) || find(descContains,"已关注，",300)) {
               toast("已经得到阳光,退回");
               while (!text("进店开宝箱").findOne(1000)) { back(); }
               sleep(2000);
               break
             }
-            if (!find(textContains, "搜索", 1000)) {
+            if (!find(textContains, "搜索", 500)) {
               back();
             }
             if (num == 15) {
@@ -404,12 +404,17 @@ function tmail_form () {
 
       sleep(1000);
       toast("没有什么任务可以做了，关闭任务菜单！");
-      click(999, 1280);
+      // click(999, 1280);
+      find_click(text,'',4000)
+      click(972,1443,1047,1521);
       sleep(1000);
       //收阳光
       get_sun();
       //蜜蜂采阳光
       take_the_sun();
+      
+      // 下面不执行了，回退
+      back_home();
       
       return;
       
